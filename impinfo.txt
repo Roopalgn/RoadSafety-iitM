@@ -1,0 +1,327 @@
+# Winning Plan: Choose RoadSoS for a 3-Member Team
+
+## Summary
+- **Recommended problem statement:** **RoadSoS**.
+- **Why:** Best reward per unit risk. It has a strong live-demo emotional hook, measurable lifesaving relevance, achievable data collection, and a clearer path to offline functionality than DriveLegal or RoadWatch.
+- **Source basis:** Official event page confirms the 2026 hackathon window and extension to May 31 ([CoERS/RBG](https://coers.iitm.ac.in/event/national-road-safety-hackathon-2026/)); Unstop confirms one submission, code, 7-slide deck, assumptions/package document, and the three tracks ([Unstop](https://unstop.com/hackathons/national-road-safety-hackathon-2026-iit-madras-1656937/amp)); CoERS AI summit context emphasizes scalable, data-driven, governance-compatible road safety systems ([CoERS AI Summit](https://coers.iitm.ac.in/event/ai-for-road-safety-summit/)); India emergency fallback should use official ERSS 112 guidance ([MHA ERSS](https://www.mha.gov.in/en/commoncontent/emergency-response-support-system-erss)).
+- **Important note:** No public point-weighted scoring rubric was found. This plan uses the published evaluation criteria as the official rubric and adds an internal 100-point optimization proxy.
+
+## Problem Selection
+| Track | Risk | Reward | Common Weakness | Verdict |
+|---|---:|---:|---|---|
+| DriveLegal | High | Medium-High | Legal hallucination, stale rules, jurisdiction complexity | Avoid |
+| RoadWatch | Very High | High | Hard public works data, unclear complaint routing, many pothole apps | Avoid |
+| RoadSoS | Medium | Very High | Data reliability and offline quality | Choose |
+
+- **RoadSoS winning angle:** Build an **offline-first accident response orchestrator**, not a generic chatbot.
+- **Core promise:** “In the golden hour, a bystander can find the right help in under 10 seconds, even with poor network.”
+- **In scope:** Nearby trauma/hospital/police/ambulance/tow contacts, ranked by distance and reliability; emergency fallback; offline cache; incident summary; multilingual/low-literacy UI; source-backed data.
+- **Out of scope:** Real ambulance dispatch, diagnosis, hospital bed availability, guaranteed live contact verification, legal/medical decision-making.
+
+## Judge Strategy
+- **Judge pain points to solve:**
+  - Too many submissions will be thin ChatGPT wrappers.
+  - Emergency tools that fail offline are not credible.
+  - Fake or unsourced contacts destroy trust.
+  - Pretty UI without source provenance will feel unserious.
+  - “Global applicability” often becomes a vague claim instead of an architecture proof.
+- **Seen-before approaches to beat:**
+  - “Call 112/108” chatbot with no location ranking.
+  - Google Maps search wrapper.
+  - Static emergency directory.
+  - Landing page plus basic chatbot.
+  - AI-generated advice without guardrails.
+- **Judge delight triggers:**
+  - Open demo in airplane mode and still fetch nearby emergency contacts.
+  - Show source badges, distance, last-verified date, and confidence score.
+  - One-tap emergency flow: detect/manual location -> ranked contacts -> call/share incident summary.
+  - “No hallucinated contacts” rule visible in the demo.
+  - A 30-second staged accident scenario that works smoothly from IIT Madras/Chennai.
+  - A second-country sample dataset proving the global schema, even if coverage is limited.
+
+## Product Architecture
+- **Frontend:** Mobile-first React/Vite PWA.
+- **Backend:** Python FastAPI.
+- **Database:** SQLite generated from curated CSV/JSON seed files.
+- **Offline:** Service worker plus IndexedDB/static JSON cache for demo city emergency contacts.
+- **AI layer:** Guarded assistant for summarizing incident info, translating instructions, and answering “what should I do next?” using only approved templates and retrieved data.
+- **Geospatial logic:** Deterministic ranking first: distance, service type, source reliability, verification freshness, availability, and emergency priority.
+- **Emergency fallback:** Always show official national emergency fallback from the dataset; for India, include ERSS 112 as the primary fallback.
+
+## Public Interfaces and Data Contracts
+- `POST /api/nearby-services`: accepts `lat`, `lon`, `radius_km`, `service_types`; returns ranked emergency services with source and confidence metadata.
+- `POST /api/incident-summary`: accepts location, injuries count, vehicle status, notes; returns a concise shareable responder summary.
+- `POST /api/assistant`: accepts user message and location context; returns guarded response with citations to local data or approved safety templates.
+- `GET /api/cache-package`: returns offline emergency dataset version for the frontend.
+- Contact schema must include: `id`, `name`, `type`, `lat`, `lon`, `phone`, `address`, `locality`, `country`, `source_url`, `verified_at`, `availability`, `confidence_score`, `notes`.
+
+## Fixed Team Constraints
+- No AI-generated phone numbers, addresses, hospital names, police stations, or ambulance contacts.
+- Every displayed service must come from the dataset and show source/verification metadata.
+- Offline mode must work for at least one polished demo region: **IIT Madras/Chennai**.
+- Add one lightweight second-region sample, preferably another Indian city or BIMSTEC city, to prove portability.
+- First screen must be the emergency action screen, not a marketing landing page.
+- No secrets in repo; use `.env.example`.
+- All shared behavior goes through API/data contracts before UI work depends on it.
+- The final submission must include code, 7-slide presentation, assumptions/package document, and dataset notes.
+
+## Team Split
+- **Member 1: Data + Geo Reliability**
+  - Owns emergency dataset, schema, dedupe, geocoding, source documentation, confidence scoring, and ranking tests.
+  - Delivers Chennai seed data plus one portability sample region.
+- **Member 2: Backend + AI Guardrails**
+  - Owns FastAPI, SQLite integration, `/nearby-services`, `/incident-summary`, `/assistant`, no-hallucination guardrails, and API tests.
+  - Ensures all assistant responses cite dataset/template sources or say it cannot verify.
+- **Member 3: Frontend + Demo + Submission**
+  - Owns PWA UI, offline cache, map/list view, one-tap call/share actions, accessibility, slide deck, README, and final demo script.
+  - Ensures the app feels usable under stress on a phone-sized viewport.
+
+## Common Merge Points in Main Repo
+- `contracts/`: frozen API request/response examples and contact schema.
+- `data/`: shared curated datasets and generated SQLite file.
+- `backend/`: API implementation; only Member 2 merges backend changes unless coordinated.
+- `frontend/`: PWA implementation; only Member 3 merges UI changes unless coordinated.
+- `docs/`: assumptions, package list, data sources, submission document, and slide outline.
+- `demo/`: golden demo scenario, screenshots, test coordinates, and final pitch script.
+- Daily merge rule: feature branches merge into `main` only after the golden demo scenario still passes.
+
+## Internal Scoring Proxy
+- Reliability and data accuracy: 30 points.
+- Number, quality, and ranking of fetched contacts: 20 points.
+- Offline functionality: 20 points.
+- Innovation and additional features: 15 points.
+- Cross-region/cross-country architecture: 10 points.
+- UI clarity and accessibility: 5 points.
+
+## Timeline
+- **May 12-13:** Finalize RoadSoS concept, repo structure, API contract, data schema, demo location.
+- **May 14-17:** Build curated Chennai dataset, deterministic ranking, FastAPI endpoints, basic PWA shell.
+- **May 18-21:** Integrate frontend/backend, offline cache, incident summary, no-hallucination assistant guardrails.
+- **May 22-24:** Add second-region sample, confidence/source badges, accessibility polish, failure-state handling.
+- **May 25-27:** Freeze features, create 7-slide deck, write assumptions/package document, record screenshots.
+- **May 28-30:** Full dry runs: online, offline, GPS denied, no nearby result, mobile viewport, live-jury script.
+- **May 31:** Submit with buffer.
+
+## Test Plan
+- Offline from IIT Madras/Chennai returns cached emergency contacts without backend/network.
+- Nearby search ranks hospital/police/ambulance/tow contacts by distance and confidence.
+- Assistant refuses to invent contacts when dataset is empty.
+- GPS denied falls back to manual location search.
+- Bad coordinates return national emergency fallback and “expand radius” guidance.
+- Contact dedupe prevents repeated services from flooding results.
+- Mobile UI completes the emergency flow in under 10 seconds.
+- Submission package includes source links, assumptions, package list, and known limitations.
+
+## 7-Slide Pitch Structure
+- Slide 1: Welcome and one-line problem: “Golden-hour help fails when people cannot find the right emergency contact fast.”
+- Slide 2: Pain and gap: panic, poor network, scattered contacts, unreliable generic search.
+- Slide 3: Solution demo flow: location -> ranked contacts -> call/share -> offline fallback.
+- Slide 4: Architecture: PWA, FastAPI, SQLite, offline cache, guarded AI assistant.
+- Slide 5: Reliability proof: source-backed data, confidence scores, no hallucinated contacts, test scenarios.
+- Slide 6: Impact and scalability: Chennai demo, portable schema, second-region proof, future governance integration.
+- Slide 7: Thank you with QR/demo link and team roles.
+
+## Assumptions
+- The current repo is effectively greenfield because it only contains `info.md`.
+- The team has 3 generalist members; the split above assigns one data/geo owner, one backend/AI owner, and one frontend/demo owner.
+- The target submission is the Indian Road Safety Hackathon 2026 deadline of **May 31, 2026**.
+- Exact judge point weights are unavailable publicly, so the internal scoring proxy is optimized from the stated RoadSoS evaluation criteria.
+
+
+
+# Three-Branch RoadSoS Implementation Plan
+
+## Summary
+- Build **RoadSoS** as an offline-first accident response PWA.
+- Use 3 separate teammate branches, then merge via PRs into `main`.
+- Current repo state: no commits yet on `main`, `origin/main` is gone, and only `info.md` exists. First create a bootstrap `main` commit before teammates branch.
+- I cannot create the PR while we are still in Plan Mode, so this plan includes the exact PR workflow for implementation mode.
+
+## Bootstrap Before Team Split
+- Create first `main` commit containing `info.md`, `README.md`, and a shared architecture note.
+- Push `main` to `origin`.
+- All teammates branch from the pushed `main`.
+- Shared stack:
+  - Frontend: React + Vite PWA
+  - Backend: Python FastAPI
+  - Database: SQLite from curated JSON/CSV seed data
+  - Offline: service worker + IndexedDB/static cache
+  - AI: guarded assistant, no generated emergency contacts
+
+## Branch 1: Data + Geo Reliability
+**Branch:** `codex/roadsos-data-geo`
+
+**Paste into teammate Codex:**
+> Implement the RoadSoS data and geo reliability layer. Create the shared emergency contact schema, curated Chennai demo dataset, one secondary portability sample region, distance ranking utilities, confidence scoring, dedupe logic, and tests. Do not edit frontend UI except minimal fixtures if needed. Use source-backed data only; never invent phone numbers or locations. Every contact must include source URL, verification date, service type, coordinates, and confidence score.
+
+**Responsibilities**
+- Create `data/contacts.seed.json` or CSV equivalent.
+- Create a SQLite build script that converts seed data into app-ready records.
+- Implement distance ranking and service filtering.
+- Add confidence score rules:
+  - Official source = higher confidence
+  - Recent verification = higher confidence
+  - Missing phone/coordinates = low confidence or excluded
+- Add dedupe by normalized name, phone, and nearby coordinates.
+- Include Chennai/IIT Madras demo coverage.
+- Include one small second-region sample to prove portability.
+
+**Main merge points**
+- `data/`
+- `contracts/contact.schema.json`
+- `docs/data_sources.md`
+- `tests/data/`
+
+**Acceptance criteria**
+- Querying IIT Madras coordinates returns nearby hospital/police/ambulance/tow contacts.
+- No duplicate contact spam.
+- Every result has source and confidence metadata.
+- Dataset can be rebuilt deterministically.
+
+## Branch 2: Backend + AI Guardrails
+**Branch:** `codex/roadsos-backend-ai`
+
+**Paste into teammate Codex:**
+> Implement the RoadSoS FastAPI backend. Build APIs for nearby services, offline cache package, incident summary, and guarded assistant responses. Use the shared contact schema from contracts. The assistant must not invent emergency contacts, phone numbers, addresses, medical claims, or legal claims. If data is missing, return fallback emergency guidance and say what cannot be verified. Coordinate with the data branch through schema examples only.
+
+**Responsibilities**
+- Create FastAPI app.
+- Implement:
+  - `POST /api/nearby-services`
+  - `GET /api/cache-package`
+  - `POST /api/incident-summary`
+  - `POST /api/assistant`
+- Use SQLite as backend store.
+- Return deterministic ranked results from data layer.
+- Add official emergency fallback behavior.
+- Add no-hallucination guardrails:
+  - Contacts only from database/cache
+  - Safety instructions only from approved templates
+  - Unknown answer returns “not verified”
+- Add backend tests with fixture data.
+
+**Main merge points**
+- `backend/`
+- `contracts/api.examples.json`
+- `docs/backend_assumptions.md`
+- `tests/backend/`
+
+**Acceptance criteria**
+- APIs work with fixture data before final dataset is merged.
+- Assistant refuses to fabricate missing contacts.
+- Bad coordinates return fallback guidance.
+- Incident summary creates a concise responder-ready message.
+
+## Branch 3: Frontend + Demo + Submission
+**Branch:** `codex/roadsos-frontend-demo`
+
+**Paste into teammate Codex:**
+> Implement the RoadSoS mobile-first PWA frontend and final demo package. The first screen must be the emergency action screen, not a landing page. Build location detection/manual fallback, ranked contact list, map/list toggle if practical, one-tap call/share actions, offline mode indicator, cached emergency results, and accessibility-friendly UI. Own the README, 7-slide outline, screenshots, and demo script.
+
+**Responsibilities**
+- Create React + Vite PWA.
+- Build emergency-first flow:
+  - Detect location or enter manually
+  - Show ranked emergency contacts
+  - One-tap call
+  - Share incident summary
+  - Offline mode support
+- Add visual trust signals:
+  - Source badge
+  - Confidence score
+  - Last verified date
+  - Distance
+- Add empty/error states:
+  - GPS denied
+  - No nearby services
+  - Offline with stale cache
+- Prepare submission materials:
+  - README
+  - 7-slide deck outline
+  - package/assumptions document
+  - demo script
+
+**Main merge points**
+- `frontend/`
+- `public/`
+- `docs/submission.md`
+- `demo/`
+
+**Acceptance criteria**
+- Mobile viewport can complete emergency flow in under 10 seconds.
+- Offline demo works for Chennai cached data.
+- UI clearly shows sources and confidence.
+- Submission docs explain packages, assumptions, and limitations.
+
+## Shared Architecture Contract
+- All teams must use this service record shape:
+  - `id`
+  - `name`
+  - `type`
+  - `lat`
+  - `lon`
+  - `phone`
+  - `address`
+  - `locality`
+  - `country`
+  - `source_url`
+  - `verified_at`
+  - `availability`
+  - `confidence_score`
+  - `notes`
+- Service types:
+  - `hospital`
+  - `trauma_center`
+  - `ambulance`
+  - `police`
+  - `tow`
+  - `repair`
+  - `fallback_emergency`
+- API response must include:
+  - ranked `services`
+  - `fallback_contacts`
+  - `query_location`
+  - `offline_cache_version`
+  - `generated_at`
+- Golden demo location: IIT Madras / Chennai.
+- No teammate may change contracts without updating `contracts/` and notifying all branches.
+
+## Merge and PR Plan
+- First PR: `codex/roadsos-data-geo` -> `main`
+  - Merge data/schema first so backend and frontend can align.
+- Second PR: `codex/roadsos-backend-ai` -> `main`
+  - Rebase on updated `main` after data PR lands.
+- Third PR: `codex/roadsos-frontend-demo` -> `main`
+  - Rebase after backend PR lands.
+- Final integration branch: `codex/roadsos-final-integration`
+  - Fix wiring, run full demo, update submission docs.
+  - Open final PR to `main`.
+
+**Exact PR commands after implementation**
+```powershell
+git checkout main
+git pull --ff-only origin main
+git checkout -b codex/roadsos-final-integration
+# integrate and verify
+git add .
+git commit -m "Integrate RoadSoS submission"
+git push -u origin codex/roadsos-final-integration
+gh pr create --base main --head codex/roadsos-final-integration --title "Integrate RoadSoS hackathon submission" --body "Builds the RoadSoS offline-first accident response PWA with source-backed emergency contacts, FastAPI backend, guarded AI assistant, and submission documentation."
+```
+
+## Test Plan
+- Data tests: schema validation, dedupe, confidence score, distance ranking.
+- Backend tests: all endpoints, empty data fallback, bad coordinates, no hallucinated contacts.
+- Frontend tests: GPS allowed, GPS denied, offline mode, mobile viewport, contact call/share actions.
+- Integration tests:
+  - Online Chennai demo
+  - Offline Chennai demo
+  - No nearby contacts
+  - Assistant asks for unavailable contact
+  - Final submission docs complete
+
+## Assumptions
+- We will create the initial `main` commit before branching because the repo currently has no commits.
+- Each teammate works only inside their assigned branch and merge points.
+- The project optimizes for the Indian Road Safety Hackathon 2026 Stage 1 submission.
+- The final PR to `main` should be created after implementation mode, not during Plan Mode.
