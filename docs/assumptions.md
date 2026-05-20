@@ -26,9 +26,11 @@
 
 ## Offline
 
-- The first offline version prioritises the Chennai / IIT Madras region.
-- Offline cache freshness depends on the last successful backend sync.
-- Stale cache is always shown with a visible indicator; it does not silently serve old data.
+- The offline layer uses browser `localStorage` to store the `/api/cache-package` response. This is simpler and more broadly compatible than a service worker and sufficient for the demo scenario.
+- The user must tap **Refresh cache** at least once while online to populate the local store. The app always falls back to ERSS 112 if no cache exists.
+- Stale cache is shown with a visible timestamp indicator; it does not silently serve old data.
+- The first offline version prioritises the Chennai / IIT Madras region (and fixture data until real contacts land in Merge 2).
+- Offline incident packet generation works locally without a backend call.
 
 ## Scoring and evaluation
 

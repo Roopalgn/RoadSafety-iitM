@@ -13,13 +13,17 @@ Based on the hackathon information in `info.md`, Stage 1 needs:
 
 | Item | Owner | Status |
 |---|---|---|
-| `README.md` with setup instructions | Roopal | Scaffold done |
-| `plan.md` with execution and merge plan | Roopal | Done |
-| `docs/data_sources.md` with source-backed contact references | Suyash | In progress |
-| `docs/assumptions.md` with known limits | Roopal | Done |
-| `demo/golden_scenario.md` with the live demo script | Roopal | Done |
-| Final screenshots for the deck | Sidhesh | Pending |
-| Final test/manual verification notes | Suyash + Sidhesh | Pending |
+| `README.md` with setup instructions | Roopal | Done (M1) |
+| `plan.md` with execution and merge plan | Roopal | Done (M1) |
+| `docs/data_sources.md` with source-backed contact references | Suyash | Merge 2 |
+| `docs/assumptions.md` with known limits | Roopal | Done (M2) |
+| `demo/golden_scenario.md` with the live demo script | Roopal | Done (M2, aligned to actual app) |
+| Backend: geo ranking, validation, dedupe, confidence | Suyash | Done (M1) |
+| Frontend: emergency flow, offline cache, trust ledger, incident packet, bystander mode, assistant panel | Sidhesh | Done (M1) |
+| Production Chennai contacts in `data/contacts.seed.json` | Suyash | Merge 2 |
+| SQLite seed generation | Suyash | Merge 2 |
+| Final screenshots for the deck | Sidhesh | Merge 4 |
+| Final test/manual verification notes | Suyash + Sidhesh | Merge 4 |
 
 ## 7-slide deck outline
 
@@ -44,10 +48,25 @@ The deck must include a Welcome slide and a Thank You slide as required by the h
 - Offline cache is scoped to the demo regions (Chennai / IIT Madras + portability sample).
 - The assistant uses retrieval from curated data and approved templates only; it does not call external LLM APIs for emergency contacts.
 
-## Software packages (to be finalised before submission)
+## Software packages (confirmed after Merge 1)
 
-- Frontend: React, Vite, workbox (or custom service worker)
-- Backend: Python, FastAPI, uvicorn, jsonschema, sqlite3 (stdlib)
-- Data tooling: Python jsonschema for seed validation
-- No LLM API dependency for contact data
+### Backend (`backend/requirements.txt`)
+- `fastapi==0.115.6`
+- `uvicorn[standard]==0.34.0`
+- `pydantic==2.10.4`
+- `jsonschema==4.23.0`
+- `pytest==8.3.4`
+- `httpx==0.28.1`
+
+### Frontend (`frontend/package.json`)
+- `react`, `react-dom` (latest)
+- `vite`, `@vitejs/plugin-react` (latest)
+- `lucide-react` (latest)
+
+### Offline layer
+- Browser `localStorage` for cache package (no service worker in current implementation)
+- Vite dev server proxy: `/api` → `http://localhost:8001`
+
+### No LLM API dependency
+- Assistant is a guarded stub; no external AI API call is made for emergency contact data
 
