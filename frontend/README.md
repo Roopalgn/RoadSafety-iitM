@@ -10,7 +10,7 @@ npm install
 npm run dev
 ```
 
-The Vite dev server proxies `/api` and `/health` to `http://localhost:8001`.
+The Vite dev server proxies `/api` and `/health` to `http://localhost:8000`.
 Set `VITE_API_BASE_URL` only when the frontend is served without that proxy.
 
 ## Demo flow
