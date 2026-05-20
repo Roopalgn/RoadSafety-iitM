@@ -25,4 +25,8 @@ data/generated/
 Thumbs.db
 .vscode/
 .idea/
+!.idea/
+.idea/*
+!.idea/runConfigurations/
+!.idea/runConfigurations/*.xml
 
