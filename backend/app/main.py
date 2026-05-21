@@ -21,7 +21,7 @@ from .core.data_loader import (
     resolve_service_contacts,
 )
 from .core.dedupe import dedupe_contacts
-from .core.geo import rank_by_distance
+from .core.geo import has_coordinates, rank_by_distance
 from .core.validation import validate_collection
 from .models import (
     AssistantRequest,
@@ -101,8 +101,15 @@ def nearby_services(request: NearbyServicesRequest) -> NearbyServicesResponse:
             f"{len(deduped['removed'])} duplicate contact(s) collapsed."
         )
 
+    # Contacts with null coordinates cannot be distance-ranked. Collect them
+    # separately so they can be surfaced as type-matched extras alongside
+    # the official fallbacks (e.g. statewide ambulance 108 when filtering
+    # by ambulance type).
+    no_coord_contacts = [c for c in deduped["contacts"] if not has_coordinates(c)]
+    coord_contacts = [c for c in deduped["contacts"] if has_coordinates(c)]
+
     ranked = rank_by_distance(
-        deduped["contacts"], request.lat, request.lon, radius_km=request.radius_km
+        coord_contacts, request.lat, request.lon, radius_km=request.radius_km
     )
     ranked = attach_confidence(ranked, today)
 
@@ -114,6 +121,15 @@ def nearby_services(request: NearbyServicesRequest) -> NearbyServicesResponse:
             f"{len(bad_fb)} fallback contact(s) failed schema validation and were skipped."
         )
         fallbacks = [c for i, c in enumerate(fallbacks) if i not in bad_fb]
+
+    # Merge no-coordinate local contacts into fallbacks so they are always
+    # visible (e.g. statewide 108 ambulance when filtering by ambulance type).
+    # Dedupe against existing fallbacks by phone to avoid showing 108 twice.
+    existing_fb_phones = {c.get("phone") for c in fallbacks}
+    for nc in no_coord_contacts:
+        if nc.get("phone") not in existing_fb_phones:
+            fallbacks = list(fallbacks) + [nc]
+            existing_fb_phones.add(nc.get("phone"))
 
     # --- Fallback behavior ---
 
