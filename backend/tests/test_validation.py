@@ -85,11 +85,44 @@ def test_collection_detects_duplicate_ids():
 
 
 def test_production_seed_files_are_valid():
-    # Production contacts seed starts empty; that is valid.
+    # Merge 2: production contacts seed is populated with Chennai data.
     prod = validate_collection(load_production_contacts(), production=True)
     assert prod["ok"], prod["errors"]
     fb = validate_collection(load_fallback_contacts(), production=True)
     assert fb["ok"], fb["errors"]
+
+
+def test_production_contacts_are_not_empty():
+    """Merge 2 requirement: production seed must contain real contacts."""
+    contacts = load_production_contacts()
+    assert contacts, "contacts.seed.json must be populated with Chennai data in Merge 2"
+
+
+def test_production_contacts_all_have_coordinates_or_are_national_service():
+    """Contacts without coordinates must be national/statewide services (ambulance, tow helplines, fallbacks).
+
+    Local physical contacts (hospitals, police stations) must always have coordinates.
+    """
+    # Types that are legitimately national/statewide and may have null coordinates.
+    NATIONAL_TYPES = ("ambulance", "fallback_emergency", "tow")
+    contacts = load_production_contacts()
+    for c in contacts:
+        has_coords = (
+            isinstance(c.get("lat"), (int, float))
+            and isinstance(c.get("lon"), (int, float))
+        )
+        if not has_coords:
+            assert c.get("type") in NATIONAL_TYPES, (
+                f"{c['id']} (type={c.get('type')}): physical contact missing coordinates"
+            )
+
+
+def test_fallback_contacts_include_112_and_108():
+    """Fallbacks must include ERSS 112 and ambulance 108."""
+    fallbacks = load_fallback_contacts()
+    phones = [c["phone"] for c in fallbacks]
+    assert "112" in phones, "ERSS 112 must be in fallbacks"
+    assert "108" in phones, "Ambulance 108 must be in fallbacks"
 
 
 def test_fixtures_match_schema():

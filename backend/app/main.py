@@ -1,14 +1,13 @@
 """RoadSoS API.
 
-Merge 1 scope (Suyash / data-geo-backend):
-  - real ``/api/nearby-services`` backed by the deterministic geo, dedupe,
-    and confidence utilities in ``app.core``;
-  - request/response models aligned with ``contracts/api.examples.json``;
-  - ``/api/cache-package`` serves the offline fallback set.
-
-Production local contacts are still empty, so ``/api/nearby-services``
-falls back to clearly-labelled fixtures and warns loudly. ``/api/assistant``
-remains a guarded stub until the AI branch lands.
+Merge 2 scope (Suyash / data-geo-backend):
+  - ``/api/nearby-services`` now backed by real source-backed Chennai contacts.
+  - Fallback behavior: national emergency fallback when local results are weak,
+    expand-radius guidance when no nearby service is found, clear response when
+    coordinates are invalid.
+  - ``/api/cache-package`` serves the versioned offline bundle.
+  - ``/api/incident-summary`` generates a shareable incident packet.
+  - ``/api/assistant`` remains a guarded stub (AI branch owns this).
 """
 
 from datetime import datetime, timezone
@@ -39,8 +38,16 @@ from .models import (
 app = FastAPI(
     title="RoadSoS API",
     description="Offline-first accident response API.",
-    version="0.2.0",
+    version="0.3.0",
 )
+
+# When fewer than this many ranked local services are returned, the response
+# always includes the national fallback contacts and an expand-radius hint.
+_WEAK_RESULT_THRESHOLD = 2
+
+# Suggested expanded radius (km) when no results are found within the
+# requested radius.
+_EXPAND_RADIUS_KM = 25
 
 
 def _utc_now_iso() -> str:
@@ -52,12 +59,22 @@ def health() -> dict[str, str]:
     return {
         "status": "ok",
         "service": "roadsos-api",
+        "version": "0.3.0",
         "offline_cache_version": OFFLINE_CACHE_VERSION,
     }
 
 
 @app.post("/api/nearby-services", response_model=NearbyServicesResponse)
 def nearby_services(request: NearbyServicesRequest) -> NearbyServicesResponse:
+    """Return ranked emergency contacts near the given coordinates.
+
+    Fallback behavior:
+    - If no local services are found within the radius, suggest expanding
+      the search radius and always include national fallback contacts.
+    - If local results are weak (fewer than threshold), include national
+      fallbacks alongside local results.
+    - Coordinates are validated by Pydantic (422 on invalid input).
+    """
     today = datetime.now(timezone.utc).date()
     warnings: list[str] = []
 
@@ -65,8 +82,7 @@ def nearby_services(request: NearbyServicesRequest) -> NearbyServicesResponse:
     warnings.extend(resolved["warnings"])
     contacts = resolved["contacts"]
 
-    # Drop any record that does not satisfy the frozen contact schema so a
-    # malformed entry can never surface as a "real" emergency contact.
+    # Drop any record that does not satisfy the frozen contact schema.
     report = validate_collection(contacts)
     if not report["ok"]:
         bad = {f["index"] for f in report["errors"]}
@@ -99,9 +115,22 @@ def nearby_services(request: NearbyServicesRequest) -> NearbyServicesResponse:
         )
         fallbacks = [c for i, c in enumerate(fallbacks) if i not in bad_fb]
 
+    # --- Fallback behavior ---
+
     if not ranked:
+        # No results within radius: suggest expanding and always show fallbacks.
         warnings.append(
-            "No ranked local services within radius. Use the official fallback contacts."
+            f"No local services found within {request.radius_km} km. "
+            f"Try expanding the search radius to {_EXPAND_RADIUS_KM} km."
+        )
+        warnings.append(
+            "Use the official fallback contacts below for immediate assistance."
+        )
+    elif len(ranked) < _WEAK_RESULT_THRESHOLD:
+        # Weak local results: include fallbacks and note the gap.
+        warnings.append(
+            f"Only {len(ranked)} local service(s) found. "
+            "National fallback contacts are included for additional coverage."
         )
 
     return NearbyServicesResponse(
@@ -121,22 +150,45 @@ def nearby_services(request: NearbyServicesRequest) -> NearbyServicesResponse:
 
 @app.get("/api/cache-package", response_model=CachePackageResponse)
 def cache_package() -> CachePackageResponse:
-    resolved = resolve_service_contacts(allow_fixtures=True)
+    """Return the versioned offline cache bundle.
+
+    Contains all validated production contacts and official fallbacks.
+    The frontend stores this in localStorage for offline use.
+    """
+    resolved = resolve_service_contacts(allow_fixtures=False)
     contacts = resolved["contacts"]
     report = validate_collection(contacts)
     if not report["ok"]:
         bad = {f["index"] for f in report["errors"]}
         contacts = [c for i, c in enumerate(contacts) if i not in bad]
+
+    fallbacks = load_fallback_contacts()
+    fb_report = validate_collection(fallbacks)
+    if not fb_report["ok"]:
+        bad_fb = {f["index"] for f in fb_report["errors"]}
+        fallbacks = [c for i, c in enumerate(fallbacks) if i not in bad_fb]
+
     return CachePackageResponse(
         version=OFFLINE_CACHE_VERSION,
         contacts=[ContactRecord(**c) for c in contacts],
-        fallback_contacts=[ContactRecord(**c) for c in load_fallback_contacts()],
-        approved_templates=[],
+        fallback_contacts=[ContactRecord(**c) for c in fallbacks],
+        approved_templates=[
+            "Stay calm and keep the injured person still unless there is immediate danger.",
+            "Do not move a person with a suspected spinal injury.",
+            "Call 108 for a free emergency ambulance in Tamil Nadu.",
+            "Call 112 for police, fire, or medical emergency anywhere in India.",
+            "Turn on hazard lights and place warning triangles if available.",
+            "Do not give food or water to an injured person.",
+        ],
     )
 
 
 @app.post("/api/incident-summary", response_model=IncidentSummaryResponse)
 def incident_summary(request: IncidentSummaryRequest) -> IncidentSummaryResponse:
+    """Generate a shareable incident packet from user-reported fields.
+
+    All content comes from user input only. No AI generation.
+    """
     hazard_text = ", ".join(request.hazards) if request.hazards else "not specified"
     injury_text = (
         f"{request.injury_count} injured person(s)"
@@ -158,11 +210,16 @@ def incident_summary(request: IncidentSummaryRequest) -> IncidentSummaryResponse
 
 @app.post("/api/assistant", response_model=AssistantResponse)
 def assistant(request: AssistantRequest) -> AssistantResponse:
+    """Guarded assistant stub.
+
+    The full assistant guardrail layer is owned by the AI branch.
+    This stub ensures the endpoint exists and is safe.
+    """
     return AssistantResponse(
         answer=(
             "I can only use verified RoadSoS data and approved safety templates. "
-            "The full assistant guardrail layer is owned by the AI branch and is "
-            "not implemented yet."
+            "The full assistant guardrail layer is not yet implemented. "
+            "For emergencies, dial 112 (all emergencies) or 108 (ambulance)."
         ),
         used_sources=["approved_safety_templates"],
         refusal_reason="assistant_layer_not_implemented",
