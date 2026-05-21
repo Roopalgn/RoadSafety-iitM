@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+pytest-cache-files-*/
 .venv/
 venv/
 
@@ -18,10 +19,16 @@ dist/
 *.sqlite
 *.sqlite3
 data/generated/
+data/roadsos.db
+data/cache_version.txt
 
 # OS/editor
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+!.idea/
+.idea/*
+!.idea/runConfigurations/
+!.idea/runConfigurations/*.xml
 
