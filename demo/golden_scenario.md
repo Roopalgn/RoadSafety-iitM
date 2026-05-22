@@ -6,8 +6,8 @@ A bystander near IIT Madras sees a road accident and needs reliable emergency he
 
 ## Setup before demo
 
-- Start backend: `cd backend && uvicorn app.main:app --reload --port 8001`
-- Start frontend: `cd frontend && npm run dev` (Vite proxies `/api` → `http://localhost:8001`)
+- Start backend: `cd backend && uvicorn app.main:app --reload --port 8000`
+- Start frontend: `cd frontend && npm run dev` (Vite proxies `/api` → `http://localhost:8000`)
 - Open browser at `http://localhost:5173` in DevTools mobile mode (375 px wide)
 
 ## Test coordinates
