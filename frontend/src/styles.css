@@ -144,10 +144,29 @@ h1 {
 
 .hero-copy p:last-child {
   max-width: 680px;
-  margin-bottom: 0;
+  margin-bottom: 18px;
   color: #48535d;
   font-size: clamp(1.02rem, 2vw, 1.28rem);
   line-height: 1.65;
+}
+
+.location-ribbon {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+  width: fit-content;
+  padding: 10px 13px;
+  border: 1px solid rgba(15, 118, 110, 0.22);
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.09);
+  color: var(--teal-dark);
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.location-ribbon strong {
+  color: var(--ink);
 }
 
 .timer-card,
@@ -225,6 +244,49 @@ h1 {
   grid-column: 1 / -1;
 }
 
+.filter-panel {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid rgba(23, 33, 43, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 253, 247, 0.72);
+}
+
+.filter-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.filter-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip {
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fffdf7;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.filter-chip.active {
+  border-color: rgba(15, 118, 110, 0.32);
+  background: var(--teal);
+  color: #fffaf0;
+}
+
 label {
   display: grid;
   gap: 7px;
@@ -288,6 +350,13 @@ textarea {
   margin: 14px 0 0;
   color: var(--muted);
   font-weight: 800;
+}
+
+.cache-text {
+  margin: 7px 0 0;
+  color: #7a4a05;
+  font-size: 0.9rem;
+  font-weight: 900;
 }
 
 .role-grid {
