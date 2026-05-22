@@ -6,11 +6,14 @@ import {
   Clipboard,
   Clock3,
   Database,
+  Filter,
   LifeBuoy,
   LocateFixed,
   MapPin,
+  Navigation,
   Phone,
   Radio,
+  Share2,
   ShieldCheck,
   Wifi,
   WifiOff,
@@ -19,6 +22,15 @@ import "./styles.css";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 const CACHE_KEY = "roadsos.cache-package.v1";
+const SERVICE_FILTERS = [
+  { value: "hospital", label: "Hospital" },
+  { value: "trauma_center", label: "Trauma" },
+  { value: "ambulance", label: "Ambulance" },
+  { value: "police", label: "Police" },
+  { value: "tow", label: "Tow" },
+  { value: "repair", label: "Repair" },
+];
+const DEFAULT_SERVICE_TYPES = SERVICE_FILTERS.map((item) => item.value);
 const DEFAULT_LOCATION = {
   lat: "12.9915",
   lon: "80.2337",
@@ -74,6 +86,17 @@ function formatType(type) {
 function confidenceLabel(contact) {
   const raw = contact.effective_confidence ?? contact.confidence_score;
   return typeof raw === "number" ? raw.toFixed(2) : "n/a";
+}
+
+function cacheAgeLabel(cacheInfo) {
+  if (!cacheInfo?.cached_at) return "not cached yet";
+  const ageMs = Date.now() - Date.parse(cacheInfo.cached_at);
+  if (!Number.isFinite(ageMs) || ageMs < 0) return "cached previously";
+  const minutes = Math.floor(ageMs / 60000);
+  if (minutes < 1) return "cached just now";
+  if (minutes < 60) return `cached ${minutes} min ago`;
+  const hours = Math.floor(minutes / 60);
+  return `cached ${hours} hr ago`;
 }
 
 function ContactCard({ contact, fallback = false }) {
@@ -132,6 +155,8 @@ function App() {
   const [locationSource, setLocationSource] = useState("manual");
   const [contacts, setContacts] = useState([]);
   const [fallbacks, setFallbacks] = useState([FALLBACK_CONTACT]);
+  const [selectedServiceTypes, setSelectedServiceTypes] =
+    useState(DEFAULT_SERVICE_TYPES);
   const [warnings, setWarnings] = useState([]);
   const [status, setStatus] = useState("Ready for the 10-second rescue drill.");
   const [cacheInfo, setCacheInfo] = useState(readCachedPackage());
@@ -167,6 +192,22 @@ function App() {
     }),
     [location.lat, location.lon]
   );
+
+  const locationConfidence = useMemo(() => {
+    if (locationSource === "gps") return "GPS high confidence";
+    if (locationSource === "cached") return "Cached location";
+    return "Manual location";
+  }, [locationSource]);
+
+  function toggleServiceType(type) {
+    setSelectedServiceTypes((current) => {
+      if (current.includes(type)) {
+        const next = current.filter((item) => item !== type);
+        return next.length ? next : current;
+      }
+      return [...current, type];
+    });
+  }
 
   async function refreshCachePackage() {
     if (!isOnline) {
@@ -257,7 +298,7 @@ function App() {
           lat: parsedLocation.lat,
           lon: parsedLocation.lon,
           radius_km: 8,
-          service_types: ["hospital", "trauma_center", "ambulance", "police", "tow", "repair"],
+          service_types: selectedServiceTypes,
           location_source: locationSource,
         }),
       });
@@ -334,6 +375,20 @@ function App() {
     setStatus("Incident packet copied.");
   }
 
+  async function sharePacket() {
+    if (!packet) return;
+    if (navigator.share) {
+      await navigator.share({
+        title: "RoadSoS incident packet",
+        text: packet,
+      });
+      setStatus("Incident packet shared.");
+      return;
+    }
+    await copyPacket();
+    setStatus("Share is unavailable, so the packet was copied instead.");
+  }
+
   async function askAssistant() {
     if (!navigator.onLine) {
       setAssistantAnswer(
@@ -395,6 +450,13 @@ function App() {
               Enter location, load ranked emergency contacts, prove source trust,
               and generate an ambulance-ready incident packet.
             </p>
+            <div className="location-ribbon" aria-label="Location confidence">
+              <Navigation size={16} aria-hidden="true" />
+              <span>{locationConfidence}</span>
+              <strong>
+                {parsedLocation.lat || "?"}, {parsedLocation.lon || "?"}
+              </strong>
+            </div>
           </div>
           <div className="timer-card" aria-live="polite">
             <Clock3 size={24} aria-hidden="true" />
@@ -438,6 +500,29 @@ function App() {
                 />
               </label>
             </div>
+            <div className="filter-panel" aria-label="Service filters">
+              <div className="filter-heading">
+                <Filter size={16} aria-hidden="true" />
+                Service filters
+              </div>
+              <div className="filter-grid">
+                {SERVICE_FILTERS.map((filter) => (
+                  <button
+                    className={
+                      selectedServiceTypes.includes(filter.value)
+                        ? "filter-chip active"
+                        : "filter-chip"
+                    }
+                    key={filter.value}
+                    type="button"
+                    onClick={() => toggleServiceType(filter.value)}
+                    aria-pressed={selectedServiceTypes.includes(filter.value)}
+                  >
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="action-grid">
               <button className="secondary-action" type="button" onClick={useGpsLocation}>
                 <LocateFixed size={20} aria-hidden="true" />
@@ -462,6 +547,10 @@ function App() {
               </button>
             </div>
             <p className="status-text">{status}</p>
+            <p className="cache-text">
+              Offline rescue pack: {cacheInfo?.version || "ERSS fallback only"} |{" "}
+              {cacheAgeLabel(cacheInfo)}
+            </p>
           </div>
 
           <div className="bystander-card">
@@ -561,6 +650,10 @@ function App() {
               </button>
               <button className="secondary-action" type="button" onClick={copyPacket}>
                 Copy packet
+              </button>
+              <button className="secondary-action" type="button" onClick={sharePacket}>
+                <Share2 size={18} aria-hidden="true" />
+                Share packet
               </button>
             </div>
             {packet && <p className="packet-preview">{packet}</p>}
