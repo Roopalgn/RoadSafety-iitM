@@ -12,14 +12,83 @@
     "country": "India",
     "source_url": "https://112.gov.in/",
     "source_name": "Emergency Response Support System, Government of India",
-    "verified_at": "2026-05-16",
+    "verified_at": "2026-05-20",
     "availability": "24x7",
-    "confidence_score": 1,
+    "confidence_score": 1.0,
     "confidence_reasons": [
       "Official national emergency response system",
-      "Government of India ERSS source"
+      "Government of India ERSS source",
+      "Single number for police, fire, health, and disaster response"
     ],
-    "notes": "Use for emergency assistance from police, fire, health, and other services."
+    "notes": "Dial 112 for any emergency. Connects to police, fire, ambulance, and disaster response."
+  },
+  {
+    "id": "india-ambulance-108",
+    "name": "National Ambulance Service (108)",
+    "type": "fallback_emergency",
+    "lat": null,
+    "lon": null,
+    "phone": "108",
+    "address": null,
+    "locality": "National",
+    "region": "India",
+    "country": "India",
+    "source_url": "https://www.emri.in/108-ambulance-service",
+    "source_name": "Emergency Management and Research Institute (EMRI)",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.98,
+    "confidence_reasons": [
+      "EMRI 108 service operational in 18+ Indian states including Tamil Nadu",
+      "Free emergency ambulance service",
+      "GPS-dispatched to accident location"
+    ],
+    "notes": "Free emergency ambulance. Operational in Tamil Nadu and most Indian states."
+  },
+  {
+    "id": "india-police-100",
+    "name": "Police Emergency (100)",
+    "type": "fallback_emergency",
+    "lat": null,
+    "lon": null,
+    "phone": "100",
+    "address": null,
+    "locality": "National",
+    "region": "India",
+    "country": "India",
+    "source_url": "https://www.tnpolice.gov.in/",
+    "source_name": "Tamil Nadu Police Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 1.0,
+    "confidence_reasons": [
+      "Official national police emergency number",
+      "Tamil Nadu Police official source",
+      "Operational 24x7 across India"
+    ],
+    "notes": "Dial 100 for police emergency anywhere in India."
+  },
+  {
+    "id": "india-nhai-1033",
+    "name": "NHAI National Highway Helpline (1033)",
+    "type": "fallback_emergency",
+    "lat": null,
+    "lon": null,
+    "phone": "1033",
+    "address": null,
+    "locality": "National",
+    "region": "India",
+    "country": "India",
+    "source_url": "https://nhai.gov.in/",
+    "source_name": "National Highways Authority of India (NHAI) Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.95,
+    "confidence_reasons": [
+      "NHAI official government helpline",
+      "Covers all national highways",
+      "Provides towing, breakdown, and accident assistance on national highways"
+    ],
+    "notes": "Dial 1033 for NHAI highway helpline. Towing, breakdown, and accident assistance on national highways."
   }
 ]
-

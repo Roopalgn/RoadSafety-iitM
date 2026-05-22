@@ -19,6 +19,8 @@ dist/
 *.sqlite
 *.sqlite3
 data/generated/
+data/roadsos.db
+data/cache_version.txt
 
 # OS/editor
 .DS_Store
