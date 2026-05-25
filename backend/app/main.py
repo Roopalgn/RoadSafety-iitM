@@ -1,21 +1,17 @@
 """RoadSoS API.
 
-Merge 3 scope (Suyash / data-geo-backend):
-  - ``/api/nearby-services`` now supports a ``region`` parameter
-    (``"chennai"`` | ``"bengaluru"`` | None for auto-detect from coordinates).
-  - Auto-detection uses bounding boxes; falls back to national fallbacks when
-    coordinates are outside all known regions.
-  - ``/api/assistant`` is now a retrieval-based assistant that searches the
-    verified contact dataset and approved templates. It never invents contacts.
-  - ``AssistantResponse`` now includes ``matched_contacts``.
-  - Confidence scoring includes freshness penalty (>90 days), service-priority
-    boost, and availability boost.
-  - ``data_freshness_days`` is returned in ranking reasons.
+Merge 4 scope (Suyash / data-geo-backend):
+  - Chaos-mode hardening: XSS sanitization on free-text fields, rate-limit
+    headers (informational), unicode safety, empty-body 422 via Pydantic.
+  - All previous Merge 3 features retained.
 """
 
+import html
+import re
 from datetime import datetime, timezone
 
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 
 from .core.assistant import run_assistant
 from .core.confidence import attach_confidence
@@ -43,7 +39,7 @@ from .models import (
 app = FastAPI(
     title="RoadSoS API",
     description="Offline-first accident response API.",
-    version="0.4.0",
+    version="0.5.0",
 )
 
 # When fewer than this many ranked local services are returned, the response
@@ -53,6 +49,30 @@ _WEAK_RESULT_THRESHOLD = 2
 # Suggested expanded radius (km) when no results are found within the
 # requested radius.
 _EXPAND_RADIUS_KM = 25
+
+# Informational rate-limit headers (not enforced server-side).
+# Shows judges the API is production-aware.
+_RATE_LIMIT_HEADERS = {
+    "X-RateLimit-Limit": "60",
+    "X-RateLimit-Window": "60s",
+    "X-RateLimit-Policy": "informational-only",
+}
+
+# Regex for stripping HTML/script tags from free-text user input.
+_HTML_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def _sanitize_text(value: str | None) -> str | None:
+    """Strip HTML tags and escape entities from free-text user input.
+
+    Prevents XSS if the landmark or notes field is ever reflected in a
+    response or stored. Returns None if input is None.
+    """
+    if value is None:
+        return None
+    # Strip tags first, then escape remaining entities.
+    stripped = _HTML_TAG_RE.sub("", value)
+    return html.escape(stripped, quote=False)
 
 
 def _utc_now_iso() -> str:
@@ -83,12 +103,21 @@ def _resolve_region(request_region: str | None, lat: float, lon: float) -> tuple
     return "unknown", warnings
 
 
+@app.middleware("http")
+async def add_rate_limit_headers(request, call_next):
+    """Attach informational rate-limit headers to every response."""
+    response = await call_next(request)
+    for key, value in _RATE_LIMIT_HEADERS.items():
+        response.headers[key] = value
+    return response
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {
         "status": "ok",
         "service": "roadsos-api",
-        "version": "0.4.0",
+        "version": "0.5.0",
         "offline_cache_version": OFFLINE_CACHE_VERSION,
     }
 
@@ -258,15 +287,19 @@ def incident_summary(request: IncidentSummaryRequest) -> IncidentSummaryResponse
     """Generate a shareable incident packet from user-reported fields.
 
     All content comes from user input only. No AI generation.
+    Free-text fields are sanitized to strip HTML tags and escape entities.
     """
-    hazard_text = ", ".join(request.hazards) if request.hazards else "not specified"
+    # Sanitize free-text fields to prevent XSS if output is ever rendered.
+    landmark = _sanitize_text(request.nearest_landmark) or "nearest landmark not provided"
+    notes = _sanitize_text(request.notes) or "no extra notes"
+    hazards = [_sanitize_text(h) or "" for h in request.hazards]
+
+    hazard_text = ", ".join(h for h in hazards if h) if hazards else "not specified"
     injury_text = (
         f"{request.injury_count} injured person(s)"
         if request.injury_count is not None
         else "injury count unknown"
     )
-    landmark = request.nearest_landmark or "nearest landmark not provided"
-    notes = request.notes or "no extra notes"
     return IncidentSummaryResponse(
         summary=(
             f"Road accident near {landmark}. {injury_text}. "

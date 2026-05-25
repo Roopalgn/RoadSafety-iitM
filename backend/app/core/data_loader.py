@@ -16,7 +16,7 @@ from typing import Any
 from .paths import data_dir, fixtures_dir
 
 # Bump in sync with scripts/build_db.py CACHE_VERSION.
-OFFLINE_CACHE_VERSION = "merge3-cross-region-0"
+OFFLINE_CACHE_VERSION = "merge4-final-0"
 
 # ---------------------------------------------------------------------------
 # Region bounding boxes for auto-detection.
