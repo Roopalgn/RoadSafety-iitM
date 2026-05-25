@@ -179,3 +179,13 @@ def test_matched_contacts_are_subset_of_input():
             f"Assistant returned contact {c['id']} not in input dataset — "
             "this would be an invented contact"
         )
+
+
+def test_assistant_ranking_reasons_contain_freshness():
+    """Matched contacts returned by assistant must carry freshness note in ranking_reasons."""
+    result = run_assistant("nearest hospital", SAMPLE_CONTACTS, IITM_LAT, IITM_LON, TODAY)
+    assert result["matched_contacts"]
+    all_reasons = " ".join(
+        r for svc in result["matched_contacts"] for r in (svc.get("ranking_reasons") or [])
+    )
+    assert "days ago" in all_reasons, "Assistant matched contacts missing data freshness note"

@@ -85,17 +85,23 @@ def test_collection_detects_duplicate_ids():
 
 
 def test_production_seed_files_are_valid():
-    # Merge 2: production contacts seed is populated with Chennai data.
-    prod = validate_collection(load_production_contacts(), production=True)
+    # Chennai
+    prod = validate_collection(load_production_contacts("chennai"), production=True)
     assert prod["ok"], prod["errors"]
-    fb = validate_collection(load_fallback_contacts(), production=True)
+    fb = validate_collection(load_fallback_contacts("chennai"), production=True)
     assert fb["ok"], fb["errors"]
+
+    # Bengaluru
+    blr_prod = validate_collection(load_production_contacts("bengaluru"), production=True)
+    assert blr_prod["ok"], blr_prod["errors"]
+    blr_fb = validate_collection(load_fallback_contacts("bengaluru"), production=True)
+    assert blr_fb["ok"], blr_fb["errors"]
 
 
 def test_production_contacts_are_not_empty():
-    """Merge 2 requirement: production seed must contain real contacts."""
-    contacts = load_production_contacts()
-    assert contacts, "contacts.seed.json must be populated with Chennai data in Merge 2"
+    """Merge 2 & 3 requirement: production seeds must contain real contacts."""
+    assert load_production_contacts("chennai"), "Chennai contacts list must not be empty"
+    assert load_production_contacts("bengaluru"), "Bengaluru contacts list must not be empty"
 
 
 def test_production_contacts_all_have_coordinates_or_are_national_service():
@@ -103,26 +109,27 @@ def test_production_contacts_all_have_coordinates_or_are_national_service():
 
     Local physical contacts (hospitals, police stations) must always have coordinates.
     """
-    # Types that are legitimately national/statewide and may have null coordinates.
     NATIONAL_TYPES = ("ambulance", "fallback_emergency", "tow")
-    contacts = load_production_contacts()
-    for c in contacts:
-        has_coords = (
-            isinstance(c.get("lat"), (int, float))
-            and isinstance(c.get("lon"), (int, float))
-        )
-        if not has_coords:
-            assert c.get("type") in NATIONAL_TYPES, (
-                f"{c['id']} (type={c.get('type')}): physical contact missing coordinates"
+    for region in ("chennai", "bengaluru"):
+        contacts = load_production_contacts(region)
+        for c in contacts:
+            has_coords = (
+                isinstance(c.get("lat"), (int, float))
+                and isinstance(c.get("lon"), (int, float))
             )
+            if not has_coords:
+                assert c.get("type") in NATIONAL_TYPES, (
+                    f"{c['id']} (type={c.get('type')}) in region '{region}': physical contact missing coordinates"
+                )
 
 
 def test_fallback_contacts_include_112_and_108():
     """Fallbacks must include ERSS 112 and ambulance 108."""
-    fallbacks = load_fallback_contacts()
-    phones = [c["phone"] for c in fallbacks]
-    assert "112" in phones, "ERSS 112 must be in fallbacks"
-    assert "108" in phones, "Ambulance 108 must be in fallbacks"
+    for region in ("chennai", "bengaluru"):
+        fallbacks = load_fallback_contacts(region)
+        phones = [c["phone"] for c in fallbacks]
+        assert "112" in phones, f"ERSS 112 must be in fallbacks for {region}"
+        assert "108" in phones, f"Ambulance 108 must be in fallbacks for {region}"
 
 
 def test_fixtures_match_schema():

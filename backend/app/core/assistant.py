@@ -242,6 +242,15 @@ def run_assistant(
         coord_contacts = [c for c in scored if has_coordinates(c)]
         no_coord = [c for c in scored if not has_coordinates(c)]
         ranked = rank_by_distance(coord_contacts, lat, lon)
+        
+        # Append data freshness to ranking_reasons since rank_by_distance overwrites them
+        for item in ranked:
+            freshness = item.get("data_freshness_days")
+            if freshness is not None and item.get("ranking_reasons"):
+                item["ranking_reasons"] = list(item["ranking_reasons"]) + [
+                    f"data verified {freshness} days ago"
+                ]
+
         # Append no-coordinate contacts (e.g. statewide 108) after ranked ones.
         ranked = ranked + sorted(
             no_coord, key=lambda c: -c.get("effective_confidence", 0)
