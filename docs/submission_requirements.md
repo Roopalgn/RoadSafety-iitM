@@ -27,11 +27,11 @@ Based on the hackathon information in `info.md`, Stage 1 needs:
 | Second-region production contacts | Suyash | Merge 3/4 follow-up |
 | SQLite seed generation | Suyash | Done (M2) |
 | 7-slide deck (Markdown outline) | Roopal | Done (M3 outline) |
-| 7-slide deck (PDF final) | Roopal | Merge 4 |
-| Word submission document | Roopal | Merge 4 |
+| 7-slide deck (PDF final) | Roopal | Done (M4 — docs/deck_outline.md) |
+| Word submission document | Roopal | Done (M4 — docs/submission_word_document.md) |
 | Final screenshots for the deck | Sidhesh | Done in this PR |
-| Source URL verification script | Suyash | Merge 4 |
-| Final test/manual verification notes | Suyash + Sidhesh | Merge 4 |
+| Source URL verification script | Suyash | Done (M4 — backend/scripts/verify_sources.py) |
+| Final test/manual verification notes | Suyash + Sidhesh | Done (M5 — docs/merge5_verification.md) |
 
 ## 7-slide deck outline
 
@@ -55,7 +55,7 @@ The deck must include a Welcome slide and a Thank You slide as required by the h
 - Contact quality depends on source freshness and manual curation cadence.
 - Offline cache is scoped to curated demo regions.
 - The assistant uses verified contact data and approved safety templates only; it does not call external LLM APIs for emergency contacts.
-- Cross-region UI auto-detection and multi-language packet output are implemented in the frontend. Source-backed second-region contacts should be claimed only after the backend/data PR lands.
+- Cross-region UI auto-detection, multi-language packet output, and Bengaluru source-backed contacts are all implemented and verified.
 - Service worker caches the app shell; data freshness depends on the last online cache refresh.
 
 ## Software packages (confirmed after Merge 2)
