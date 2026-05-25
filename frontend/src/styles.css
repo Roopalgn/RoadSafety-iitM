@@ -39,7 +39,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   overflow-x: hidden;
-  background: #f4efe6;
+  background: #ead8bd;
 }
 
 button,
@@ -72,9 +72,10 @@ button:disabled {
   padding: 28px;
   color: var(--ink);
   background:
-    radial-gradient(circle at top left, rgba(244, 184, 96, 0.38), transparent 34rem),
-    radial-gradient(circle at 85% 8%, rgba(15, 118, 110, 0.18), transparent 28rem),
-    linear-gradient(135deg, #fffaf0 0%, #f1e4d1 48%, #eaf2ef 100%);
+    radial-gradient(circle at 10% 0%, rgba(244, 184, 96, 0.58), transparent 32rem),
+    radial-gradient(circle at 88% 10%, rgba(225, 166, 78, 0.34), transparent 26rem),
+    radial-gradient(circle at 18% 84%, rgba(15, 118, 110, 0.16), transparent 26rem),
+    linear-gradient(135deg, #fff1d2 0%, #ead8bd 48%, #f7eddb 100%);
   transition: background 280ms ease, color 280ms ease;
 }
 
@@ -107,7 +108,7 @@ button:disabled {
   height: 280px;
   right: -90px;
   top: 80px;
-  background: rgba(194, 65, 12, 0.16);
+  background: rgba(244, 184, 96, 0.34);
 }
 
 .atmosphere-two {
@@ -115,7 +116,7 @@ button:disabled {
   height: 340px;
   left: -140px;
   bottom: 10vh;
-  background: rgba(15, 118, 110, 0.14);
+  background: rgba(194, 65, 12, 0.13);
   animation-delay: -4s;
 }
 
@@ -200,7 +201,7 @@ button:disabled {
   border: 1px solid var(--line);
   border-radius: 32px;
   background:
-    linear-gradient(135deg, rgba(255, 250, 240, 0.96), rgba(255, 250, 240, 0.76)),
+    linear-gradient(135deg, rgba(255, 250, 240, 0.96), rgba(255, 242, 211, 0.84)),
     repeating-linear-gradient(
       -45deg,
       rgba(23, 33, 43, 0.035),
@@ -230,7 +231,7 @@ button:disabled {
   inset: auto -20% -42% 35%;
   height: 220px;
   border-radius: 999px;
-  background: radial-gradient(circle, rgba(244, 184, 96, 0.28), transparent 68%);
+  background: radial-gradient(circle, rgba(244, 184, 96, 0.46), transparent 68%);
   animation: pulse-glow 4s ease-in-out infinite;
 }
 
@@ -315,7 +316,7 @@ h1 {
   min-height: 220px;
   padding: 22px;
   background:
-    radial-gradient(circle at 70% 8%, rgba(244, 184, 96, 0.18), transparent 12rem),
+    radial-gradient(circle at 70% 8%, rgba(244, 184, 96, 0.34), transparent 12rem),
     linear-gradient(135deg, #17212b, #101820);
   color: #fffaf0;
   text-align: center;
@@ -371,7 +372,7 @@ h1 {
 .mission-card {
   border: 1px solid var(--line);
   border-radius: 26px;
-  background: rgba(255, 250, 240, 0.9);
+  background: rgba(255, 247, 226, 0.92);
   box-shadow: var(--shadow);
   backdrop-filter: blur(22px) saturate(1.22);
   -webkit-backdrop-filter: blur(22px) saturate(1.22);
@@ -703,7 +704,7 @@ textarea {
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: 22px;
-  background: rgba(255, 253, 247, 0.94);
+  background: rgba(255, 247, 226, 0.94);
   box-shadow: 0 14px 32px rgba(74, 45, 18, 0.09);
   backdrop-filter: blur(20px) saturate(1.24);
   -webkit-backdrop-filter: blur(20px) saturate(1.24);
@@ -1139,10 +1140,11 @@ textarea:focus {
     --shadow-hover: 0 34px 95px rgba(0, 0, 0, 0.48);
     color: #fffaf0;
     background:
-      radial-gradient(circle at 12% 2%, rgba(244, 184, 96, 0.2), transparent 30rem),
-      radial-gradient(circle at 86% 8%, rgba(20, 184, 166, 0.22), transparent 28rem),
-      radial-gradient(circle at 55% 92%, rgba(194, 65, 12, 0.14), transparent 24rem),
-      linear-gradient(135deg, #0b1219 0%, #101820 48%, #092827 100%);
+      radial-gradient(circle at 10% 0%, rgba(244, 184, 96, 0.28), transparent 30rem),
+      radial-gradient(circle at 82% 8%, rgba(225, 166, 78, 0.22), transparent 25rem),
+      radial-gradient(circle at 55% 92%, rgba(194, 65, 12, 0.18), transparent 24rem),
+      radial-gradient(circle at 88% 70%, rgba(20, 184, 166, 0.14), transparent 26rem),
+      linear-gradient(135deg, #140f0a 0%, #101820 46%, #092827 100%);
   }
 
   .app-shell::before {
@@ -1161,14 +1163,14 @@ textarea:focus {
   .assistant-card,
   .empty-state,
   .contact-card {
-    background: rgba(12, 22, 31, 0.72);
-    border-color: rgba(255, 250, 240, 0.16);
+    background: rgba(19, 22, 25, 0.76);
+    border-color: rgba(244, 184, 96, 0.22);
     color: #f8efe2;
   }
 
   .hero-copy {
     background:
-      linear-gradient(135deg, rgba(12, 22, 31, 0.78), rgba(12, 31, 34, 0.62)),
+      linear-gradient(135deg, rgba(36, 28, 20, 0.82), rgba(12, 31, 34, 0.66)),
       repeating-linear-gradient(
         -45deg,
         rgba(255, 250, 240, 0.035),
@@ -1184,14 +1186,14 @@ textarea:focus {
   .role-grid span,
   .skeleton-card,
   .flight-recorder {
-    background: rgba(255, 250, 240, 0.08);
-    border-color: rgba(255, 250, 240, 0.16);
+    background: rgba(244, 184, 96, 0.12);
+    border-color: rgba(244, 184, 96, 0.24);
     color: #f8efe2;
   }
 
   .status-pill.urgent,
   .status-button[aria-pressed="true"] {
-    background: rgba(5, 15, 24, 0.92);
+    background: rgba(37, 24, 12, 0.94);
     color: #fffaf0;
   }
 
@@ -1237,8 +1239,8 @@ textarea:focus {
   .mini-map,
   .packet-preview,
   .assistant-answer {
-    background: rgba(255, 250, 240, 0.08);
-    border-color: rgba(255, 250, 240, 0.14);
+    background: rgba(244, 184, 96, 0.1);
+    border-color: rgba(244, 184, 96, 0.2);
     color: #fffaf0;
   }
 
@@ -1249,8 +1251,8 @@ textarea:focus {
 
   .filter-chip,
   .preset-button {
-    background: rgba(255, 250, 240, 0.08);
-    border-color: rgba(255, 250, 240, 0.16);
+    background: rgba(244, 184, 96, 0.1);
+    border-color: rgba(244, 184, 96, 0.2);
     color: #d6e0e8;
   }
 
@@ -1295,10 +1297,11 @@ textarea:focus {
   --shadow-hover: 0 34px 95px rgba(0, 0, 0, 0.48);
   color: #fffaf0;
   background:
-    radial-gradient(circle at 12% 2%, rgba(244, 184, 96, 0.2), transparent 30rem),
-    radial-gradient(circle at 86% 8%, rgba(20, 184, 166, 0.22), transparent 28rem),
-    radial-gradient(circle at 55% 92%, rgba(194, 65, 12, 0.14), transparent 24rem),
-    linear-gradient(135deg, #0b1219 0%, #101820 48%, #092827 100%);
+    radial-gradient(circle at 10% 0%, rgba(244, 184, 96, 0.28), transparent 30rem),
+    radial-gradient(circle at 82% 8%, rgba(225, 166, 78, 0.22), transparent 25rem),
+    radial-gradient(circle at 55% 92%, rgba(194, 65, 12, 0.18), transparent 24rem),
+    radial-gradient(circle at 88% 70%, rgba(20, 184, 166, 0.14), transparent 26rem),
+    linear-gradient(135deg, #140f0a 0%, #101820 46%, #092827 100%);
 }
 
 .night-mode::before {
@@ -1317,14 +1320,14 @@ textarea:focus {
 .night-mode .assistant-card,
 .night-mode .empty-state,
 .night-mode .contact-card {
-  background: rgba(12, 22, 31, 0.72);
-  border-color: rgba(255, 250, 240, 0.16);
+  background: rgba(19, 22, 25, 0.76);
+  border-color: rgba(244, 184, 96, 0.22);
   color: #f8efe2;
 }
 
 .night-mode .hero-copy {
   background:
-    linear-gradient(135deg, rgba(12, 22, 31, 0.78), rgba(12, 31, 34, 0.62)),
+    linear-gradient(135deg, rgba(36, 28, 20, 0.82), rgba(12, 31, 34, 0.66)),
     repeating-linear-gradient(
       -45deg,
       rgba(255, 250, 240, 0.035),
@@ -1340,14 +1343,14 @@ textarea:focus {
 .night-mode .role-grid span,
 .night-mode .skeleton-card,
 .night-mode .flight-recorder {
-  background: rgba(255, 250, 240, 0.08);
-  border-color: rgba(255, 250, 240, 0.16);
+  background: rgba(244, 184, 96, 0.12);
+  border-color: rgba(244, 184, 96, 0.24);
   color: #f8efe2;
 }
 
 .night-mode .status-pill.urgent,
 .night-mode .status-button[aria-pressed="true"] {
-  background: rgba(5, 15, 24, 0.92);
+  background: rgba(37, 24, 12, 0.94);
   color: #fffaf0;
 }
 
@@ -1390,8 +1393,8 @@ textarea:focus {
 .night-mode .mini-map,
 .night-mode .packet-preview,
 .night-mode .assistant-answer {
-  background: rgba(255, 250, 240, 0.08);
-  border-color: rgba(255, 250, 240, 0.14);
+  background: rgba(244, 184, 96, 0.1);
+  border-color: rgba(244, 184, 96, 0.2);
   color: #fffaf0;
 }
 
@@ -1402,8 +1405,8 @@ textarea:focus {
 
 .night-mode .filter-chip,
 .night-mode .preset-button {
-  background: rgba(255, 250, 240, 0.08);
-  border-color: rgba(255, 250, 240, 0.16);
+  background: rgba(244, 184, 96, 0.1);
+  border-color: rgba(244, 184, 96, 0.2);
   color: #d6e0e8;
 }
 
