@@ -18,7 +18,7 @@
   --teal-dark: #115e59;
   --gold: #f4b860;
   --danger-soft: #fff1e8;
-  --glass: rgba(255, 250, 240, 0.68);
+  --glass: rgba(255, 250, 240, 0.9);
   --glass-strong: rgba(255, 250, 240, 0.86);
   --glass-line: rgba(255, 255, 255, 0.52);
   --shadow: 0 24px 70px rgba(74, 45, 18, 0.14);
@@ -72,9 +72,8 @@ button:disabled {
   padding: 28px;
   color: var(--ink);
   background:
-    radial-gradient(circle at 12% 4%, rgba(244, 184, 96, 0.48), transparent 28rem),
-    radial-gradient(circle at 88% 12%, rgba(15, 118, 110, 0.22), transparent 28rem),
-    radial-gradient(circle at 60% 88%, rgba(194, 65, 12, 0.12), transparent 24rem),
+    radial-gradient(circle at top left, rgba(244, 184, 96, 0.38), transparent 34rem),
+    radial-gradient(circle at 85% 8%, rgba(15, 118, 110, 0.18), transparent 28rem),
     linear-gradient(135deg, #fffaf0 0%, #f1e4d1 48%, #eaf2ef 100%);
   transition: background 280ms ease, color 280ms ease;
 }
@@ -90,6 +89,7 @@ button:disabled {
     linear-gradient(90deg, rgba(23, 33, 43, 0.035) 1px, transparent 1px);
   background-size: 38px 38px;
   mask-image: radial-gradient(circle at 50% 8%, black, transparent 74%);
+  opacity: 0;
 }
 
 .atmosphere {
@@ -140,7 +140,7 @@ button:disabled {
   padding: 8px 13px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: var(--glass);
+  background: rgba(255, 250, 240, 0.84);
   color: var(--ink);
   font-size: 0.9rem;
   font-weight: 800;
@@ -200,7 +200,7 @@ button:disabled {
   border: 1px solid var(--line);
   border-radius: 32px;
   background:
-    linear-gradient(135deg, rgba(255, 250, 240, 0.9), rgba(255, 250, 240, 0.62)),
+    linear-gradient(135deg, rgba(255, 250, 240, 0.96), rgba(255, 250, 240, 0.76)),
     repeating-linear-gradient(
       -45deg,
       rgba(23, 33, 43, 0.035),
@@ -371,7 +371,7 @@ h1 {
 .mission-card {
   border: 1px solid var(--line);
   border-radius: 26px;
-  background: var(--glass);
+  background: rgba(255, 250, 240, 0.9);
   box-shadow: var(--shadow);
   backdrop-filter: blur(22px) saturate(1.22);
   -webkit-backdrop-filter: blur(22px) saturate(1.22);
@@ -396,7 +396,7 @@ h1 {
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: rgba(255, 253, 247, 0.78);
+  background: #fffdf7;
   color: var(--ink);
   cursor: pointer;
   text-align: left;
@@ -520,7 +520,7 @@ h1 {
   padding: 12px;
   border: 1px solid rgba(23, 33, 43, 0.1);
   border-radius: 18px;
-  background: rgba(255, 253, 247, 0.58);
+  background: rgba(255, 253, 247, 0.72);
   backdrop-filter: blur(14px) saturate(1.18);
   -webkit-backdrop-filter: blur(14px) saturate(1.18);
 }
@@ -546,7 +546,7 @@ h1 {
   padding: 0 12px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(255, 253, 247, 0.78);
+  background: #fffdf7;
   color: var(--muted);
   cursor: pointer;
   font-weight: 900;
@@ -579,7 +579,7 @@ textarea {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: rgba(255, 253, 247, 0.82);
+  background: #fffdf7;
   color: var(--ink);
   padding: 12px 13px;
   box-shadow: var(--ring-glow);
@@ -630,7 +630,7 @@ textarea {
 }
 
 .secondary-action {
-  background: rgba(255, 253, 247, 0.78);
+  background: #fffdf7;
   color: var(--ink);
   border-color: var(--line);
   padding: 0 14px;
@@ -703,7 +703,7 @@ textarea {
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: 22px;
-  background: rgba(255, 253, 247, 0.78);
+  background: rgba(255, 253, 247, 0.94);
   box-shadow: 0 14px 32px rgba(74, 45, 18, 0.09);
   backdrop-filter: blur(20px) saturate(1.24);
   -webkit-backdrop-filter: blur(20px) saturate(1.24);
@@ -722,7 +722,7 @@ textarea {
 
 .fallback-card {
   border-color: rgba(15, 118, 110, 0.28);
-  background: rgba(232, 247, 242, 0.7);
+  background: rgba(232, 247, 242, 0.78);
 }
 
 .contact-topline,
@@ -884,7 +884,7 @@ textarea {
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 22px;
-  background: rgba(255, 253, 247, 0.74);
+  background: rgba(255, 253, 247, 0.88);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -1146,6 +1146,7 @@ textarea:focus {
   }
 
   .app-shell::before {
+    opacity: 1;
     background-image:
       linear-gradient(rgba(255, 250, 240, 0.035) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 250, 240, 0.035) 1px, transparent 1px);
@@ -1301,6 +1302,7 @@ textarea:focus {
 }
 
 .night-mode::before {
+  opacity: 1;
   background-image:
     linear-gradient(rgba(255, 250, 240, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 250, 240, 0.035) 1px, transparent 1px);
