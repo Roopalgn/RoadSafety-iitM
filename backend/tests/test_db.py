@@ -107,3 +107,35 @@ def test_build_is_repeatable(tmp_path):
     c1 = sorted(c["id"] for c in load_contacts_from_db(db1))
     c2 = sorted(c["id"] for c in load_contacts_from_db(db2))
     assert c1 == c2, "Repeated builds must produce identical contact sets"
+
+
+def test_build_produces_deterministic_hash(tmp_path):
+    """Two builds from the same seed must produce byte-identical contact sets.
+
+    We compare sorted JSON of all contacts rather than raw file bytes because
+    SQLite may embed timestamps in the file header. The contact data itself
+    must be identical.
+    """
+    import hashlib
+    import json
+
+    db1 = tmp_path / "a.db"
+    db2 = tmp_path / "b.db"
+    build(db1, tmp_path / "v1.txt")
+    build(db2, tmp_path / "v2.txt")
+
+    contacts1 = sorted(load_contacts_from_db(db1), key=lambda c: c["id"])
+    contacts2 = sorted(load_contacts_from_db(db2), key=lambda c: c["id"])
+
+    hash1 = hashlib.sha256(json.dumps(contacts1, sort_keys=True).encode()).hexdigest()
+    hash2 = hashlib.sha256(json.dumps(contacts2, sort_keys=True).encode()).hexdigest()
+
+    assert hash1 == hash2, "Two builds from the same seed must produce identical contact data"
+
+
+def test_no_fixture_ids_in_db(tmp_db):
+    """The built database must not contain any fixture IDs."""
+    db_path, _ = tmp_db
+    contacts = load_contacts_from_db(db_path)
+    fixture_ids = [c["id"] for c in contacts if c["id"].startswith("fixture-")]
+    assert not fixture_ids, f"Fixture IDs found in production DB: {fixture_ids}"
