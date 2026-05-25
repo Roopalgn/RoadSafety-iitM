@@ -14,6 +14,7 @@ ServiceType = Literal[
     "trauma_center",
     "ambulance",
     "police",
+    "fire_station",
     "tow",
     "repair",
     "fallback_emergency",
@@ -63,6 +64,7 @@ class NearbyServicesRequest(BaseModel):
     radius_km: float = Field(default=8, gt=0, le=100)
     service_types: list[ServiceType] = Field(default_factory=list)
     location_source: Literal["gps", "manual", "cached"] = "manual"
+    region: str | None = Field(default=None, description="Region key: 'chennai', 'bengaluru', or None for auto-detect")
 
 
 class NearbyServicesResponse(BaseModel):
@@ -99,6 +101,7 @@ class AssistantResponse(BaseModel):
     answer: str
     used_sources: list[str]
     refusal_reason: str | None = None
+    matched_contacts: list["ContactRecord"] = Field(default_factory=list)
 
 
 class CachePackageResponse(BaseModel):

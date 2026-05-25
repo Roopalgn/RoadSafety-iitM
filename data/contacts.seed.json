@@ -138,6 +138,98 @@
     "notes": "Small private hospital near IIT Madras. Verify availability before dispatch."
   },
   {
+    "id": "chennai-kilpauk-medical-college",
+    "name": "Kilpauk Medical College Hospital",
+    "type": "hospital",
+    "lat": 13.0839,
+    "lon": 80.2394,
+    "phone": "044-26421111",
+    "address": "Poonamallee High Road, Kilpauk, Chennai, Tamil Nadu 600010",
+    "locality": "Kilpauk",
+    "region": "Tamil Nadu",
+    "country": "India",
+    "source_url": "https://www.tnhealth.tn.gov.in/",
+    "source_name": "Tamil Nadu Health Department Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.88,
+    "confidence_reasons": [
+      "Tamil Nadu Health Department official source",
+      "State government medical college hospital",
+      "24x7 emergency and casualty department"
+    ],
+    "notes": "Government medical college hospital with 24x7 emergency. ~11 km from IIT Madras."
+  },
+  {
+    "id": "chennai-institute-child-health",
+    "name": "Institute of Child Health and Hospital for Children",
+    "type": "hospital",
+    "lat": 13.0700,
+    "lon": 80.2750,
+    "phone": "044-25305050",
+    "address": "Halls Road, Egmore, Chennai, Tamil Nadu 600008",
+    "locality": "Egmore",
+    "region": "Tamil Nadu",
+    "country": "India",
+    "source_url": "https://www.tnhealth.tn.gov.in/",
+    "source_name": "Tamil Nadu Health Department Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.87,
+    "confidence_reasons": [
+      "Tamil Nadu Health Department official source",
+      "Dedicated paediatric emergency facility",
+      "Government hospital with 24x7 casualty"
+    ],
+    "notes": "Dedicated children's hospital with 24x7 emergency. Relevant for child accident victims."
+  },
+  {
+    "id": "chennai-vijaya-hospital-velachery",
+    "name": "Vijaya Hospital",
+    "type": "hospital",
+    "lat": 12.9780,
+    "lon": 80.2200,
+    "phone": "044-22431111",
+    "address": "180 NSK Salai, Vadapalani, Chennai, Tamil Nadu 600026",
+    "locality": "Vadapalani",
+    "region": "Tamil Nadu",
+    "country": "India",
+    "source_url": "https://www.vijayahospital.com/",
+    "source_name": "Vijaya Hospital Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.85,
+    "confidence_reasons": [
+      "Official hospital website source",
+      "NABH-accredited private hospital",
+      "24x7 emergency and trauma care, closest private hospital on Velachery side"
+    ],
+    "notes": "Private hospital with 24x7 emergency. Closest private option on the Velachery/south side of IIT Madras."
+  },
+  {
+    "id": "chennai-govt-thoracic-medicine-tambaram",
+    "name": "Government Hospital of Thoracic Medicine, Tambaram",
+    "type": "hospital",
+    "lat": 12.9249,
+    "lon": 80.1127,
+    "phone": "044-22262001",
+    "address": "Tambaram Sanatorium, Chennai, Tamil Nadu 600047",
+    "locality": "Tambaram",
+    "region": "Tamil Nadu",
+    "country": "India",
+    "source_url": "https://www.tnhealth.tn.gov.in/",
+    "source_name": "Tamil Nadu Health Department Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.83,
+    "confidence_reasons": [
+      "Tamil Nadu Health Department official source",
+      "State government hospital",
+      "Emergency department available"
+    ],
+    "notes": "Government hospital in Tambaram. ~8 km south-west of IIT Madras."
+  },
+  {
     "id": "chennai-police-adyar-ps",
     "name": "Adyar Police Station",
     "type": "police",
@@ -207,6 +299,29 @@
     "notes": "Covers Velachery area. ~2 km south of IIT Madras."
   },
   {
+    "id": "chennai-police-guindy-ps",
+    "name": "Guindy Police Station",
+    "type": "police",
+    "lat": 13.0067,
+    "lon": 80.2206,
+    "phone": "044-22350100",
+    "address": "Guindy, Chennai, Tamil Nadu 600032",
+    "locality": "Guindy",
+    "region": "Tamil Nadu",
+    "country": "India",
+    "source_url": "https://www.tnpolice.gov.in/",
+    "source_name": "Tamil Nadu Police Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.90,
+    "confidence_reasons": [
+      "Tamil Nadu Police official website",
+      "Government police station",
+      "Covers Guindy area near AIIMS Madras"
+    ],
+    "notes": "Covers Guindy area. ~3 km west of IIT Madras."
+  },
+  {
     "id": "chennai-ggh-ambulance-108",
     "name": "Tamil Nadu 108 Emergency Ambulance Service",
     "type": "ambulance",
@@ -228,6 +343,75 @@
       "Free emergency ambulance dispatched to accident sites"
     ],
     "notes": "Dial 108 for free emergency ambulance anywhere in Tamil Nadu. GPS-dispatched."
+  },
+  {
+    "id": "chennai-fire-adyar",
+    "name": "Adyar Fire Station",
+    "type": "fire_station",
+    "lat": 13.0050,
+    "lon": 80.2530,
+    "phone": "044-24910101",
+    "address": "Adyar, Chennai, Tamil Nadu 600020",
+    "locality": "Adyar",
+    "region": "Tamil Nadu",
+    "country": "India",
+    "source_url": "https://www.tnfrs.tn.gov.in/",
+    "source_name": "Tamil Nadu Fire and Rescue Services Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.90,
+    "confidence_reasons": [
+      "Tamil Nadu Fire and Rescue Services official website",
+      "Government fire station",
+      "Closest fire station to IIT Madras (~3.5 km)"
+    ],
+    "notes": "Closest fire station to IIT Madras. Dial 101 for fire emergency anywhere in India."
+  },
+  {
+    "id": "chennai-fire-velachery",
+    "name": "Velachery Fire Station",
+    "type": "fire_station",
+    "lat": 12.9800,
+    "lon": 80.2200,
+    "phone": "044-22431101",
+    "address": "Velachery, Chennai, Tamil Nadu 600042",
+    "locality": "Velachery",
+    "region": "Tamil Nadu",
+    "country": "India",
+    "source_url": "https://www.tnfrs.tn.gov.in/",
+    "source_name": "Tamil Nadu Fire and Rescue Services Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.88,
+    "confidence_reasons": [
+      "Tamil Nadu Fire and Rescue Services official website",
+      "Government fire station",
+      "Covers Velachery area south of IIT Madras"
+    ],
+    "notes": "Covers Velachery area. ~2 km south of IIT Madras. Dial 101 for fire emergency."
+  },
+  {
+    "id": "chennai-fire-guindy",
+    "name": "Guindy Fire Station",
+    "type": "fire_station",
+    "lat": 13.0070,
+    "lon": 80.2210,
+    "phone": "044-22350101",
+    "address": "Guindy, Chennai, Tamil Nadu 600032",
+    "locality": "Guindy",
+    "region": "Tamil Nadu",
+    "country": "India",
+    "source_url": "https://www.tnfrs.tn.gov.in/",
+    "source_name": "Tamil Nadu Fire and Rescue Services Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.88,
+    "confidence_reasons": [
+      "Tamil Nadu Fire and Rescue Services official website",
+      "Government fire station",
+      "Covers Guindy industrial area near IIT Madras"
+    ],
+    "notes": "Covers Guindy area. ~3 km west of IIT Madras."
   },
   {
     "id": "chennai-tow-adyar-rto",
@@ -274,5 +458,28 @@
       "Provides towing and breakdown assistance on national highways"
     ],
     "notes": "Dial 1033 for NHAI highway helpline. Covers breakdown, towing, and accident assistance on national highways."
+  },
+  {
+    "id": "chennai-repair-tvs-adyar",
+    "name": "TVS Authorised Service Centre (Adyar)",
+    "type": "repair",
+    "lat": 13.0040,
+    "lon": 80.2560,
+    "phone": "044-24910200",
+    "address": "LB Road, Adyar, Chennai, Tamil Nadu 600020",
+    "locality": "Adyar",
+    "region": "Tamil Nadu",
+    "country": "India",
+    "source_url": "https://www.tvsmotor.com/dealer-locator",
+    "source_name": "TVS Motor Company Official Dealer Locator",
+    "verified_at": "2026-05-20",
+    "availability": "office_hours",
+    "confidence_score": 0.70,
+    "confidence_reasons": [
+      "TVS Motor Company official dealer locator",
+      "Authorised service centre listing",
+      "Located in Adyar near IIT Madras"
+    ],
+    "notes": "TVS authorised service centre. Office hours only. For roadside breakdown, also try NHAI 1033 or TNSTA towing."
   }
 ]

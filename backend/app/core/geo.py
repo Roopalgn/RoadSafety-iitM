@@ -31,7 +31,9 @@ def has_coordinates(contact: dict[str, Any]) -> bool:
 
 
 def _confidence(contact: dict[str, Any]) -> float:
-    raw = contact.get("confidence_score", 0)
+    # Prefer effective_confidence (post-scoring) when available; fall back to
+    # the raw curated score so ranking is consistent before and after scoring.
+    raw = contact.get("effective_confidence") or contact.get("confidence_score", 0)
     try:
         return max(0.0, min(1.0, float(raw)))
     except (TypeError, ValueError):
