@@ -196,7 +196,7 @@ def test_cache_package_shape():
     res = client.get("/api/cache-package")
     assert res.status_code == 200
     body = res.json()
-    assert body["version"] == "merge3-cross-region-0"
+    assert body["version"] == "merge4-final-0"
     assert isinstance(body["contacts"], list)
     assert isinstance(body["fallback_contacts"], list)
     assert isinstance(body["approved_templates"], list)
@@ -493,3 +493,117 @@ def test_ranking_reasons_include_freshness():
         r for svc in services for r in (svc.get("ranking_reasons") or [])
     )
     assert "days ago" in all_reasons, "Ranking reasons must include data freshness"
+
+
+# ---------------------------------------------------------------------------
+# Chaos-mode hardening (Merge 4)
+# ---------------------------------------------------------------------------
+
+def test_empty_body_returns_422():
+    """Empty request body must return 422 (Pydantic validation error)."""
+    res = client.post("/api/nearby-services", json={})
+    assert res.status_code == 422
+
+
+def test_negative_injury_count_rejected():
+    """Negative injury_count must return 422."""
+    res = client.post(
+        "/api/incident-summary",
+        json={**IITM, "injury_count": -1},
+    )
+    assert res.status_code == 422
+
+
+def test_xss_in_landmark_is_sanitized():
+    """HTML/script tags in landmark must be stripped from the summary."""
+    payload = {
+        **IITM,
+        "nearest_landmark": "<script>alert('xss')</script>IIT Madras gate",
+    }
+    res = client.post("/api/incident-summary", json=payload)
+    assert res.status_code == 200
+    summary = res.json()["summary"]
+    # Tags must be stripped — the script cannot execute.
+    assert "<script>" not in summary
+    assert "</script>" not in summary
+
+
+def test_xss_in_notes_is_sanitized():
+    """HTML tags in notes must be stripped."""
+    payload = {**IITM, "notes": "<b>bold</b> note with <img src=x onerror=alert(1)>"}
+    res = client.post("/api/incident-summary", json=payload)
+    assert res.status_code == 200
+    assert "<b>" not in res.json()["summary"]
+    assert "<img" not in res.json()["summary"]
+
+
+def test_unicode_in_landmark_does_not_crash():
+    """Unicode characters in landmark must not crash the API."""
+    payload = {
+        **IITM,
+        "nearest_landmark": "ஐஐடி மெட்ராஸ் வாயில் 🚑 事故",
+        "notes": "Привет мир — unicode test",
+    }
+    res = client.post("/api/incident-summary", json=payload)
+    assert res.status_code == 200
+
+
+def test_unicode_in_assistant_message_does_not_crash():
+    """Unicode in assistant message must not crash."""
+    res = client.post(
+        "/api/assistant",
+        json={"message": "அருகிலுள்ள மருத்துவமனை எங்கே? 🏥", **IITM},
+    )
+    assert res.status_code == 200
+
+
+def test_radius_capped_at_100km():
+    """radius_km > 100 must be rejected with 422."""
+    res = client.post("/api/nearby-services", json={**IITM, "radius_km": 150})
+    assert res.status_code == 422
+
+
+def test_rate_limit_headers_present():
+    """Every response must carry informational rate-limit headers."""
+    res = client.get("/health")
+    assert "x-ratelimit-limit" in res.headers or "X-RateLimit-Limit" in res.headers
+
+
+def test_nearby_services_rate_limit_headers():
+    res = client.post("/api/nearby-services", json={**IITM})
+    assert res.status_code == 200
+    headers_lower = {k.lower(): v for k, v in res.headers.items()}
+    assert "x-ratelimit-limit" in headers_lower
+
+
+# ---------------------------------------------------------------------------
+# No fixture data in production paths (Merge 4)
+# ---------------------------------------------------------------------------
+
+def test_cache_package_has_no_fixture_ids():
+    """Cache package must never contain fixture IDs."""
+    res = client.get("/api/cache-package")
+    ids = [c["id"] for c in res.json()["contacts"]]
+    assert not any(i.startswith("fixture-") for i in ids)
+
+
+def test_nearby_services_production_data_has_no_fixture_ids():
+    """Production nearby-services response must not contain fixture IDs."""
+    res = client.post("/api/nearby-services", json={**IITM, "radius_km": 50})
+    ids = [s["id"] for s in res.json()["services"]]
+    assert not any(i.startswith("fixture-") for i in ids)
+
+
+# ---------------------------------------------------------------------------
+# Version freeze (Merge 4)
+# ---------------------------------------------------------------------------
+
+def test_cache_version_is_merge4():
+    """OFFLINE_CACHE_VERSION must be the frozen merge4 value."""
+    from app.core.data_loader import OFFLINE_CACHE_VERSION
+    assert OFFLINE_CACHE_VERSION == "merge4-final-0"
+
+
+def test_health_reports_merge4_version():
+    res = client.get("/health")
+    assert res.json()["offline_cache_version"] == "merge4-final-0"

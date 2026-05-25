@@ -28,7 +28,7 @@ from app.core.validation import validate_collection
 
 # Bump this string every time the schema or data changes in a breaking way.
 # Format: merge<N>-<description>-<sequence>
-CACHE_VERSION = "merge3-cross-region-0"
+CACHE_VERSION = "merge4-final-0"
 
 _CREATE_CONTACTS = """
 CREATE TABLE IF NOT EXISTS contacts (
