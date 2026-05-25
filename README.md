@@ -35,7 +35,7 @@ All implementation branches should start from the same bootstrap `main`.
 - Assistant responses must cite curated data or approved templates.
 - If the app cannot verify something, it should say so and show official fallback guidance.
 
-## Current scaffold
+## Current product state
 
-This repository intentionally starts with contracts, docs, and small app skeletons. Suyash and Sidhesh can build their streams without changing ownership boundaries, while Roopal can review PRs against `plan.md` and `docs/pr_review_checklist.md`.
+This repository now contains the RoadSoS vertical slice: FastAPI ranking/data APIs, source-backed Chennai contacts, offline cache package support, and a React/Vite emergency-first PWA. Roopal can review PRs against `plan.md` and `docs/pr_review_checklist.md` while Suyash and Sidhesh continue improving data reliability and demo UX.
 

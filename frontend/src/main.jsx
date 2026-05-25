@@ -3,10 +3,14 @@ import { createRoot } from "react-dom/client";
 import {
   Activity,
   AlertTriangle,
+  CheckCircle2,
   Clipboard,
   Clock3,
   Database,
+  Download,
   Filter,
+  Gauge,
+  Layers,
   LifeBuoy,
   LocateFixed,
   MapPin,
@@ -15,6 +19,7 @@ import {
   Radio,
   Share2,
   ShieldCheck,
+  Siren,
   Wifi,
   WifiOff,
 } from "lucide-react";
@@ -31,6 +36,36 @@ const SERVICE_FILTERS = [
   { value: "repair", label: "Repair" },
 ];
 const DEFAULT_SERVICE_TYPES = SERVICE_FILTERS.map((item) => item.value);
+const INCIDENT_PRESETS = [
+  {
+    id: "medical",
+    label: "Medical emergency",
+    description: "Prioritise ambulance, trauma, and hospitals.",
+    serviceTypes: ["ambulance", "trauma_center", "hospital"],
+    severity: "critical",
+  },
+  {
+    id: "police",
+    label: "Police support",
+    description: "Prioritise nearby police and official fallbacks.",
+    serviceTypes: ["police"],
+    severity: "moderate",
+  },
+  {
+    id: "recovery",
+    label: "Vehicle recovery",
+    description: "Prioritise tow and repair support.",
+    serviceTypes: ["tow", "repair"],
+    severity: "minor",
+  },
+  {
+    id: "all",
+    label: "Full rescue sweep",
+    description: "Show every verified local service type.",
+    serviceTypes: DEFAULT_SERVICE_TYPES,
+    severity: "unknown",
+  },
+];
 const DEFAULT_LOCATION = {
   lat: "12.9915",
   lon: "80.2337",
@@ -149,6 +184,35 @@ function ContactCard({ contact, fallback = false }) {
   );
 }
 
+function DemoStep({ done, label }) {
+  return (
+    <span className={done ? "demo-step done" : "demo-step"}>
+      <CheckCircle2 size={15} aria-hidden="true" />
+      {label}
+    </span>
+  );
+}
+
+function MiniMap({ contacts }) {
+  const topContacts = contacts.slice(0, 4);
+  return (
+    <div className="mini-map" aria-label="Approximate nearest contact radar">
+      <div className="map-ring ring-one" />
+      <div className="map-ring ring-two" />
+      <div className="map-origin">You</div>
+      {topContacts.map((contact, index) => (
+        <span
+          className={`map-pin pin-${index}`}
+          key={contact.id}
+          title={contact.name}
+        >
+          {index + 1}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [location, setLocation] = useState(DEFAULT_LOCATION);
@@ -167,12 +231,29 @@ function App() {
     injury_count: "1",
     hazards: "traffic, fuel smell",
     notes: "Two-wheeler collision. Rider conscious.",
+    callback: "",
+    vehicle_type: "Two-wheeler",
+    road_side: "Near main gate / left shoulder",
+    severity: "moderate",
   });
   const [packet, setPacket] = useState("");
   const [assistantQuestion, setAssistantQuestion] = useState(
     "Can an ambulance come now?"
   );
   const [assistantAnswer, setAssistantAnswer] = useState("");
+  const [assistantTrace, setAssistantTrace] = useState({
+    used_sources: [],
+    refusal_reason: null,
+  });
+  const [serviceWorkerStatus, setServiceWorkerStatus] = useState(
+    "service worker checking"
+  );
+  const [chaosMode, setChaosMode] = useState({
+    backendDown: false,
+    noLocalResults: false,
+  });
+  const [selectedPreset, setSelectedPreset] = useState("all");
+  const [installPrompt, setInstallPrompt] = useState(null);
 
   useEffect(() => {
     const onOnline = () => setIsOnline(true);
@@ -183,6 +264,28 @@ function App() {
       window.removeEventListener("online", onOnline);
       window.removeEventListener("offline", onOffline);
     };
+  }, []);
+
+  useEffect(() => {
+    const onBeforeInstallPrompt = (event) => {
+      event.preventDefault();
+      setInstallPrompt(event);
+    };
+    window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) {
+      setServiceWorkerStatus("service worker unavailable");
+      return;
+    }
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then(() => setServiceWorkerStatus("offline shell ready"))
+      .catch(() => setServiceWorkerStatus("offline shell blocked"));
   }, []);
 
   const parsedLocation = useMemo(
@@ -207,6 +310,23 @@ function App() {
       }
       return [...current, type];
     });
+  }
+
+  function applyPreset(preset) {
+    setSelectedPreset(preset.id);
+    setSelectedServiceTypes(preset.serviceTypes);
+    setIncident((current) => ({ ...current, severity: preset.severity }));
+    setStatus(`${preset.label} preset loaded.`);
+  }
+
+  async function installApp() {
+    if (!installPrompt) {
+      setStatus("Install prompt is not available yet. Use browser install menu if shown.");
+      return;
+    }
+    installPrompt.prompt();
+    await installPrompt.userChoice;
+    setInstallPrompt(null);
   }
 
   async function refreshCachePackage() {
@@ -291,6 +411,9 @@ function App() {
     }
 
     try {
+      if (chaosMode.backendDown) {
+        throw new Error("chaos mode simulated backend outage");
+      }
       const response = await fetch(`${API_BASE}/api/nearby-services`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -306,12 +429,18 @@ function App() {
         throw new Error(`API returned ${response.status}`);
       }
       const payload = await response.json();
-      setContacts(payload.services || []);
+      const nextServices = chaosMode.noLocalResults ? [] : payload.services || [];
+      setContacts(nextServices);
       setFallbacks(payload.fallback_contacts?.length ? payload.fallback_contacts : [FALLBACK_CONTACT]);
-      setWarnings(payload.warnings || []);
+      setWarnings([
+        ...(payload.warnings || []),
+        ...(chaosMode.noLocalResults
+          ? ["Chaos mode: local ranked contacts hidden to rehearse no-result fallback."]
+          : []),
+      ]);
       setElapsed(((performance.now() - start) / 1000).toFixed(1));
       setStatus(
-        payload.services?.length
+        nextServices.length
           ? "Ranked help loaded. Show the trust ledger before calling."
           : "No local contacts found. Use official fallback guidance."
       );
@@ -331,9 +460,21 @@ function App() {
     const localPacket = [
       `Road accident near ${location.landmark || "reported location"}.`,
       `${incident.injury_count || "Unknown"} injured person(s).`,
+      `Severity: ${incident.severity || "unknown"}.`,
+      `Vehicle: ${incident.vehicle_type || "not specified"}.`,
+      `Road side: ${incident.road_side || "not specified"}.`,
       `Hazards: ${hazards.length ? hazards.join(", ") : "not specified"}.`,
+      `Callback: ${incident.callback || "not provided"}.`,
       `Notes: ${incident.notes || "none"}.`,
       `Coordinates: ${parsedLocation.lat}, ${parsedLocation.lon}.`,
+      `Nearest contacts: ${
+        contacts.length
+          ? contacts
+              .slice(0, 3)
+              .map((contact) => `${contact.name} (${contact.phone})`)
+              .join("; ")
+          : "official fallbacks listed in app"
+      }.`,
       `Timestamp: ${new Date().toLocaleString()}.`,
       "Disclaimer: not medical advice or dispatch confirmation.",
     ].join(" ");
@@ -361,7 +502,24 @@ function App() {
         throw new Error(`summary API returned ${response.status}`);
       }
       const payload = await response.json();
-      setPacket(`${payload.summary} ${payload.medical_disclaimer}`);
+      setPacket(
+        [
+          payload.summary,
+          `Severity: ${incident.severity || "unknown"}.`,
+          `Vehicle: ${incident.vehicle_type || "not specified"}.`,
+          `Road side: ${incident.road_side || "not specified"}.`,
+          `Callback: ${incident.callback || "not provided"}.`,
+          `Nearest contacts: ${
+            contacts.length
+              ? contacts
+                  .slice(0, 3)
+                  .map((contact) => `${contact.name} (${contact.phone})`)
+                  .join("; ")
+              : "official fallbacks listed in app"
+          }.`,
+          payload.medical_disclaimer,
+        ].join(" ")
+      );
       setStatus("Incident packet generated from backend fields.");
     } catch {
       setPacket(localPacket);
@@ -391,6 +549,10 @@ function App() {
 
   async function askAssistant() {
     if (!navigator.onLine) {
+      setAssistantTrace({
+        used_sources: ["offline_guardrail_template", "fallback_contacts"],
+        refusal_reason: "offline_live_availability_unverifiable",
+      });
       setAssistantAnswer(
         "Offline guardrail: I cannot verify live availability or invent contacts. Use listed cached contacts or official ERSS 112."
       );
@@ -408,12 +570,20 @@ function App() {
         }),
       });
       const payload = await response.json();
+      setAssistantTrace({
+        used_sources: payload.used_sources || [],
+        refusal_reason: payload.refusal_reason || null,
+      });
       setAssistantAnswer(
         `${payload.answer} ${
           payload.refusal_reason ? `Refusal reason: ${payload.refusal_reason}.` : ""
         }`
       );
     } catch {
+      setAssistantTrace({
+        used_sources: ["frontend_guardrail_fallback"],
+        refusal_reason: "assistant_unavailable",
+      });
       setAssistantAnswer(
         "Assistant unavailable. RoadSoS will not guess emergency contacts; use verified cards or ERSS 112."
       );
@@ -423,9 +593,24 @@ function App() {
   const rescuePackLabel = cacheInfo
     ? `cache ${cacheInfo.version || "stored"}`
     : "ERSS fallback only";
+  const readiness = {
+    location: Number.isFinite(parsedLocation.lat) && Number.isFinite(parsedLocation.lon),
+    cache: Boolean(cacheInfo),
+    services: contacts.length > 0,
+    packet: Boolean(packet),
+    assistant: Boolean(assistantAnswer),
+    offlineShell: serviceWorkerStatus === "offline shell ready",
+  };
+  const coverageSummary = {
+    local: contacts.length,
+    fallback: fallbacks.length,
+    cached: cacheInfo?.contacts?.length || 0,
+  };
 
   return (
     <main className="app-shell">
+      <div className="atmosphere atmosphere-one" aria-hidden="true" />
+      <div className="atmosphere atmosphere-two" aria-hidden="true" />
       <section className="emergency-panel" aria-labelledby="app-title">
         <div className="status-row">
           <span className="status-pill urgent">
@@ -440,6 +625,14 @@ function App() {
             <Database size={16} aria-hidden="true" />
             {rescuePackLabel}
           </span>
+          <span className="status-pill">
+            <WifiOff size={16} aria-hidden="true" />
+            {serviceWorkerStatus}
+          </span>
+          <button className="status-button" type="button" onClick={installApp}>
+            <Download size={16} aria-hidden="true" />
+            Install PWA
+          </button>
         </div>
 
         <div className="hero-grid">
@@ -464,6 +657,57 @@ function App() {
             <span>{elapsed ? "drill result" : "target drill"}</span>
           </div>
         </div>
+
+        <section className="mission-grid" aria-label="RoadSoS mission controls">
+          <div className="mission-card preset-card">
+            <div className="section-heading">
+              <Siren size={18} aria-hidden="true" />
+              <h2>Emergency presets</h2>
+            </div>
+            <div className="preset-grid">
+              {INCIDENT_PRESETS.map((preset) => (
+                <button
+                  className={
+                    selectedPreset === preset.id
+                      ? "preset-button active"
+                      : "preset-button"
+                  }
+                  key={preset.id}
+                  type="button"
+                  onClick={() => applyPreset(preset)}
+                >
+                  <strong>{preset.label}</strong>
+                  <span>{preset.description}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="mission-card">
+            <div className="section-heading">
+              <Gauge size={18} aria-hidden="true" />
+              <h2>Demo readiness</h2>
+            </div>
+            <div className="demo-steps">
+              <DemoStep done={readiness.location} label="Location ready" />
+              <DemoStep done={readiness.offlineShell} label="Offline shell" />
+              <DemoStep done={readiness.cache} label="Cache refreshed" />
+              <DemoStep done={readiness.services} label="Ranked contacts" />
+              <DemoStep done={readiness.packet} label="Packet generated" />
+              <DemoStep done={readiness.assistant} label="Assistant refusal" />
+            </div>
+          </div>
+          <div className="mission-card">
+            <div className="section-heading">
+              <Layers size={18} aria-hidden="true" />
+              <h2>Coverage snapshot</h2>
+            </div>
+            <div className="metric-grid">
+              <span><strong>{coverageSummary.local}</strong> ranked</span>
+              <span><strong>{coverageSummary.fallback}</strong> fallbacks</span>
+              <span><strong>{coverageSummary.cached}</strong> cached</span>
+            </div>
+          </div>
+        </section>
 
         <section className="control-deck" aria-label="Emergency actions">
           <div className="location-card">
@@ -564,6 +808,46 @@ function App() {
               <span>Note taker: keep injury, hazard, and landmark details.</span>
               <span>Location sharer: send incident packet to responders.</span>
             </div>
+            <MiniMap contacts={contacts} />
+          </div>
+        </section>
+
+        <section className="chaos-card" aria-label="Demo rehearsal controls">
+          <div className="section-heading">
+            <AlertTriangle size={18} aria-hidden="true" />
+            <h2>Chaos rehearsal controls</h2>
+          </div>
+          <p>
+            Use these before judging to prove RoadSoS fails safely without
+            changing backend data.
+          </p>
+          <div className="filter-grid">
+            <button
+              className={chaosMode.backendDown ? "filter-chip active" : "filter-chip"}
+              type="button"
+              onClick={() =>
+                setChaosMode((current) => ({
+                  ...current,
+                  backendDown: !current.backendDown,
+                }))
+              }
+              aria-pressed={chaosMode.backendDown}
+            >
+              Simulate backend down
+            </button>
+            <button
+              className={chaosMode.noLocalResults ? "filter-chip active" : "filter-chip"}
+              type="button"
+              onClick={() =>
+                setChaosMode((current) => ({
+                  ...current,
+                  noLocalResults: !current.noLocalResults,
+                }))
+              }
+              aria-pressed={chaosMode.noLocalResults}
+            >
+              Simulate no local results
+            </button>
           </div>
         </section>
 
@@ -627,6 +911,48 @@ function App() {
               />
             </label>
             <label>
+              Severity
+              <select
+                value={incident.severity}
+                onChange={(event) =>
+                  setIncident({ ...incident, severity: event.target.value })
+                }
+              >
+                <option value="minor">Minor</option>
+                <option value="moderate">Moderate</option>
+                <option value="critical">Critical</option>
+                <option value="unknown">Unknown</option>
+              </select>
+            </label>
+            <label>
+              Callback number
+              <input
+                value={incident.callback}
+                onChange={(event) =>
+                  setIncident({ ...incident, callback: event.target.value })
+                }
+                placeholder="Responder callback number"
+              />
+            </label>
+            <label>
+              Vehicle type
+              <input
+                value={incident.vehicle_type}
+                onChange={(event) =>
+                  setIncident({ ...incident, vehicle_type: event.target.value })
+                }
+              />
+            </label>
+            <label>
+              Road side / lane
+              <input
+                value={incident.road_side}
+                onChange={(event) =>
+                  setIncident({ ...incident, road_side: event.target.value })
+                }
+              />
+            </label>
+            <label>
               Hazards
               <input
                 value={incident.hazards}
@@ -678,6 +1004,18 @@ function App() {
               {assistantAnswer ||
                 "The assistant must cite verified data/templates or refuse. It never creates contacts."}
             </p>
+            <div className="flight-recorder" aria-label="Assistant flight recorder">
+              <strong>Flight recorder</strong>
+              <span>
+                Sources:{" "}
+                {assistantTrace.used_sources.length
+                  ? assistantTrace.used_sources.join(", ")
+                  : "not asked yet"}
+              </span>
+              <span>
+                Refusal: {assistantTrace.refusal_reason || "none"}
+              </span>
+            </div>
           </div>
         </section>
       </section>

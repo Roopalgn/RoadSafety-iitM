@@ -4,7 +4,7 @@ Production emergency contacts must be curated from source-backed public informat
 
 ## Files
 
-- `contacts.seed.json` - production local contacts. Starts empty until Suyash curates source-backed records.
+- `contacts.seed.json` - production local contacts curated from source-backed records.
 - `fallbacks.seed.json` - official fallback emergency contacts and country-level profiles.
 
 ## Production contact rules

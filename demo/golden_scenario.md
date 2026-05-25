@@ -2,98 +2,101 @@
 
 ## Scenario
 
-A bystander near IIT Madras sees a road accident and needs reliable emergency help fast. The demo proves the app can deliver trusted emergency contacts within 10 seconds, works without a network, and refuses to invent safety-critical data.
+A bystander near IIT Madras sees a road accident and needs reliable emergency help fast. The demo proves the app can deliver trusted emergency contacts within 10 seconds, works with weak/no network after the rescue pack is warmed, and refuses to invent safety-critical data.
 
 ## Setup before demo
 
-- Start backend: `cd backend && uvicorn app.main:app --reload --port 8000`
-- Start frontend: `cd frontend && npm run dev` (Vite proxies `/api` → `http://localhost:8000`)
-- Open browser at `http://localhost:5173` in DevTools mobile mode (375 px wide)
+- Start backend: `cd backend && python -m uvicorn app.main:app --host localhost --port 8001 --reload`
+- Start frontend: `cd frontend && npm run dev -- --host localhost --port 5174`
+- The Vite dev server proxies `/api` and `/health` to `http://localhost:8001`.
+- Open browser at `http://localhost:5174` in DevTools mobile mode (375 px wide).
 
 ## Test coordinates
 
-- **Primary location:** IIT Madras main gate — lat `12.9915`, lon `80.2337`
-- **Nearby landmark for incident packet:** "IIT Madras main gate"
-- **Second-region portability:** Bengaluru / Koramangala — lat `12.9716`, lon `77.5946` — should return Bengaluru-specific contacts (Victoria Hospital, Nimhans, Koramangala Police, etc.)
-- **Unknown region test:** lat `28.6139`, lon `77.2090` (Delhi — no region data) — should return national fallbacks only (ERSS 112, 108, 100)
+- Primary location: IIT Madras main gate - lat `12.9915`, lon `80.2337`.
+- Nearby landmark for incident packet: `IIT Madras main gate`.
+- Unknown/low-coverage region test: lat `28.6139`, lon `77.2090` should keep national fallbacks visible if no local ranked contacts exist.
+- Portability target: Bengaluru / Koramangala - lat `12.9716`, lon `77.5946` - should become a region-specific dataset once the second-region seed lands.
 
 ## Demo roles
 
-- **Presenter:** drives the browser, speaks to judges.
-- **Timer watcher:** watches the timer card in the top-right of the app and calls out the elapsed time aloud.
-- (Solo demo: presenter narrates both roles.)
+- Presenter: drives the browser, speaks to judges.
+- Timer watcher: watches the timer card in the top-right of the app and calls out the elapsed time aloud.
+- Solo demo: presenter narrates both roles.
 
 ## Demo beats
 
-### Beat 1 — First screen
+### Beat 1 - First screen
+
 - Open RoadSoS on a phone-sized viewport.
-- Expected: The rescue drill screen is the first and only viewport. No marketing page. The status row shows three pills: "No hallucinated contacts", online/offline state, and cache status.
+- Expected: The rescue drill screen is the first viewport. No marketing page. The status row shows no-hallucination, online/offline state, cache status, and service-worker status.
 
-### Beat 2 — Location input
-- The lat/lon fields default to IIT Madras (`12.9915`, `80.2337`) and landmark "IIT Madras main gate".
-- Optionally tap "Use GPS" to capture live location. If GPS is denied, manual fields remain active.
-- Expected: Location confidence ribbon (status row) shows "Online API mode" or "Offline rescue mode".
+### Beat 2 - Location input
 
-### Beat 3 — 10-second rescue drill
-- Say aloud: "Starting now."
-- Tap **Start rescue drill**.
+- The lat/lon fields default to IIT Madras (`12.9915`, `80.2337`) and landmark `IIT Madras main gate`.
+- Optionally tap `Use GPS` to capture live location. If GPS is denied, manual fields remain active.
+- Expected: Location confidence ribbon shows GPS, manual, or cached location context.
+
+### Beat 3 - 10-second rescue drill
+
+- Say aloud: `Starting now.`
+- Tap `Start rescue drill`.
 - Expected: The timer card shows elapsed seconds live. Ranked emergency contacts appear. Timer stops.
-- Narrate: "Police, hospital, ambulance — ranked by distance, all sourced. Timer card proves it."
+- Narrate: `Police, hospital, ambulance - ranked by distance, all sourced. Timer card proves it.`
 
-### Beat 4 — Trust ledger
-- Click **Trust ledger and ranking reasons** on any contact card.
-- Expected: Expandable `<details>` opens showing distance, confidence score, source name, verification date, and ranking reasons.
-- Narrate: "Every contact tells you where it came from and when it was last verified."
+### Beat 4 - Trust ledger
 
-### Beat 5 — Bystander mode
-- Scroll to the **Bystander mode** card (always visible, no tap needed).
-- Expected: Four role cards: Caller, Traffic spotter, Note taker, Location sharer — each with a plain instruction.
-- Narrate: "The app keeps bystanders useful without pretending to diagnose."
+- Click `Trust ledger and ranking reasons` on any contact card.
+- Expected: Expandable details show distance, confidence score, source name, verification date, and ranking reasons.
+- Narrate: `Every contact tells you where it came from and when it was last verified.`
 
-### Beat 6 — Incident packet
-- The incident packet form defaults to 1 injured, hazards "traffic, fuel smell", notes "Two-wheeler collision. Rider conscious."
-- Tap **Generate packet** (uses backend when online, generates locally when offline).
-- Tap **Copy packet**.
-- Expected: Short structured summary with location, landmark, injury count, hazards, notes, timestamp, medical disclaimer. Clipboard copy confirmed.
+### Beat 5 - Bystander mode and radar
 
-### Beat 7 — Offline mode
-- First tap **Refresh cache** while online to store the rescue pack in localStorage.
-- Then put the browser in offline mode (DevTools → Network → Offline).
-- Tap **Start rescue drill** again.
-- Expected: Cached contacts or ERSS 112 fallback load immediately. Warning box shows "Using cached rescue pack from [timestamp]." Status row switches to "Offline rescue mode".
-- Narrate: "Airplane mode, still useful. Cache was stored from the previous online session."
+- Scroll to the `Bystander mode` card.
+- Expected: Four role cards are visible: Caller, Traffic spotter, Note taker, Location sharer. The radar preview marks the nearest returned contacts.
+- Narrate: `The app keeps bystanders useful without pretending to diagnose.`
 
-### Beat 8 — Smart assistant retrieval
-- Type "nearest hospital" in the assistant panel.
-- Tap **Ask guarded assistant**.
-- Expected: Backend returns ranked hospitals near the coordinates with source citations. The UI shows mini contact cards below the answer with `used_sources: ["verified_contacts_db"]` badge. No refusal — this is a supported query.
-- Narrate: "Ask about hospitals, police, fire, ambulance — the assistant retrieves from our verified dataset."
+### Beat 6 - Emergency presets
 
-### Beat 9 — Assistant refusal for real-time queries
-- Type "Is the ambulance coming?" in the assistant panel.
-- Tap **Ask guarded assistant**.
-- Expected: Backend returns a clear refusal with `refusal_reason: "realtime_availability_not_supported"`. No contact cards. Warning-style UI.
-- Narrate: "The assistant admits what it cannot do. It never invents live availability or dispatch status."
+- Tap `Medical emergency`, `Police support`, or `Vehicle recovery`.
+- Expected: The selected service filters update immediately and the severity field changes to match the scenario.
+- Narrate: `One tap shifts the search intent without hiding the trust ledger.`
 
-### Beat 10 — Cross-region portability
-- Change lat to `12.9716`, lon to `77.5946` (Bengaluru / Koramangala).
-- Select **Bengaluru** from the region selector (or let auto-detect trigger).
-- Tap **Start rescue drill**.
-- Expected: Bengaluru-specific contacts appear — Victoria Hospital, Nimhans, Koramangala Police Station, etc. All with Karnataka sources. Region label shows "Bengaluru".
-- Narrate: "Switch region, get region-specific verified contacts. Not hardcoded to Chennai."
+### Beat 7 - Incident packet
 
-### Beat 11 — Multi-language incident packet
-- Switch to the incident packet section.
-- Toggle language to **Tamil**.
-- Tap **Generate packet**.
-- Expected: Incident packet generates with Tamil keywords for critical terms (accident, hospital, police, injury, help). English structure preserved, key nouns translated.
-- Narrate: "Template-based translation for emergency terms. Works without internet or an LLM."
+- Confirm the incident packet form includes injured count, severity, callback number, vehicle type, road side, hazards, and notes.
+- Tap `Generate packet`.
+- Tap `Copy packet` or `Share packet`.
+- Expected: Short structured summary includes location, landmark, injury count, severity, hazards, callback, nearest contacts, timestamp, and medical disclaimer.
 
-### Beat 12 — PWA install and dark mode
-- Show the **Install RoadSoS** prompt (or browser install icon in address bar).
-- Trigger dark mode (system preference or toggle).
-- Expected: App installs to home screen. Dark mode activates with full readability and WCAG AA contrast.
-- Narrate: "Installable PWA. Night-time accident scenario? Dark mode is automatic."
+### Beat 8 - Offline mode
+
+- First tap `Refresh cache` while online to store the rescue pack in localStorage and warm the service-worker app shell.
+- Then put the browser in offline mode (DevTools -> Network -> Offline).
+- Tap `Start rescue drill` again.
+- Expected: Cached contacts or ERSS 112 fallback load immediately. Warning box shows cached/stale context. Status row switches to offline rescue mode.
+- Narrate: `Airplane mode, still useful. Cache was stored from the previous online session.`
+
+### Beat 9 - Assistant refusal and flight recorder
+
+- Type `Can an ambulance come now?` in the assistant panel, or use the default question.
+- Tap `Ask guarded assistant`.
+- Expected: Backend returns a guarded answer/refusal. The UI shows source/refusal trace in the flight recorder.
+- Narrate: `The assistant admits what it cannot do. It never invents live availability.`
+
+### Beat 10 - Chaos rehearsal
+
+- Turn on `Simulate backend down`, then tap `Start rescue drill`.
+- Turn on `Simulate no local results`, then tap `Start rescue drill`.
+- Expected: Backend-down falls back to cache or official ERSS; no-result keeps official fallbacks visible with a warning.
+- Narrate: `We can rehearse failure without corrupting the data.`
+
+### Beat 11 - Cross-region / unknown-region check
+
+- Change lat to `28.6139`, lon to `77.2090`, or use Bengaluru coordinates if second-region data is present.
+- Tap `Start rescue drill`.
+- Expected: If no local ranked contacts match, warning text explains the gap and official fallback contacts remain visible.
+- Narrate: `The schema is data-driven; unsupported regions fail safely instead of inventing contacts.`
 
 ## Chaos-mode dry run
 
@@ -101,35 +104,25 @@ Run this before every live judging session:
 
 | Scenario | Expected behaviour |
 |---|---|
-| Network offline after "Refresh cache" was tapped | Cached rescue pack loads from service worker + localStorage; stale timestamp shown; status row shows "Offline rescue mode" |
-| Network offline, no prior cache | App shell loads from service worker; ERSS 112 fallback contact visible; clear "no local results" warning; no crash |
-| Cold start in airplane mode (PWA installed) | Service worker serves app shell; localStorage serves cached contacts or ERSS fallback |
+| Network offline after `Refresh cache` was tapped | Cached rescue pack loads from localStorage; stale timestamp shown; app shell can reload after first visit |
+| Network offline, no prior cache | ERSS 112 fallback contact visible; clear no-local-results warning; no crash |
 | GPS permission denied | Manual lat/lon fields remain active; no crash |
-| Empty nearby contacts (non-Chennai/Bengaluru coords) | National fallback contacts displayed; clear "no local results" message |
-| Assistant asked "nearest hospital" | Retrieval returns ranked hospitals with source citations |
-| Assistant asked for real-time info | Clear refusal with reason; no invented contact |
-| Assistant asked for medical advice | Clear refusal with `medical_legal_advice_not_provided` reason |
+| Empty nearby contacts or `Simulate no local results` | Fallback contacts displayed; clear no-local-results message |
+| Backend unavailable or `Simulate backend down` | Cached contacts or ERSS fallback visible; no crash |
+| Assistant asked for made-up or real-time data | Refusal text plus flight recorder refusal reason; no invented contact |
 | Invalid coordinates entered | Validation error; no crash |
-| Region switch Chennai → Bengaluru | Contacts change to Bengaluru-specific results |
-| Multi-language packet (Tamil) | Key emergency terms appear in Tamil |
 
 ## Pass criteria
 
 - Location to ranked help in under 10 seconds on the polished demo.
-- Offline path returns fallback guidance with a visible stale-cache indicator.
-- Service worker serves app shell on cold offline start.
-- Every displayed contact shows source, verified date, and confidence score.
+- Offline path returns cached or fallback guidance with a visible cache indicator.
+- Service worker serves the app shell after the app has been opened once.
+- Every displayed contact shows source, verified date, confidence score, and ranking reasons.
 - No invented emergency contact appears anywhere.
 - Bystander role cards are accessible.
 - Incident packet generates without backend (offline path).
-- Assistant retrieves relevant contacts for supported queries.
 - Assistant refuses clearly for real-time / medical / legal queries.
-- Cross-region switch shows different, verifiable contacts.
-- Multi-language packet generates in Tamil.
-- PWA is installable.
-- Dark mode is readable.
 - The demo repeats without manual database edits.
-- Full demo (Beats 1-12) completes in under 60 seconds.
 
 ## Known limitations to state honestly
 
@@ -137,8 +130,5 @@ Run this before every live judging session:
 - Contact freshness depends on manual curation cadence; staleness is shown transparently.
 - Offline cache uses service worker for app shell and localStorage for data. Cache persists across page loads but not across browser data clears.
 - The app does not dispatch emergency services.
-- Assistant uses deterministic keyword/intent matching against the verified dataset — not an external LLM. It will not answer questions outside its verified data.
-- Multi-language translation is template-based (keyword substitution for ~20 emergency terms), not full NLP translation.
-- Bengaluru is a portability proof with 5-8 contacts; it is not as deep as the Chennai dataset.
-- Cross-region auto-detection uses bounding boxes; coordinates outside known regions get national fallbacks only.
-
+- Assistant behavior is guarded and retrieval/refusal-oriented; it is not an external LLM and must not answer outside verified data/templates.
+- Full second-region depth, dark mode, and multi-language packets remain follow-up work unless their dedicated M3 implementation PR lands first.
