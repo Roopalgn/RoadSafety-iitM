@@ -1,8 +1,10 @@
 # RoadSoS
 
-**Offline-first accident response assistant — Road Safety Hackathon 2026, IIT Madras.**
+**168,000 Indians die in road accidents every year. 50,000 are preventable — if help arrives within the golden hour. Only 20.6% of victims reach a hospital in time.**
 
-A bystander at an accident scene can get the right verified emergency contact in under 10 seconds, even with no network. Every contact is source-backed. The assistant refuses to invent emergency information.
+RoadSoS is an offline-first accident response platform that delivers verified emergency contacts in under 10 seconds — even with zero network. No AI-generated phone numbers. No hallucinated hospitals. Every contact is source-backed, confidence-scored, and distance-ranked.
+
+> **Why no LLM for contacts?** Competitors use Gemini/Claude and risk hallucinating fake hospitals in life-or-death moments. We use deterministic retrieval on source-verified data. Safety-critical systems don't gamble.
 
 ---
 
@@ -16,7 +18,7 @@ A bystander at an accident scene can get the right verified emergency contact in
 cd backend
 pip install -r requirements.txt
 python -m scripts.build_db
-uvicorn app.main:app --port 8001 --reload
+uvicorn app.main:app --port 8000 --reload
 ```
 
 ### Frontend (new terminal)
@@ -26,7 +28,7 @@ npm install
 npm run dev
 ```
 
-Open **http://localhost:5174** in Chrome. Backend API docs at **http://localhost:8001/docs**.
+Open **http://localhost:5173** in Chrome. Backend API docs at **http://localhost:8000/docs**.
 
 ### Verify data and tests
 ```powershell
