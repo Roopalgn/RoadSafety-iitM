@@ -6,15 +6,16 @@ A bystander near IIT Madras sees a road accident and needs reliable emergency he
 
 ## Setup before demo
 
-- Start backend: `cd backend && uvicorn app.main:app --reload --port 8001`
-- Start frontend: `cd frontend && npm run dev` (Vite proxies `/api` → `http://localhost:8001`)
+- Start backend: `cd backend && uvicorn app.main:app --reload --port 8000`
+- Start frontend: `cd frontend && npm run dev` (Vite proxies `/api` → `http://localhost:8000`)
 - Open browser at `http://localhost:5173` in DevTools mobile mode (375 px wide)
 
 ## Test coordinates
 
 - **Primary location:** IIT Madras main gate — lat `12.9915`, lon `80.2337`
 - **Nearby landmark for incident packet:** "IIT Madras main gate"
-- **Second-region portability check:** use any non-Chennai coordinate (e.g., Bengaluru: lat `12.9716`, lon `77.5946`) to show the app handles the empty-contacts case gracefully and falls back to ERSS 112
+- **Second-region portability:** Bengaluru / Koramangala — lat `12.9716`, lon `77.5946` — should return Bengaluru-specific contacts (Victoria Hospital, Nimhans, Koramangala Police, etc.)
+- **Unknown region test:** lat `28.6139`, lon `77.2090` (Delhi — no region data) — should return national fallbacks only (ERSS 112, 108, 100)
 
 ## Demo roles
 
@@ -62,17 +63,37 @@ A bystander near IIT Madras sees a road accident and needs reliable emergency he
 - Expected: Cached contacts or ERSS 112 fallback load immediately. Warning box shows "Using cached rescue pack from [timestamp]." Status row switches to "Offline rescue mode".
 - Narrate: "Airplane mode, still useful. Cache was stored from the previous online session."
 
-### Beat 8 — Assistant refusal
-- Type "Can an ambulance come now?" in the assistant panel (default question).
+### Beat 8 — Smart assistant retrieval
+- Type "nearest hospital" in the assistant panel.
 - Tap **Ask guarded assistant**.
-- Expected: Backend returns the guarded stub answer plus `refusal_reason: assistant_layer_not_implemented`. The UI shows the refusal reason.
-- Narrate: "The assistant admits what it cannot do. It never invents live availability."
+- Expected: Backend returns ranked hospitals near the coordinates with source citations. The UI shows mini contact cards below the answer with `used_sources: ["verified_contacts_db"]` badge. No refusal — this is a supported query.
+- Narrate: "Ask about hospitals, police, fire, ambulance — the assistant retrieves from our verified dataset."
 
-### Beat 9 — Cross-region portability check
-- Change lat to `12.9716`, lon to `77.5946` (Bengaluru).
+### Beat 9 — Assistant refusal for real-time queries
+- Type "Is the ambulance coming?" in the assistant panel.
+- Tap **Ask guarded assistant**.
+- Expected: Backend returns a clear refusal with `refusal_reason: "realtime_availability_not_supported"`. No contact cards. Warning-style UI.
+- Narrate: "The assistant admits what it cannot do. It never invents live availability or dispatch status."
+
+### Beat 10 — Cross-region portability
+- Change lat to `12.9716`, lon to `77.5946` (Bengaluru / Koramangala).
+- Select **Bengaluru** from the region selector (or let auto-detect trigger).
 - Tap **Start rescue drill**.
-- Expected: `services` is empty (no Chennai fixture contacts match), warning box says "No ranked local services within radius", ERSS 112 fallback always visible.
-- Narrate: "Data-driven, not hardcoded to Chennai."
+- Expected: Bengaluru-specific contacts appear — Victoria Hospital, Nimhans, Koramangala Police Station, etc. All with Karnataka sources. Region label shows "Bengaluru".
+- Narrate: "Switch region, get region-specific verified contacts. Not hardcoded to Chennai."
+
+### Beat 11 — Multi-language incident packet
+- Switch to the incident packet section.
+- Toggle language to **Tamil**.
+- Tap **Generate packet**.
+- Expected: Incident packet generates with Tamil keywords for critical terms (accident, hospital, police, injury, help). English structure preserved, key nouns translated.
+- Narrate: "Template-based translation for emergency terms. Works without internet or an LLM."
+
+### Beat 12 — PWA install and dark mode
+- Show the **Install RoadSoS** prompt (or browser install icon in address bar).
+- Trigger dark mode (system preference or toggle).
+- Expected: App installs to home screen. Dark mode activates with full readability and WCAG AA contrast.
+- Narrate: "Installable PWA. Night-time accident scenario? Dark mode is automatic."
 
 ## Chaos-mode dry run
 
@@ -80,29 +101,44 @@ Run this before every live judging session:
 
 | Scenario | Expected behaviour |
 |---|---|
-| Network offline after "Refresh cache" was tapped | Cached rescue pack loads from localStorage; stale timestamp shown; status row shows "Offline rescue mode" |
-| Network offline, no prior cache | ERSS 112 fallback contact visible; clear "no local results" warning; no crash |
+| Network offline after "Refresh cache" was tapped | Cached rescue pack loads from service worker + localStorage; stale timestamp shown; status row shows "Offline rescue mode" |
+| Network offline, no prior cache | App shell loads from service worker; ERSS 112 fallback contact visible; clear "no local results" warning; no crash |
+| Cold start in airplane mode (PWA installed) | Service worker serves app shell; localStorage serves cached contacts or ERSS fallback |
 | GPS permission denied | Manual lat/lon fields remain active; no crash |
-| Empty nearby contacts (non-Chennai coords) | Fallback contacts displayed; clear "no local results" message |
-| Assistant asked for made-up data | Refusal text; `refusal_reason` shown; no invented contact |
+| Empty nearby contacts (non-Chennai/Bengaluru coords) | National fallback contacts displayed; clear "no local results" message |
+| Assistant asked "nearest hospital" | Retrieval returns ranked hospitals with source citations |
+| Assistant asked for real-time info | Clear refusal with reason; no invented contact |
+| Assistant asked for medical advice | Clear refusal with `medical_legal_advice_not_provided` reason |
 | Invalid coordinates entered | Validation error; no crash |
+| Region switch Chennai → Bengaluru | Contacts change to Bengaluru-specific results |
+| Multi-language packet (Tamil) | Key emergency terms appear in Tamil |
 
 ## Pass criteria
 
 - Location to ranked help in under 10 seconds on the polished demo.
 - Offline path returns fallback guidance with a visible stale-cache indicator.
+- Service worker serves app shell on cold offline start.
 - Every displayed contact shows source, verified date, and confidence score.
 - No invented emergency contact appears anywhere.
 - Bystander role cards are accessible.
 - Incident packet generates without backend (offline path).
+- Assistant retrieves relevant contacts for supported queries.
+- Assistant refuses clearly for real-time / medical / legal queries.
+- Cross-region switch shows different, verifiable contacts.
+- Multi-language packet generates in Tamil.
+- PWA is installable.
+- Dark mode is readable.
 - The demo repeats without manual database edits.
+- Full demo (Beats 1-12) completes in under 60 seconds.
 
 ## Known limitations to state honestly
 
 - Real-time ambulance availability is not confirmed; app shows last-verified static data.
-- Offline cache uses browser localStorage, not a service worker. Cache persists across page loads but not across browser data clears.
-- Production local contacts (`data/contacts.seed.json`) are still empty; ranked contacts currently come from clearly-labelled non-production fixtures until Suyash's M2 data PR lands.
+- Contact freshness depends on manual curation cadence; staleness is shown transparently.
+- Offline cache uses service worker for app shell and localStorage for data. Cache persists across page loads but not across browser data clears.
 - The app does not dispatch emergency services.
-- Assistant layer is a guarded stub; full retrieval-augmented response lands in a later merge.
-- Contact freshness depends on manual curation cadence.
+- Assistant uses deterministic keyword/intent matching against the verified dataset — not an external LLM. It will not answer questions outside its verified data.
+- Multi-language translation is template-based (keyword substitution for ~20 emergency terms), not full NLP translation.
+- Bengaluru is a portability proof with 5-8 contacts; it is not as deep as the Chennai dataset.
+- Cross-region auto-detection uses bounding boxes; coordinates outside known regions get national fallbacks only.
 

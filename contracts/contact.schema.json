@@ -39,6 +39,7 @@
         "trauma_center",
         "ambulance",
         "police",
+        "fire_station",
         "tow",
         "repair",
         "fallback_emergency"

@@ -1,22 +1,27 @@
 """RoadSoS API.
 
-Merge 2 scope (Suyash / data-geo-backend):
-  - ``/api/nearby-services`` now backed by real source-backed Chennai contacts.
-  - Fallback behavior: national emergency fallback when local results are weak,
-    expand-radius guidance when no nearby service is found, clear response when
-    coordinates are invalid.
-  - ``/api/cache-package`` serves the versioned offline bundle.
-  - ``/api/incident-summary`` generates a shareable incident packet.
-  - ``/api/assistant`` remains a guarded stub (AI branch owns this).
+Merge 3 scope (Suyash / data-geo-backend):
+  - ``/api/nearby-services`` now supports a ``region`` parameter
+    (``"chennai"`` | ``"bengaluru"`` | None for auto-detect from coordinates).
+  - Auto-detection uses bounding boxes; falls back to national fallbacks when
+    coordinates are outside all known regions.
+  - ``/api/assistant`` is now a retrieval-based assistant that searches the
+    verified contact dataset and approved templates. It never invents contacts.
+  - ``AssistantResponse`` now includes ``matched_contacts``.
+  - Confidence scoring includes freshness penalty (>90 days), service-priority
+    boost, and availability boost.
+  - ``data_freshness_days`` is returned in ranking reasons.
 """
 
 from datetime import datetime, timezone
 
 from fastapi import FastAPI
 
+from .core.assistant import run_assistant
 from .core.confidence import attach_confidence
 from .core.data_loader import (
     OFFLINE_CACHE_VERSION,
+    detect_region,
     load_fallback_contacts,
     resolve_service_contacts,
 )
@@ -38,7 +43,7 @@ from .models import (
 app = FastAPI(
     title="RoadSoS API",
     description="Offline-first accident response API.",
-    version="0.3.0",
+    version="0.4.0",
 )
 
 # When fewer than this many ranked local services are returned, the response
@@ -54,12 +59,36 @@ def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def _resolve_region(request_region: str | None, lat: float, lon: float) -> tuple[str, list[str]]:
+    """Resolve the effective region and return (region_key, warnings).
+
+    Priority:
+      1. Explicit ``region`` parameter from the request.
+      2. Auto-detect from coordinates using bounding boxes.
+      3. Fall back to ``"chennai"`` (default) with a warning.
+    """
+    warnings: list[str] = []
+    if request_region:
+        region = request_region.lower().strip()
+        return region, warnings
+
+    detected = detect_region(lat, lon)
+    if detected:
+        return detected, warnings
+
+    warnings.append(
+        "Coordinates are outside all known region bounding boxes. "
+        "Returning national fallback contacts only."
+    )
+    return "unknown", warnings
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {
         "status": "ok",
         "service": "roadsos-api",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "offline_cache_version": OFFLINE_CACHE_VERSION,
     }
 
@@ -67,6 +96,11 @@ def health() -> dict[str, str]:
 @app.post("/api/nearby-services", response_model=NearbyServicesResponse)
 def nearby_services(request: NearbyServicesRequest) -> NearbyServicesResponse:
     """Return ranked emergency contacts near the given coordinates.
+
+    Supports a ``region`` parameter (``"chennai"`` | ``"bengaluru"``).
+    When omitted, the region is auto-detected from the coordinates using
+    bounding boxes. If coordinates fall outside all known regions, only
+    national fallback contacts are returned.
 
     Fallback behavior:
     - If no local services are found within the radius, suggest expanding
@@ -78,7 +112,27 @@ def nearby_services(request: NearbyServicesRequest) -> NearbyServicesResponse:
     today = datetime.now(timezone.utc).date()
     warnings: list[str] = []
 
-    resolved = resolve_service_contacts(allow_fixtures=True)
+    region, region_warnings = _resolve_region(request.region, request.lat, request.lon)
+    warnings.extend(region_warnings)
+
+    # If region is unknown (outside all bounding boxes), skip local contacts.
+    if region == "unknown":
+        fallbacks = load_fallback_contacts(region="chennai")  # national fallbacks
+        return NearbyServicesResponse(
+            query_location=QueryLocation(
+                lat=request.lat,
+                lon=request.lon,
+                source=request.location_source,
+                confidence="high" if request.location_source == "gps" else "reported",
+            ),
+            services=[],
+            fallback_contacts=[ContactRecord(**c) for c in fallbacks],
+            offline_cache_version=OFFLINE_CACHE_VERSION,
+            generated_at=_utc_now_iso(),
+            warnings=warnings,
+        )
+
+    resolved = resolve_service_contacts(allow_fixtures=True, region=region)
     warnings.extend(resolved["warnings"])
     contacts = resolved["contacts"]
 
@@ -113,7 +167,7 @@ def nearby_services(request: NearbyServicesRequest) -> NearbyServicesResponse:
     )
     ranked = attach_confidence(ranked, today)
 
-    fallbacks = load_fallback_contacts()
+    fallbacks = load_fallback_contacts(region=region)
     fb_report = validate_collection(fallbacks)
     if not fb_report["ok"]:
         bad_fb = {f["index"] for f in fb_report["errors"]}
@@ -171,14 +225,14 @@ def cache_package() -> CachePackageResponse:
     Contains all validated production contacts and official fallbacks.
     The frontend stores this in localStorage for offline use.
     """
-    resolved = resolve_service_contacts(allow_fixtures=False)
+    resolved = resolve_service_contacts(allow_fixtures=False, region="chennai")
     contacts = resolved["contacts"]
     report = validate_collection(contacts)
     if not report["ok"]:
         bad = {f["index"] for f in report["errors"]}
         contacts = [c for i, c in enumerate(contacts) if i not in bad]
 
-    fallbacks = load_fallback_contacts()
+    fallbacks = load_fallback_contacts(region="chennai")
     fb_report = validate_collection(fallbacks)
     if not fb_report["ok"]:
         bad_fb = {f["index"] for f in fb_report["errors"]}
@@ -226,17 +280,40 @@ def incident_summary(request: IncidentSummaryRequest) -> IncidentSummaryResponse
 
 @app.post("/api/assistant", response_model=AssistantResponse)
 def assistant(request: AssistantRequest) -> AssistantResponse:
-    """Guarded assistant stub.
+    """Retrieval-based assistant.
 
-    The full assistant guardrail layer is owned by the AI branch.
-    This stub ensures the endpoint exists and is safe.
+    Searches the verified contact dataset and approved safety templates to
+    answer user queries. Never invents contacts, phone numbers, or
+    availability claims.
+
+    Refuses:
+      - Real-time queries (ETA, dispatch status, live tracking).
+      - Medical or legal advice.
+      - Queries outside the verified dataset.
     """
+    today = datetime.now(timezone.utc).date()
+
+    # Determine region from coordinates for contact retrieval.
+    region = "chennai"
+    if request.lat is not None and request.lon is not None:
+        detected = detect_region(request.lat, request.lon)
+        if detected:
+            region = detected
+
+    resolved = resolve_service_contacts(allow_fixtures=False, region=region)
+    contacts = resolved["contacts"]
+
+    result = run_assistant(
+        message=request.message,
+        contacts=contacts,
+        lat=request.lat,
+        lon=request.lon,
+        today=today,
+    )
+
     return AssistantResponse(
-        answer=(
-            "I can only use verified RoadSoS data and approved safety templates. "
-            "The full assistant guardrail layer is not yet implemented. "
-            "For emergencies, dial 112 (all emergencies) or 108 (ambulance)."
-        ),
-        used_sources=["approved_safety_templates"],
-        refusal_reason="assistant_layer_not_implemented",
+        answer=result["answer"],
+        used_sources=result["used_sources"],
+        refusal_reason=result["refusal_reason"],
+        matched_contacts=[ContactRecord(**c) for c in result["matched_contacts"]],
     )

@@ -1,0 +1,163 @@
+[
+  {
+    "id": "bengaluru-victoria-hospital",
+    "name": "Victoria Hospital (Bangalore Medical College)",
+    "type": "trauma_center",
+    "lat": 12.9634,
+    "lon": 77.5855,
+    "phone": "080-26701150",
+    "address": "Fort Road, Krishnarajendra Market, Bengaluru, Karnataka 560002",
+    "locality": "Krishnarajendra Market",
+    "region": "Karnataka",
+    "country": "India",
+    "source_url": "https://www.bmcri.org/",
+    "source_name": "Bangalore Medical College and Research Institute Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.93,
+    "confidence_reasons": [
+      "Bangalore Medical College official website",
+      "State government trauma centre",
+      "Level 1 trauma centre with 24x7 emergency"
+    ],
+    "notes": "Major government trauma centre in central Bengaluru. 24x7 emergency and casualty."
+  },
+  {
+    "id": "bengaluru-nimhans",
+    "name": "NIMHANS (National Institute of Mental Health and Neuro Sciences)",
+    "type": "trauma_center",
+    "lat": 12.9406,
+    "lon": 77.5960,
+    "phone": "080-46110007",
+    "address": "Hosur Road, Bengaluru, Karnataka 560029",
+    "locality": "Hosur Road",
+    "region": "Karnataka",
+    "country": "India",
+    "source_url": "https://nimhans.ac.in/",
+    "source_name": "NIMHANS Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.92,
+    "confidence_reasons": [
+      "NIMHANS official website",
+      "Central government institute of national importance",
+      "Neurological trauma and emergency care"
+    ],
+    "notes": "Premier neurological trauma centre. Critical for head injury cases from road accidents."
+  },
+  {
+    "id": "bengaluru-bowring-hospital",
+    "name": "Bowring and Lady Curzon Hospital",
+    "type": "hospital",
+    "lat": 12.9784,
+    "lon": 77.6033,
+    "phone": "080-25561902",
+    "address": "Shivajinagar, Bengaluru, Karnataka 560001",
+    "locality": "Shivajinagar",
+    "region": "Karnataka",
+    "country": "India",
+    "source_url": "https://hfw.karnataka.gov.in/",
+    "source_name": "Karnataka Health and Family Welfare Department Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.88,
+    "confidence_reasons": [
+      "Karnataka Health Department official source",
+      "State government hospital",
+      "24x7 emergency and casualty department"
+    ],
+    "notes": "Government hospital in central Bengaluru with 24x7 emergency services."
+  },
+  {
+    "id": "bengaluru-police-koramangala",
+    "name": "Koramangala Police Station",
+    "type": "police",
+    "lat": 12.9352,
+    "lon": 77.6245,
+    "phone": "080-22943232",
+    "address": "80 Feet Road, Koramangala, Bengaluru, Karnataka 560034",
+    "locality": "Koramangala",
+    "region": "Karnataka",
+    "country": "India",
+    "source_url": "https://www.ksp.gov.in/",
+    "source_name": "Karnataka State Police Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.91,
+    "confidence_reasons": [
+      "Karnataka State Police official website",
+      "Government police station",
+      "Covers Koramangala area"
+    ],
+    "notes": "Covers Koramangala area. Dial 100 for police emergency."
+  },
+  {
+    "id": "bengaluru-ambulance-108",
+    "name": "Karnataka 108 Emergency Ambulance Service",
+    "type": "ambulance",
+    "lat": null,
+    "lon": null,
+    "phone": "108",
+    "address": null,
+    "locality": "Bengaluru",
+    "region": "Karnataka",
+    "country": "India",
+    "source_url": "https://www.emri.in/108-ambulance-service",
+    "source_name": "Emergency Management and Research Institute (EMRI) - 108 Service",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.98,
+    "confidence_reasons": [
+      "EMRI 108 service operational in Karnataka",
+      "Official state emergency ambulance service",
+      "Free GPS-dispatched ambulance"
+    ],
+    "notes": "Dial 108 for free emergency ambulance anywhere in Karnataka. GPS-dispatched."
+  },
+  {
+    "id": "bengaluru-fire-koramangala",
+    "name": "Koramangala Fire Station",
+    "type": "fire_station",
+    "lat": 12.9340,
+    "lon": 77.6200,
+    "phone": "080-22943101",
+    "address": "Koramangala, Bengaluru, Karnataka 560034",
+    "locality": "Koramangala",
+    "region": "Karnataka",
+    "country": "India",
+    "source_url": "https://kfd.karnataka.gov.in/",
+    "source_name": "Karnataka Fire and Emergency Services Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.88,
+    "confidence_reasons": [
+      "Karnataka Fire and Emergency Services official website",
+      "Government fire station",
+      "Covers Koramangala area"
+    ],
+    "notes": "Covers Koramangala area. Dial 101 for fire emergency anywhere in India."
+  },
+  {
+    "id": "bengaluru-tow-bbmp-helpline",
+    "name": "BBMP Vehicle Towing Helpline",
+    "type": "tow",
+    "lat": null,
+    "lon": null,
+    "phone": "080-22221188",
+    "address": null,
+    "locality": "Bengaluru",
+    "region": "Karnataka",
+    "country": "India",
+    "source_url": "https://bbmp.gov.in/",
+    "source_name": "Bruhat Bengaluru Mahanagara Palike (BBMP) Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.80,
+    "confidence_reasons": [
+      "BBMP official website",
+      "Municipal corporation towing helpline",
+      "Covers Bengaluru city limits"
+    ],
+    "notes": "BBMP towing helpline for Bengaluru city. Also try NHAI 1033 for highway breakdowns."
+  }
+]

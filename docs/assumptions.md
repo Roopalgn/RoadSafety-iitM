@@ -4,7 +4,8 @@
 
 - RoadSoS is built for the RoadSoS track only; DriveLegal and RoadWatch features are explicitly out of scope.
 - The primary demo region is IIT Madras / Chennai (coordinates: lat 12.9915, lon 80.2337).
-- A small second-region portability sample is included to show the schema is not Chennai-hardcoded.
+- A second-region portability sample (Bengaluru, 5-8 contacts) proves the schema works across cities.
+- Cross-region auto-detection uses bounding boxes; coordinates outside known regions receive national fallbacks only.
 
 ## Data
 
@@ -17,20 +18,25 @@
 
 ## Backend and assistant
 
-- The assistant uses retrieval from `contacts.seed.json`, `fallbacks.seed.json`, and approved safety templates only.
+- The assistant uses deterministic keyword/intent matching to search `contacts.seed.json`, `fallbacks.seed.json`, and approved safety templates.
+- Supported intents: hospital, trauma, ambulance, police, fire, tow, breakdown, puncture, offline help, first aid.
 - The assistant does not call external LLM APIs for emergency contact data.
-- If the assistant cannot verify something from curated data, it says so and shows official fallback guidance.
+- If the assistant cannot match a query to its verified dataset, it refuses with a clear `refusal_reason`.
+- Real-time queries (ETA, dispatch status, "is the ambulance coming?") are always refused.
+- Medical diagnosis, triage advice, and legal advice queries are always refused.
 - RoadSoS does not dispatch emergency services.
 - RoadSoS does not guarantee real-time availability of any listed contact.
-- RoadSoS does not provide medical diagnosis, triage advice, or legal advice.
+- Multi-factor ranking: distance + confidence + freshness + service priority + availability. Contacts verified > 90 days ago get a confidence penalty.
 
 ## Offline
 
-- The offline layer uses browser `localStorage` to store the `/api/cache-package` response. This is simpler and more broadly compatible than a service worker and sufficient for the demo scenario.
-- The user must tap **Refresh cache** at least once while online to populate the local store. The app always falls back to ERSS 112 if no cache exists.
+- The offline layer has two tiers: (1) service worker caches the app shell (HTML, JS, CSS) for cold offline start, and (2) browser `localStorage` stores the `/api/cache-package` data response.
+- The PWA is installable to home screen via the service worker and web manifest.
+- The user must tap **Refresh cache** at least once while online to populate the data store. The app always falls back to ERSS 112 if no data cache exists.
 - Stale cache is shown with a visible timestamp indicator; it does not silently serve old data.
-- The first offline version prioritises the Chennai / IIT Madras region (and fixture data until real contacts land in Merge 2).
+- The offline data covers Chennai and Bengaluru demo regions (not all of India).
 - Offline incident packet generation works locally without a backend call.
+- Multi-language incident packets (Tamil, Hindi) work offline using template-based keyword substitution.
 
 ## Scoring and evaluation
 

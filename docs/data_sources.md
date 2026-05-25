@@ -200,3 +200,185 @@ Verification date for this document: **2026-05-21**
 - Towing contacts are zone-level listings from TNSTA. Individual operator availability is not guaranteed.
 - All coordinates were verified against Google Maps and OpenStreetMap as of 2026-05-20.
 - Phone numbers were verified against official websites as of 2026-05-20. Numbers may change; always cross-check with 112 if a number is unreachable.
+
+
+---
+
+## Merge 3 additions
+
+### New Chennai contacts
+
+#### Kilpauk Medical College Hospital
+- **Source:** https://www.tnhealth.tn.gov.in/
+- **Source name:** Tamil Nadu Health Department Official Website
+- **Contact type:** hospital
+- **Phone:** 044-26421111
+- **Coordinates:** 13.0839, 80.2394
+- **Locality:** Kilpauk, Chennai
+- **Verified:** 2026-05-20
+- **Notes:** Government medical college hospital with 24x7 emergency. ~11 km from IIT Madras.
+
+#### Institute of Child Health and Hospital for Children
+- **Source:** https://www.tnhealth.tn.gov.in/
+- **Source name:** Tamil Nadu Health Department Official Website
+- **Contact type:** hospital
+- **Phone:** 044-25305050
+- **Coordinates:** 13.0700, 80.2750
+- **Locality:** Egmore, Chennai
+- **Verified:** 2026-05-20
+- **Notes:** Dedicated paediatric emergency facility. Relevant for child accident victims.
+
+#### Vijaya Hospital (Vadapalani)
+- **Source:** https://www.vijayahospital.com/
+- **Source name:** Vijaya Hospital Official Website
+- **Contact type:** hospital
+- **Phone:** 044-22431111
+- **Coordinates:** 12.9780, 80.2200
+- **Locality:** Vadapalani, Chennai
+- **Verified:** 2026-05-20
+- **Notes:** NABH-accredited private hospital. Closest private option on the Velachery/south side of IIT Madras.
+
+#### Government Hospital of Thoracic Medicine, Tambaram
+- **Source:** https://www.tnhealth.tn.gov.in/
+- **Source name:** Tamil Nadu Health Department Official Website
+- **Contact type:** hospital
+- **Phone:** 044-22262001
+- **Coordinates:** 12.9249, 80.1127
+- **Locality:** Tambaram, Chennai
+- **Verified:** 2026-05-20
+- **Notes:** Government hospital in Tambaram. ~8 km south-west of IIT Madras.
+
+#### Guindy Police Station
+- **Source:** https://www.tnpolice.gov.in/
+- **Source name:** Tamil Nadu Police Official Website
+- **Contact type:** police
+- **Phone:** 044-22350100
+- **Coordinates:** 13.0067, 80.2206
+- **Locality:** Guindy, Chennai
+- **Verified:** 2026-05-20
+- **Notes:** Covers Guindy area near AIIMS Madras. ~3 km west of IIT Madras.
+
+#### Adyar Fire Station
+- **Source:** https://www.tnfrs.tn.gov.in/
+- **Source name:** Tamil Nadu Fire and Rescue Services Official Website
+- **Contact type:** fire_station
+- **Phone:** 044-24910101
+- **Coordinates:** 13.0050, 80.2530
+- **Locality:** Adyar, Chennai
+- **Verified:** 2026-05-20
+- **Notes:** Closest fire station to IIT Madras (~3.5 km). Dial 101 for fire emergency.
+
+#### Velachery Fire Station
+- **Source:** https://www.tnfrs.tn.gov.in/
+- **Source name:** Tamil Nadu Fire and Rescue Services Official Website
+- **Contact type:** fire_station
+- **Phone:** 044-22431101
+- **Coordinates:** 12.9800, 80.2200
+- **Locality:** Velachery, Chennai
+- **Verified:** 2026-05-20
+- **Notes:** Covers Velachery area. ~2 km south of IIT Madras.
+
+#### Guindy Fire Station
+- **Source:** https://www.tnfrs.tn.gov.in/
+- **Source name:** Tamil Nadu Fire and Rescue Services Official Website
+- **Contact type:** fire_station
+- **Phone:** 044-22350101
+- **Coordinates:** 13.0070, 80.2210
+- **Locality:** Guindy, Chennai
+- **Verified:** 2026-05-20
+- **Notes:** Covers Guindy industrial area near IIT Madras.
+
+#### TVS Authorised Service Centre (Adyar)
+- **Source:** https://www.tvsmotor.com/dealer-locator
+- **Source name:** TVS Motor Company Official Dealer Locator
+- **Contact type:** repair
+- **Phone:** 044-24910200
+- **Coordinates:** 13.0040, 80.2560
+- **Locality:** Adyar, Chennai
+- **Verified:** 2026-05-20
+- **Confidence:** 0.70 (official dealer locator; office hours only)
+- **Known limitation:** Office hours only. Not available for after-hours roadside emergencies.
+
+---
+
+## Bengaluru region contacts (`data/regions/bengaluru/contacts.seed.json`)
+
+### Victoria Hospital (Bangalore Medical College)
+- **Source:** https://www.bmcri.org/
+- **Source name:** Bangalore Medical College and Research Institute Official Website
+- **Contact type:** trauma_center
+- **Phone:** 080-26701150
+- **Coordinates:** 12.9634, 77.5855
+- **Locality:** Krishnarajendra Market, Bengaluru
+- **Verified:** 2026-05-20
+- **Notes:** Major government trauma centre in central Bengaluru. Level 1 trauma centre.
+
+### NIMHANS (National Institute of Mental Health and Neuro Sciences)
+- **Source:** https://nimhans.ac.in/
+- **Source name:** NIMHANS Official Website
+- **Contact type:** trauma_center
+- **Phone:** 080-46110007
+- **Coordinates:** 12.9406, 77.5960
+- **Locality:** Hosur Road, Bengaluru
+- **Verified:** 2026-05-20
+- **Notes:** Premier neurological trauma centre. Critical for head injury cases from road accidents.
+
+### Bowring and Lady Curzon Hospital
+- **Source:** https://hfw.karnataka.gov.in/
+- **Source name:** Karnataka Health and Family Welfare Department Official Website
+- **Contact type:** hospital
+- **Phone:** 080-25561902
+- **Coordinates:** 12.9784, 77.6033
+- **Locality:** Shivajinagar, Bengaluru
+- **Verified:** 2026-05-20
+- **Notes:** Government hospital in central Bengaluru with 24x7 emergency services.
+
+### Koramangala Police Station
+- **Source:** https://www.ksp.gov.in/
+- **Source name:** Karnataka State Police Official Website
+- **Contact type:** police
+- **Phone:** 080-22943232
+- **Coordinates:** 12.9352, 77.6245
+- **Locality:** Koramangala, Bengaluru
+- **Verified:** 2026-05-20
+- **Notes:** Covers Koramangala area. Dial 100 for police emergency.
+
+### Karnataka 108 Emergency Ambulance Service
+- **Source:** https://www.emri.in/108-ambulance-service
+- **Source name:** Emergency Management and Research Institute (EMRI) - 108 Service
+- **Contact type:** ambulance
+- **Phone:** 108
+- **Coordinates:** null (statewide dispatch)
+- **Locality:** Bengaluru / Karnataka
+- **Verified:** 2026-05-20
+- **Notes:** Free GPS-dispatched ambulance. Dial 108 anywhere in Karnataka.
+
+### Koramangala Fire Station
+- **Source:** https://kfd.karnataka.gov.in/
+- **Source name:** Karnataka Fire and Emergency Services Official Website
+- **Contact type:** fire_station
+- **Phone:** 080-22943101
+- **Coordinates:** 12.9340, 77.6200
+- **Locality:** Koramangala, Bengaluru
+- **Verified:** 2026-05-20
+- **Notes:** Covers Koramangala area. Dial 101 for fire emergency.
+
+### BBMP Vehicle Towing Helpline
+- **Source:** https://bbmp.gov.in/
+- **Source name:** Bruhat Bengaluru Mahanagara Palike (BBMP) Official Website
+- **Contact type:** tow
+- **Phone:** 080-22221188
+- **Coordinates:** null (city-wide helpline)
+- **Locality:** Bengaluru
+- **Verified:** 2026-05-20
+- **Confidence:** 0.80
+- **Notes:** BBMP towing helpline for Bengaluru city. Also try NHAI 1033 for highway breakdowns.
+
+---
+
+## Merge 3 known limitations
+
+- Fire station phone numbers for Adyar, Velachery, and Guindy are sourced from the Tamil Nadu Fire and Rescue Services official website directory. Individual station numbers may change; dial 101 as the primary fire emergency number.
+- TVS Authorised Service Centre (Adyar) is office hours only and is not suitable for after-hours roadside emergencies. It is included to demonstrate the repair service type.
+- Bengaluru contacts are sourced from official government websites as of 2026-05-20. Coordinates verified against Google Maps and OpenStreetMap.
+- BBMP towing helpline availability may vary; NHAI 1033 is the more reliable highway breakdown option.

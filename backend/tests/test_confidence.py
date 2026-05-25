@@ -20,6 +20,7 @@ def _contact(**overrides):
         "verified_at": "2026-05-01",
         "confidence_score": 0.9,
         "confidence_reasons": ["seed"],
+        "availability": "24x7",
     }
     base.update(overrides)
     return base
@@ -27,8 +28,24 @@ def _contact(**overrides):
 
 def test_fresh_source_backed_keeps_score():
     result = evaluate_confidence(_contact(), TODAY)
-    assert result["score"] == 0.9
+    # Merge 3: hospital gets service-priority boost (x1.05) and 24x7 gets
+    # availability boost (x1.03), so effective score > curated score.
+    assert result["score"] >= 0.9
     assert any("fresh" in r for r in result["reasons"])
+
+
+def test_service_priority_boost_applied():
+    """trauma_center must score higher than repair for same curated score."""
+    trauma = evaluate_confidence(_contact(type="trauma_center"), TODAY)
+    repair = evaluate_confidence(_contact(type="repair"), TODAY)
+    assert trauma["score"] > repair["score"]
+
+
+def test_availability_boost_applied():
+    """24x7 contact must score higher than office_hours contact."""
+    always_on = evaluate_confidence(_contact(availability="24x7"), TODAY)
+    office = evaluate_confidence(_contact(availability="office_hours"), TODAY)
+    assert always_on["score"] > office["score"]
 
 
 def test_missing_source_zeroes_trust():
