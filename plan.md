@@ -40,6 +40,23 @@
 - Cross-region architecture: 10 points.
 - UI clarity and accessibility: 5 points.
 
+## Competitor analysis summary-
+An exhaustive analysis of all 110 competitor repositories listed in competitors.txt (including 18 initial deep-dives and 92 automated code scans) revealed the following patterns:
+- **Active vs. Scaffold Split**: Out of the 110 repos, 74 are active repositories with actual functional code (18 initial deep-dives + 56 discovered in the scan), while 36 are empty templates/scaffolds or abandoned.
+- **Common features among active competitors**: Google Maps Places API or Leaflet Maps for service discovery, basic Gemini/OpenAI chatbot interfaces (Next.js or React/Flask stacks), and native SMS or WhatsApp fallback links (e.g. `Bhavan-R/RoadSOS`, `Nitheka07/RoadSOS`, `leonkaushikdeka/roadsos`) to send pre-formatted distress messages.
+- **Rare but impactful features**: Browser-native voice description (Web Speech API), accident triage systems that prioritize services, and working PWAs with offline service workers (like `VidhyaSriKS/RoadSOS`, `ShriNithee/RoadSoS`).
+- **Universal weaknesses**: Zero competitors implement data provenance (no verification metadata or trust badges for emergency contacts), no chatbot has hallucination guardrails (making them highly dangerous for fabricating phone numbers), and cross-region support is just a hardcoded variable rather than a data-driven adapter.
+- **Our competitive Moat**: A trusted verified local contacts ledger (solving the Google Maps garbage data problem), a strict no-hallucination flight recorder architecture, and a schema-driven cross-region layout that runs 100% offline (contacts, maps, first-aid guides).
+- **Gaps we have closed in this plan**:
+  1. Seeding real verified Chennai contacts with trust ratings (P0).
+  2. Map integration using Leaflet.js with offline golden-region tiles (P0).
+  3. Working PWA infrastructure with service workers and IndexedDB (P0).
+  4. Native offline dispatch handoff using `sms:` and `https://wa.me/` protocols with pre-filled coordinates (P1).
+  5. Browser-native voice-to-text input (P1).
+  6. Multilingual support for Hindi, Tamil, and English (P1).
+  7. Accident severity triage affecting search ranking (P1).
+  8. Static first-aid templates stored offline (P1).
+
 ## Working model-
 - Shared repository trunk: `main`.
 - Roopal branch: `codex/roopal-product-submission`.
@@ -293,7 +310,7 @@ Build the working RoadSoS vertical slice: location in, ranked emergency help out
   - Manual location fallback.
   - Service filters for hospital, ambulance, police, tow, repair.
   - One-tap call links.
-  - Copy/share incident packet.
+  - Copy/share incident packet (including native offline messaging handoff links using `sms:` and `https://wa.me/` protocols pre-filled with the incident summary and GPS coordinates).
   - Show nearest landmark field.
 - Build offline layer:
   - Cache package fetch.

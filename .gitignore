@@ -28,3 +28,7 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Hackathon competitor tracking
+competitors.txt
+competitive_analysis.md
+
