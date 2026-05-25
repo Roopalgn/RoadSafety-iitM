@@ -13,7 +13,11 @@ import {
   Layers,
   LifeBuoy,
   LocateFixed,
+  Languages,
+  MapPinned,
   MapPin,
+  MessageCircle,
+  Moon,
   Navigation,
   Phone,
   Radio,
@@ -66,6 +70,77 @@ const INCIDENT_PRESETS = [
     severity: "unknown",
   },
 ];
+const REGION_OPTIONS = [
+  { value: "auto", label: "Auto detect", note: "Use coordinates" },
+  { value: "chennai", label: "Chennai", note: "IIT Madras demo" },
+  { value: "bengaluru", label: "Bengaluru", note: "Portability proof" },
+];
+const LANGUAGE_OPTIONS = [
+  { value: "english", label: "English" },
+  { value: "tamil", label: "Tamil" },
+  { value: "hindi", label: "Hindi" },
+];
+const QUICK_ASKS = [
+  "Nearest hospital",
+  "Nearest police",
+  "What do I do?",
+  "Fire station",
+];
+const ASSISTANT_INTENTS = [
+  { tokens: ["hospital", "trauma"], types: ["hospital", "trauma_center"] },
+  { tokens: ["ambulance", "108"], types: ["ambulance", "fallback_emergency"] },
+  { tokens: ["police", "fir", "100"], types: ["police", "fallback_emergency"] },
+  { tokens: ["tow", "breakdown", "puncture", "repair"], types: ["tow", "repair"] },
+  { tokens: ["fire"], types: ["fire_station", "fallback_emergency"] },
+];
+const TEMPLATE_RESPONSES = {
+  offline:
+    "Offline guidance: use cached verified contacts if present, otherwise call ERSS 112. Keep the location, landmark, hazards, and callback number ready.",
+  first_aid:
+    "Safety template: keep the injured person still unless there is immediate danger, warn traffic from a safe place, and call official emergency help. This is not medical advice.",
+};
+const TRANSLATION_TERMS = {
+  tamil: [
+    ["Road accident", "சாலை விபத்து"],
+    ["accident", "விபத்து"],
+    ["injured person(s)", "காயமடைந்தவர்(கள்)"],
+    ["injured person", "காயமடைந்தவர்"],
+    ["Severity", "தீவிரம்"],
+    ["Vehicle", "வாகனம்"],
+    ["Road side", "சாலை பக்கம்"],
+    ["Hazards", "ஆபத்துகள்"],
+    ["Callback", "திரும்ப அழைக்க"],
+    ["Notes", "குறிப்புகள்"],
+    ["Coordinates", "இட நிர்ணயம்"],
+    ["Nearest contacts", "அருகிலுள்ள தொடர்புகள்"],
+    ["Timestamp", "நேரம்"],
+    ["hospital", "மருத்துவமனை"],
+    ["ambulance", "ஆம்புலன்ஸ்"],
+    ["police", "காவல்"],
+    ["fire", "தீயணைப்பு"],
+    ["help", "உதவி"],
+  ],
+  hindi: [
+    ["Road accident", "सड़क दुर्घटना"],
+    ["accident", "दुर्घटना"],
+    ["injured person(s)", "घायल व्यक्ति"],
+    ["injured person", "घायल व्यक्ति"],
+    ["Severity", "गंभीरता"],
+    ["Vehicle", "वाहन"],
+    ["Road side", "सड़क की ओर"],
+    ["Hazards", "खतरे"],
+    ["Callback", "वापस कॉल"],
+    ["Notes", "नोट्स"],
+    ["Coordinates", "स्थान निर्देशांक"],
+    ["Nearest contacts", "नजदीकी संपर्क"],
+    ["Timestamp", "समय"],
+    ["hospital", "अस्पताल"],
+    ["ambulance", "एम्बुलेंस"],
+    ["police", "पुलिस"],
+    ["fire", "आग"],
+    ["help", "मदद"],
+  ],
+};
 const DEFAULT_LOCATION = {
   lat: "12.9915",
   lon: "80.2337",
@@ -134,7 +209,75 @@ function cacheAgeLabel(cacheInfo) {
   return `cached ${hours} hr ago`;
 }
 
-function ContactCard({ contact, fallback = false }) {
+function detectRegion(lat, lon, selectedRegion = "auto") {
+  if (selectedRegion !== "auto") {
+    return REGION_OPTIONS.find((region) => region.value === selectedRegion);
+  }
+  if (lat >= 12.8 && lat <= 13.2 && lon >= 80 && lon <= 80.35) {
+    return REGION_OPTIONS.find((region) => region.value === "chennai");
+  }
+  if (lat >= 12.85 && lat <= 13.1 && lon >= 77.45 && lon <= 77.75) {
+    return REGION_OPTIONS.find((region) => region.value === "bengaluru");
+  }
+  return { value: "national", label: "National fallback", note: "Outside demo regions" };
+}
+
+function translatePacket(packet, language) {
+  if (language === "english") return packet;
+  const translated = (TRANSLATION_TERMS[language] || []).reduce(
+    (text, [english, replacement]) => text.replaceAll(english, replacement),
+    packet
+  );
+  return `${translated} Translation note: template-based emergency keyword translation, not full NLP.`;
+}
+
+function uniqueContacts(contacts) {
+  const seen = new Set();
+  return contacts.filter((contact) => {
+    const key = contact.id || `${contact.name}-${contact.phone}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function hasAssistantToken(text, token) {
+  if (/^\d+$/.test(token)) return text.includes(token);
+  const pattern = new RegExp(`(^|[^a-z0-9])${escapeRegExp(token)}([^a-z0-9]|$)`);
+  return pattern.test(text);
+}
+
+function resolveAssistantMatches(question, contacts, fallbacks, cacheInfo) {
+  const normalized = question.toLowerCase();
+  const cacheContacts = cacheInfo?.contacts || [];
+  const pool = uniqueContacts([...contacts, ...cacheContacts, ...fallbacks]);
+  const intent = ASSISTANT_INTENTS.find((item) =>
+    item.tokens.some((token) => hasAssistantToken(normalized, token))
+  );
+  if (!intent) return { matches: [], intent: null };
+  return {
+    intent,
+    matches: pool
+      .filter((contact) => intent.types.includes(contact.type))
+      .slice(0, 4),
+  };
+}
+
+function SkeletonCard() {
+  return (
+    <div className="skeleton-card" aria-label="Loading contact">
+      <span />
+      <strong />
+      <span />
+    </div>
+  );
+}
+
+function ContactCard({ contact, fallback = false, compact = false }) {
   const reasons = [
     ...(contact.ranking_reasons || []),
     ...(contact.confidence_eval_reasons || []),
@@ -142,7 +285,11 @@ function ContactCard({ contact, fallback = false }) {
   ].slice(0, 4);
 
   return (
-    <article className={`contact-card ${fallback ? "fallback-card" : ""}`}>
+    <article
+      className={`contact-card ${fallback ? "fallback-card" : ""} ${
+        compact ? "compact-card" : ""
+      }`}
+    >
       <div className="contact-topline">
         <span className="contact-type">{formatType(contact.type)}</span>
         <span className="confidence-chip">
@@ -165,7 +312,11 @@ function ContactCard({ contact, fallback = false }) {
             </a>
           </p>
         </div>
-        <a className="call-button" href={`tel:${contact.phone}`}>
+        <a
+          className="call-button"
+          href={`tel:${contact.phone}`}
+          onClick={() => navigator.vibrate?.(35)}
+        >
           <Phone size={18} aria-hidden="true" />
           Call {contact.phone}
         </a>
@@ -245,15 +396,20 @@ function App() {
     used_sources: [],
     refusal_reason: null,
   });
+  const [assistantMatches, setAssistantMatches] = useState([]);
   const [serviceWorkerStatus, setServiceWorkerStatus] = useState(
     "service worker checking"
   );
   const [chaosMode, setChaosMode] = useState({
     backendDown: false,
     noLocalResults: false,
+    gpsDenied: false,
   });
   const [selectedPreset, setSelectedPreset] = useState("all");
   const [installPrompt, setInstallPrompt] = useState(null);
+  const [selectedRegion, setSelectedRegion] = useState("auto");
+  const [incidentLanguage, setIncidentLanguage] = useState("english");
+  const [nightMode, setNightMode] = useState(false);
 
   useEffect(() => {
     const onOnline = () => setIsOnline(true);
@@ -301,6 +457,10 @@ function App() {
     if (locationSource === "cached") return "Cached location";
     return "Manual location";
   }, [locationSource]);
+  const activeRegion = useMemo(
+    () => detectRegion(parsedLocation.lat, parsedLocation.lon, selectedRegion),
+    [parsedLocation.lat, parsedLocation.lon, selectedRegion]
+  );
 
   function toggleServiceType(type) {
     setSelectedServiceTypes((current) => {
@@ -313,6 +473,7 @@ function App() {
   }
 
   function applyPreset(preset) {
+    navigator.vibrate?.(20);
     setSelectedPreset(preset.id);
     setSelectedServiceTypes(preset.serviceTypes);
     setIncident((current) => ({ ...current, severity: preset.severity }));
@@ -336,20 +497,27 @@ function App() {
     }
 
     try {
-      const response = await fetch(`${API_BASE}/api/cache-package`);
+      const response = await fetch(
+        `${API_BASE}/api/cache-package?region=${encodeURIComponent(activeRegion.value)}`
+      );
       if (!response.ok) {
         throw new Error(`cache package failed: ${response.status}`);
       }
       const payload = await response.json();
-      storeCachedPackage(payload);
+      storeCachedPackage({ ...payload, selected_region: activeRegion.value });
       setCacheInfo(readCachedPackage());
-      setStatus(`Offline rescue pack refreshed: ${payload.version}.`);
+      setStatus(`Offline rescue pack refreshed: ${payload.version} (${activeRegion.label}).`);
     } catch (error) {
       setStatus(`Cache refresh unavailable: ${error.message}`);
     }
   }
 
   function useGpsLocation() {
+    if (chaosMode.gpsDenied) {
+      setLocationSource("manual");
+      setStatus("Chaos mode simulated GPS denial. Manual location remains active.");
+      return;
+    }
     if (!navigator.geolocation) {
       setStatus("GPS is unavailable. Manual location stays active.");
       setLocationSource("manual");
@@ -423,6 +591,7 @@ function App() {
           radius_km: 8,
           service_types: selectedServiceTypes,
           location_source: locationSource,
+          region: activeRegion.value,
         }),
       });
       if (!response.ok) {
@@ -434,6 +603,11 @@ function App() {
       setFallbacks(payload.fallback_contacts?.length ? payload.fallback_contacts : [FALLBACK_CONTACT]);
       setWarnings([
         ...(payload.warnings || []),
+        ...(activeRegion.value !== "chennai"
+          ? [
+              `${activeRegion.label} selected. Region-specific contacts require the backend region data PR; national fallbacks stay visible if no local contacts match.`,
+            ]
+          : []),
         ...(chaosMode.noLocalResults
           ? ["Chaos mode: local ranked contacts hidden to rehearse no-result fallback."]
           : []),
@@ -457,7 +631,7 @@ function App() {
       .split(",")
       .map((item) => item.trim())
       .filter(Boolean);
-    const localPacket = [
+    const localPacketEnglish = [
       `Road accident near ${location.landmark || "reported location"}.`,
       `${incident.injury_count || "Unknown"} injured person(s).`,
       `Severity: ${incident.severity || "unknown"}.`,
@@ -478,6 +652,7 @@ function App() {
       `Timestamp: ${new Date().toLocaleString()}.`,
       "Disclaimer: not medical advice or dispatch confirmation.",
     ].join(" ");
+    const localPacket = translatePacket(localPacketEnglish, incidentLanguage);
 
     if (!navigator.onLine) {
       setPacket(localPacket);
@@ -502,24 +677,23 @@ function App() {
         throw new Error(`summary API returned ${response.status}`);
       }
       const payload = await response.json();
-      setPacket(
-        [
-          payload.summary,
-          `Severity: ${incident.severity || "unknown"}.`,
-          `Vehicle: ${incident.vehicle_type || "not specified"}.`,
-          `Road side: ${incident.road_side || "not specified"}.`,
-          `Callback: ${incident.callback || "not provided"}.`,
-          `Nearest contacts: ${
-            contacts.length
-              ? contacts
-                  .slice(0, 3)
-                  .map((contact) => `${contact.name} (${contact.phone})`)
-                  .join("; ")
-              : "official fallbacks listed in app"
-          }.`,
-          payload.medical_disclaimer,
-        ].join(" ")
-      );
+      const backendPacketEnglish = [
+        payload.summary,
+        `Severity: ${incident.severity || "unknown"}.`,
+        `Vehicle: ${incident.vehicle_type || "not specified"}.`,
+        `Road side: ${incident.road_side || "not specified"}.`,
+        `Callback: ${incident.callback || "not provided"}.`,
+        `Nearest contacts: ${
+          contacts.length
+            ? contacts
+                .slice(0, 3)
+                .map((contact) => `${contact.name} (${contact.phone})`)
+                .join("; ")
+            : "official fallbacks listed in app"
+        }.`,
+        payload.medical_disclaimer,
+      ].join(" ");
+      setPacket(translatePacket(backendPacketEnglish, incidentLanguage));
       setStatus("Incident packet generated from backend fields.");
     } catch {
       setPacket(localPacket);
@@ -547,15 +721,61 @@ function App() {
     setStatus("Share is unavailable, so the packet was copied instead.");
   }
 
-  async function askAssistant() {
-    if (!navigator.onLine) {
+  function applyLocalAssistantFallback(question) {
+    const normalized = question.toLowerCase();
+    if (normalized.includes("offline") || normalized.includes("network")) {
+      setAssistantMatches([]);
       setAssistantTrace({
-        used_sources: ["offline_guardrail_template", "fallback_contacts"],
-        refusal_reason: "offline_live_availability_unverifiable",
+        used_sources: ["approved_safety_templates", "frontend_verified_cache"],
+        refusal_reason: null,
       });
-      setAssistantAnswer(
-        "Offline guardrail: I cannot verify live availability or invent contacts. Use listed cached contacts or official ERSS 112."
-      );
+      setAssistantAnswer(TEMPLATE_RESPONSES.offline);
+      return true;
+    }
+    if (normalized.includes("first aid") || normalized.includes("what do i do")) {
+      setAssistantMatches([]);
+      setAssistantTrace({
+        used_sources: ["approved_safety_templates"],
+        refusal_reason: null,
+      });
+      setAssistantAnswer(TEMPLATE_RESPONSES.first_aid);
+      return true;
+    }
+    const { matches, intent } = resolveAssistantMatches(
+      question,
+      contacts,
+      fallbacks,
+      cacheInfo
+    );
+    if (!intent || !matches.length) return false;
+    setAssistantMatches(matches);
+    setAssistantTrace({
+      used_sources: ["verified_contacts_db", "frontend_visible_or_cached_contacts"],
+      refusal_reason: null,
+    });
+    setAssistantAnswer(
+      `Verified retrieval preview: showing ${matches.length} contact(s) from currently loaded or cached RoadSoS data. Live availability is not confirmed.`
+    );
+    return true;
+  }
+
+  async function askAssistant(questionOverride = assistantQuestion) {
+    const question =
+      typeof questionOverride === "string"
+        ? questionOverride.trim()
+        : assistantQuestion.trim();
+    setAssistantQuestion(question);
+    setAssistantMatches([]);
+    if (!navigator.onLine) {
+      if (!applyLocalAssistantFallback(question)) {
+        setAssistantTrace({
+          used_sources: ["offline_guardrail_template", "fallback_contacts"],
+          refusal_reason: "offline_live_availability_unverifiable",
+        });
+        setAssistantAnswer(
+          "Offline guardrail: I cannot verify live availability or invent contacts. Use listed cached contacts or official ERSS 112."
+        );
+      }
       return;
     }
 
@@ -564,12 +784,21 @@ function App() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          message: assistantQuestion,
+          message: question,
           lat: parsedLocation.lat,
           lon: parsedLocation.lon,
         }),
       });
       const payload = await response.json();
+      const backendMatches = payload.matched_contacts || [];
+      if (
+        !backendMatches.length &&
+        payload.refusal_reason === "assistant_layer_not_implemented" &&
+        applyLocalAssistantFallback(question)
+      ) {
+        return;
+      }
+      setAssistantMatches(backendMatches);
       setAssistantTrace({
         used_sources: payload.used_sources || [],
         refusal_reason: payload.refusal_reason || null,
@@ -600,6 +829,7 @@ function App() {
     packet: Boolean(packet),
     assistant: Boolean(assistantAnswer),
     offlineShell: serviceWorkerStatus === "offline shell ready",
+    night: nightMode,
   };
   const coverageSummary = {
     local: contacts.length,
@@ -608,7 +838,7 @@ function App() {
   };
 
   return (
-    <main className="app-shell">
+    <main className={nightMode ? "app-shell night-mode" : "app-shell"}>
       <div className="atmosphere atmosphere-one" aria-hidden="true" />
       <div className="atmosphere atmosphere-two" aria-hidden="true" />
       <section className="emergency-panel" aria-labelledby="app-title">
@@ -629,6 +859,19 @@ function App() {
             <WifiOff size={16} aria-hidden="true" />
             {serviceWorkerStatus}
           </span>
+          <span className="status-pill">
+            <MapPinned size={16} aria-hidden="true" />
+            {activeRegion.label}
+          </span>
+          <button
+            className="status-button"
+            type="button"
+            onClick={() => setNightMode((current) => !current)}
+            aria-pressed={nightMode}
+          >
+            <Moon size={16} aria-hidden="true" />
+            Night demo
+          </button>
           <button className="status-button" type="button" onClick={installApp}>
             <Download size={16} aria-hidden="true" />
             Install PWA
@@ -694,6 +937,7 @@ function App() {
               <DemoStep done={readiness.services} label="Ranked contacts" />
               <DemoStep done={readiness.packet} label="Packet generated" />
               <DemoStep done={readiness.assistant} label="Assistant refusal" />
+              <DemoStep done={readiness.night} label="Night mode" />
             </div>
           </div>
           <div className="mission-card">
@@ -742,6 +986,19 @@ function App() {
                     setLocation({ ...location, landmark: event.target.value })
                   }
                 />
+              </label>
+              <label className="wide-input">
+                Region mode
+                <select
+                  value={selectedRegion}
+                  onChange={(event) => setSelectedRegion(event.target.value)}
+                >
+                  {REGION_OPTIONS.map((region) => (
+                    <option key={region.value} value={region.value}>
+                      {region.label} - {region.note}
+                    </option>
+                  ))}
+                </select>
               </label>
             </div>
             <div className="filter-panel" aria-label="Service filters">
@@ -848,6 +1105,19 @@ function App() {
             >
               Simulate no local results
             </button>
+            <button
+              className={chaosMode.gpsDenied ? "filter-chip active" : "filter-chip"}
+              type="button"
+              onClick={() =>
+                setChaosMode((current) => ({
+                  ...current,
+                  gpsDenied: !current.gpsDenied,
+                }))
+              }
+              aria-pressed={chaosMode.gpsDenied}
+            >
+              Simulate GPS denied
+            </button>
           </div>
         </section>
 
@@ -869,7 +1139,13 @@ function App() {
               <h2>Ranked emergency contacts</h2>
             </div>
             <div className="contact-list" aria-label="Ranked emergency contacts">
-              {contacts.length ? (
+              {loading ? (
+                <>
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                </>
+              ) : contacts.length ? (
                 contacts.map((contact) => (
                   <ContactCard contact={contact} key={contact.id} />
                 ))
@@ -901,6 +1177,23 @@ function App() {
               <Clipboard size={18} aria-hidden="true" />
               <h2>Incident packet</h2>
             </div>
+            <label>
+              Packet language
+              <select
+                value={incidentLanguage}
+                onChange={(event) => setIncidentLanguage(event.target.value)}
+              >
+                {LANGUAGE_OPTIONS.map((language) => (
+                  <option key={language.value} value={language.value}>
+                    {language.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <p className="language-note">
+              <Languages size={15} aria-hidden="true" />
+              Tamil/Hindi use template-based emergency keyword translation.
+            </p>
             <label>
               Injured people
               <input
@@ -990,6 +1283,19 @@ function App() {
               <ShieldCheck size={18} aria-hidden="true" />
               <h2>No-hallucination assistant check</h2>
             </div>
+            <div className="quick-ask-grid" aria-label="Assistant quick asks">
+              {QUICK_ASKS.map((question) => (
+                <button
+                  className="quick-ask"
+                  key={question}
+                  type="button"
+                  onClick={() => askAssistant(question)}
+                >
+                  <MessageCircle size={15} aria-hidden="true" />
+                  {question}
+                </button>
+              ))}
+            </div>
             <label>
               Ask an unsafe/live-availability question
               <input
@@ -997,13 +1303,20 @@ function App() {
                 onChange={(event) => setAssistantQuestion(event.target.value)}
               />
             </label>
-            <button className="secondary-action" type="button" onClick={askAssistant}>
+            <button className="secondary-action" type="button" onClick={() => askAssistant()}>
               Ask guarded assistant
             </button>
             <p className="assistant-answer">
               {assistantAnswer ||
                 "The assistant must cite verified data/templates or refuse. It never creates contacts."}
             </p>
+            {assistantMatches.length > 0 && (
+              <div className="assistant-match-list" aria-label="Assistant retrieved contacts">
+                {assistantMatches.map((contact) => (
+                  <ContactCard contact={contact} compact key={`assistant-${contact.id}`} />
+                ))}
+              </div>
+            )}
             <div className="flight-recorder" aria-label="Assistant flight recorder">
               <strong>Flight recorder</strong>
               <span>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="RoadSoS icon">
+  <rect width="512" height="512" rx="112" fill="#17212b"/>
+  <circle cx="256" cy="256" r="172" fill="#fffaf0" opacity="0.1"/>
+  <path d="M256 102c70 0 127 57 127 127 0 95-127 181-127 181S129 324 129 229c0-70 57-127 127-127Z" fill="#0f766e"/>
+  <path d="M236 164h40v48h48v40h-48v48h-40v-48h-48v-40h48v-48Z" fill="#fffaf0"/>
+  <path d="M141 370h230" stroke="#f4b860" stroke-width="28" stroke-linecap="round"/>
+</svg>

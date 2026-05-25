@@ -490,6 +490,13 @@ Address the three biggest scoring gaps: cross-region portability (currently 0/10
 - Suggested PR title:
   - `Add installable PWA, region selector, smart assistant UI, and night mode`
 
+**Sidhesh implementation note:** the frontend PR now covers the service worker,
+offline fallback page, install prompt surface, region selector contract, active
+region status, assistant quick asks with retrieved contact cards, template-based
+Tamil/Hindi incident packet output, automatic dark mode, and manual Night demo
+toggle. The remaining cross-region production behavior depends on Suyash's
+backend/data PR for source-backed Bengaluru contacts and region-aware routing.
+
 ### Roopal tasks-
 - Review Suyash PR for:
   - Cross-region data provenance (Bengaluru sources must be verifiable).
@@ -600,6 +607,12 @@ Ensure the app is demo-proof: every judge interaction path works reliably, edge 
   - Lighthouse scores are documented.
 - Suggested PR title:
   - `Polish UI, capture screenshots, and verify offline/accessibility`
+
+**Sidhesh implementation note:** the frontend PR now includes the mobile polish
+pass, loading skeletons, haptic call taps, GPS-denied chaos rehearsal, offline
+verification notes, and the required 375px screenshots under
+`docs/screenshots/`. Lighthouse should still be run manually in the browser
+before final submission because desktop availability varies by judge machine.
 
 ### Roopal tasks-
 - **Finalize 7-slide presentation:**

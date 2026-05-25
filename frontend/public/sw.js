@@ -1,5 +1,5 @@
 const CACHE_NAME = "roadsos-shell-v1";
-const SHELL_URLS = ["/", "/manifest.webmanifest"];
+const SHELL_URLS = ["/", "/manifest.webmanifest", "/offline.html"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -33,7 +33,7 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put("/", copy));
           return response;
         })
-        .catch(() => caches.match("/") || caches.match(request))
+        .catch(() => caches.match("/") || caches.match("/offline.html") || caches.match(request))
     );
     return;
   }

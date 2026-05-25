@@ -35,7 +35,7 @@ A bystander near IIT Madras sees a road accident and needs reliable emergency he
 
 - The lat/lon fields default to IIT Madras (`12.9915`, `80.2337`) and landmark `IIT Madras main gate`.
 - Optionally tap `Use GPS` to capture live location. If GPS is denied, manual fields remain active.
-- Expected: Location confidence ribbon shows GPS, manual, or cached location context.
+- Expected: Location confidence ribbon shows GPS, manual, or cached location context. The region selector defaults to auto-detect and shows Chennai for IIT Madras.
 
 ### Beat 3 - 10-second rescue drill
 
@@ -65,9 +65,10 @@ A bystander near IIT Madras sees a road accident and needs reliable emergency he
 ### Beat 7 - Incident packet
 
 - Confirm the incident packet form includes injured count, severity, callback number, vehicle type, road side, hazards, and notes.
+- Switch `Packet language` to Tamil if judges ask about regional accessibility.
 - Tap `Generate packet`.
 - Tap `Copy packet` or `Share packet`.
-- Expected: Short structured summary includes location, landmark, injury count, severity, hazards, callback, nearest contacts, timestamp, and medical disclaimer.
+- Expected: Short structured summary includes location, landmark, injury count, severity, hazards, callback, nearest contacts, timestamp, and medical disclaimer. Tamil/Hindi output uses template-based emergency keyword translation.
 
 ### Beat 8 - Offline mode
 
@@ -79,24 +80,33 @@ A bystander near IIT Madras sees a road accident and needs reliable emergency he
 
 ### Beat 9 - Assistant refusal and flight recorder
 
+- Tap the `Nearest hospital` quick ask first.
+- Expected: The assistant answer lists verified visible/cached contacts and renders compact matched contact cards.
 - Type `Can an ambulance come now?` in the assistant panel, or use the default question.
 - Tap `Ask guarded assistant`.
 - Expected: Backend returns a guarded answer/refusal. The UI shows source/refusal trace in the flight recorder.
 - Narrate: `The assistant admits what it cannot do. It never invents live availability.`
 
-### Beat 10 - Chaos rehearsal
+### Beat 10 - Night mode
+
+- Tap `Night demo` in the status row.
+- Expected: The app switches to a high-contrast dark emergency theme without changing data.
+- Narrate: `Accidents often happen in low light, so the UI has a night-safe mode.`
+
+### Beat 11 - Chaos rehearsal
 
 - Turn on `Simulate backend down`, then tap `Start rescue drill`.
 - Turn on `Simulate no local results`, then tap `Start rescue drill`.
-- Expected: Backend-down falls back to cache or official ERSS; no-result keeps official fallbacks visible with a warning.
+- Turn on `Simulate GPS denied`, then tap `Use GPS`.
+- Expected: Backend-down falls back to cache or official ERSS; no-result keeps official fallbacks visible with a warning; GPS-denied keeps manual fields active.
 - Narrate: `We can rehearse failure without corrupting the data.`
 
-### Beat 11 - Cross-region / unknown-region check
+### Beat 12 - Cross-region / unknown-region check
 
-- Change lat to `28.6139`, lon to `77.2090`, or use Bengaluru coordinates if second-region data is present.
+- Use the region selector to choose Bengaluru, or change lat/lon to `28.6139`, `77.2090` for an unknown-region fallback rehearsal.
 - Tap `Start rescue drill`.
-- Expected: If no local ranked contacts match, warning text explains the gap and official fallback contacts remain visible.
-- Narrate: `The schema is data-driven; unsupported regions fail safely instead of inventing contacts.`
+- Expected: If no local ranked contacts match, warning text explains the gap and official fallback contacts remain visible. Source-backed Bengaluru contacts appear only after the backend region data PR lands.
+- Narrate: `The frontend is region-ready; unsupported regions fail safely instead of inventing contacts.`
 
 ## Chaos-mode dry run
 
@@ -121,6 +131,8 @@ Run this before every live judging session:
 - No invented emergency contact appears anywhere.
 - Bystander role cards are accessible.
 - Incident packet generates without backend (offline path).
+- Tamil packet mode generates template-based emergency keyword output.
+- Night mode remains readable at mobile width.
 - Assistant refuses clearly for real-time / medical / legal queries.
 - The demo repeats without manual database edits.
 
@@ -131,4 +143,4 @@ Run this before every live judging session:
 - Offline cache uses service worker for app shell and localStorage for data. Cache persists across page loads but not across browser data clears.
 - The app does not dispatch emergency services.
 - Assistant behavior is guarded and retrieval/refusal-oriented; it is not an external LLM and must not answer outside verified data/templates.
-- Full second-region depth, dark mode, and multi-language packets remain follow-up work unless their dedicated M3 implementation PR lands first.
+- Full second-region contact depth remains follow-up until the backend/data PR lands. The frontend region selector, dark mode, and multi-language packet demo are implemented in the Sidhesh PR.

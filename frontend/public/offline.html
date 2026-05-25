@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RoadSoS offline</title>
+    <style>
+      :root {
+        color: #fffaf0;
+        background: #17212b;
+        font-family: "Aptos", "Segoe UI", sans-serif;
+      }
+
+      body {
+        display: grid;
+        min-height: 100vh;
+        margin: 0;
+        place-items: center;
+        padding: 24px;
+      }
+
+      main {
+        width: min(560px, 100%);
+        border: 1px solid rgba(255, 250, 240, 0.16);
+        border-radius: 28px;
+        background: rgba(255, 250, 240, 0.08);
+        padding: 28px;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2rem, 10vw, 4rem);
+        line-height: 0.9;
+      }
+
+      p {
+        color: #d6e0e8;
+        font-weight: 800;
+        line-height: 1.6;
+      }
+
+      a {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        border-radius: 999px;
+        background: #0f766e;
+        color: #fffaf0;
+        font-weight: 900;
+        padding: 0 16px;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>RoadSoS is offline.</h1>
+      <p>
+        If the app shell is cached, reload once. If no local rescue pack is
+        available, use official emergency fallback numbers: 112 for all
+        emergencies, 108 for ambulance, 100 for police.
+      </p>
+      <a href="/">Try RoadSoS again</a>
+    </main>
+  </body>
+</html>

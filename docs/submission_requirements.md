@@ -22,14 +22,14 @@ Based on the hackathon information in `info.md`, Stage 1 needs:
 | Backend: retrieval-based assistant, cross-region, multi-factor ranking | Suyash | Merge 3/4 follow-up |
 | Frontend: emergency flow, offline cache, trust ledger, incident packet, bystander mode, assistant panel | Sidhesh | Done (M2) |
 | Frontend: service worker, demo readiness, chaos controls, presets, richer packet | Sidhesh | Done in this PR |
-| Frontend: region selector, dark mode, multi-language packet | Sidhesh | Merge 3/4 follow-up |
+| Frontend: region selector, dark mode, multi-language packet | Sidhesh | Done in this PR; backend region data still Suyash-owned |
 | Production Chennai contacts in `data/contacts.seed.json` | Suyash | Done (M2) |
 | Second-region production contacts | Suyash | Merge 3/4 follow-up |
 | SQLite seed generation | Suyash | Done (M2) |
 | 7-slide deck (Markdown outline) | Roopal | Done (M3 outline) |
 | 7-slide deck (PDF final) | Roopal | Merge 4 |
 | Word submission document | Roopal | Merge 4 |
-| Final screenshots for the deck | Sidhesh | Merge 4 |
+| Final screenshots for the deck | Sidhesh | Done in this PR |
 | Source URL verification script | Suyash | Merge 4 |
 | Final test/manual verification notes | Suyash + Sidhesh | Merge 4 |
 
@@ -55,7 +55,7 @@ The deck must include a Welcome slide and a Thank You slide as required by the h
 - Contact quality depends on source freshness and manual curation cadence.
 - Offline cache is scoped to curated demo regions.
 - The assistant uses verified contact data and approved safety templates only; it does not call external LLM APIs for emergency contacts.
-- Cross-region auto-detection and multi-language support should be documented as implemented only after their dedicated code/data PR lands.
+- Cross-region UI auto-detection and multi-language packet output are implemented in the frontend. Source-backed second-region contacts should be claimed only after the backend/data PR lands.
 - Service worker caches the app shell; data freshness depends on the last online cache refresh.
 
 ## Software packages (confirmed after Merge 2)

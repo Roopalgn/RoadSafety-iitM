@@ -5,6 +5,14 @@
   "display": "standalone",
   "background_color": "#f7fafc",
   "theme_color": "#102a43",
-  "description": "Offline-first accident response assistant."
+  "description": "Offline-first accident response assistant.",
+  "icons": [
+    {
+      "src": "/roadsos-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
 

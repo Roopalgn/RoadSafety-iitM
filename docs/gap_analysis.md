@@ -30,7 +30,7 @@ RoadSoS now has a credible vertical slice: source-backed Chennai contacts, deter
 - Repair/puncture contacts are absent or too sparse for a convincing vehicle-recovery flow.
 - Ambulance coverage relies mostly on state/national fallback numbers.
 - Towing coverage is sparse and zone-level.
-- No second-region sample is present yet, so global/cross-region claims are not proven in data.
+- The frontend now has a region selector and auto-detection contract, but no second-region production seed is present yet, so global/cross-region claims are not proven in data.
 - Several source URLs are broad homepages rather than contact-specific source pages.
 - No automated source URL availability checker is wired into tests.
 - No manual verification workflow exists for stale or unreachable contacts.
@@ -47,14 +47,14 @@ RoadSoS now has a credible vertical slice: source-backed Chennai contacts, deter
 ### Frontend Product Experience
 
 - The current PR adds a lightweight contact radar, but not a real map, route preview, or route-safe landmark trail.
-- The current PR adds rehearsable chaos controls for backend-down and no-result states; GPS-denied still needs a dedicated visual toggle or browser test.
-- Install prompt and service-worker status are visible, but there is no full PWA install analytics or manifest icon polish yet.
+- The current PR adds rehearsable chaos controls for backend-down, no-result, and GPS-denied states; browser-level GPS permission testing is still manual.
+- Install prompt, service-worker status, manifest icon, and offline fallback page are visible, but there is no full PWA install analytics yet.
 - A structured demo checklist is now inside the app, but it is not persisted across sessions.
 - Contact cards do not yet show source IDs or cache version.
 - Service filters now include medical, police, and vehicle recovery presets, but preset ranking is still handled mostly by filters rather than backend scoring.
 - Incident packet now captures callback number, vehicle type, road side, severity, and nearest contacts, but it is not exported as QR/SMS format yet.
 - Share action depends on browser capability and has no visible fallback reason.
-- No screenshots or automated visual checks are committed.
+- Screenshots are committed under `docs/screenshots/`; automated visual regression checks are still absent.
 
 ### Backend And API
 
@@ -79,7 +79,7 @@ RoadSoS now has a credible vertical slice: source-backed Chennai contacts, deter
 ### Submission Assets
 
 - The 7-slide deck is outlined but not built.
-- Final screenshots are missing.
+- Final frontend screenshots are available under `docs/screenshots/`; the final deck still needs to consume them.
 - A package/assumptions Word document is not generated.
 - Demo recording or GIF is missing.
 - README setup is usable, but root-level one-command local run instructions would help judges.
@@ -113,9 +113,14 @@ This PR closes the highest demo-impact frontend gaps that fit safely in one revi
 - Service-worker app-shell caching.
 - Clearer offline rescue-pack behavior.
 - Assistant flight-recorder trace UI.
+- Assistant quick asks with frontend retrieval preview cards.
 - Demo readiness checklist and coverage snapshot.
 - Emergency presets for medical, police, and vehicle recovery flows.
-- Backend-down/no-result chaos rehearsal controls.
+- Backend-down/no-result/GPS-denied chaos rehearsal controls.
 - Richer ambulance-ready incident packet fields.
+- Template-based Tamil/Hindi incident packet output.
+- Region selector and active-region status, ready for backend region data.
+- Automatic dark mode plus manual Night demo toggle.
+- Mobile screenshots and offline verification notes.
 - A more expressive, less static frontend visual system.
 - A durable gap list for later team work.
