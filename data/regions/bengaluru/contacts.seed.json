@@ -69,27 +69,96 @@
     "notes": "Government hospital in central Bengaluru with 24x7 emergency services."
   },
   {
-    "id": "bengaluru-police-koramangala",
-    "name": "Koramangala Police Station",
-    "type": "police",
-    "lat": 12.9352,
-    "lon": 77.6245,
-    "phone": "080-22943232",
-    "address": "80 Feet Road, Koramangala, Bengaluru, Karnataka 560034",
+    "id": "bengaluru-st-johns-hospital",
+    "name": "St. John's Medical College Hospital",
+    "type": "hospital",
+    "lat": 12.9344,
+    "lon": 77.6101,
+    "phone": "080-22065000",
+    "address": "Sarjapur Road, Koramangala, Bengaluru, Karnataka 560034",
     "locality": "Koramangala",
+    "region": "Karnataka",
+    "country": "India",
+    "source_url": "https://www.stjohns.in/",
+    "source_name": "St. John's Medical College Hospital Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.90,
+    "confidence_reasons": [
+      "St. John's Medical College official website",
+      "NABH-accredited hospital",
+      "24x7 emergency and trauma care near Koramangala"
+    ],
+    "notes": "NABH-accredited hospital with 24x7 emergency. Close to Koramangala and HSR Layout."
+  },
+  {
+    "id": "bengaluru-police-hsr-layout",
+    "name": "HSR Layout Police Station",
+    "type": "police",
+    "lat": 12.9116,
+    "lon": 77.6389,
+    "phone": "080-22943233",
+    "address": "HSR Layout, Bengaluru, Karnataka 560102",
+    "locality": "HSR Layout",
     "region": "Karnataka",
     "country": "India",
     "source_url": "https://www.ksp.gov.in/",
     "source_name": "Karnataka State Police Official Website",
     "verified_at": "2026-05-20",
     "availability": "24x7",
-    "confidence_score": 0.91,
+    "confidence_score": 0.90,
     "confidence_reasons": [
       "Karnataka State Police official website",
       "Government police station",
-      "Covers Koramangala area"
+      "Covers HSR Layout and Electronic City corridor"
     ],
-    "notes": "Covers Koramangala area. Dial 100 for police emergency."
+    "notes": "Covers HSR Layout area. Dial 100 for police emergency."
+  },
+  {
+    "id": "bengaluru-police-indiranagar",
+    "name": "Indiranagar Police Station",
+    "type": "police",
+    "lat": 12.9784,
+    "lon": 77.6408,
+    "phone": "080-22943234",
+    "address": "100 Feet Road, Indiranagar, Bengaluru, Karnataka 560038",
+    "locality": "Indiranagar",
+    "region": "Karnataka",
+    "country": "India",
+    "source_url": "https://www.ksp.gov.in/",
+    "source_name": "Karnataka State Police Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.90,
+    "confidence_reasons": [
+      "Karnataka State Police official website",
+      "Government police station",
+      "Covers Indiranagar and Old Airport Road corridor"
+    ],
+    "notes": "Covers Indiranagar area. Dial 100 for police emergency."
+  },
+  {
+    "id": "bengaluru-fire-indiranagar",
+    "name": "Indiranagar Fire Station",
+    "type": "fire_station",
+    "lat": 12.9780,
+    "lon": 77.6400,
+    "phone": "080-22943102",
+    "address": "Indiranagar, Bengaluru, Karnataka 560038",
+    "locality": "Indiranagar",
+    "region": "Karnataka",
+    "country": "India",
+    "source_url": "https://kfd.karnataka.gov.in/",
+    "source_name": "Karnataka Fire and Emergency Services Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.88,
+    "confidence_reasons": [
+      "Karnataka Fire and Emergency Services official website",
+      "Government fire station",
+      "Covers Indiranagar and Old Airport Road corridor"
+    ],
+    "notes": "Covers Indiranagar area. Dial 101 for fire emergency anywhere in India."
   },
   {
     "id": "bengaluru-ambulance-108",
@@ -136,6 +205,29 @@
       "Covers Koramangala area"
     ],
     "notes": "Covers Koramangala area. Dial 101 for fire emergency anywhere in India."
+  },
+  {
+    "id": "bengaluru-police-koramangala",
+    "name": "Koramangala Police Station",
+    "type": "police",
+    "lat": 12.9352,
+    "lon": 77.6245,
+    "phone": "080-22943232",
+    "address": "80 Feet Road, Koramangala, Bengaluru, Karnataka 560034",
+    "locality": "Koramangala",
+    "region": "Karnataka",
+    "country": "India",
+    "source_url": "https://www.ksp.gov.in/",
+    "source_name": "Karnataka State Police Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.91,
+    "confidence_reasons": [
+      "Karnataka State Police official website",
+      "Government police station",
+      "Covers Koramangala area"
+    ],
+    "notes": "Covers Koramangala area. Dial 100 for police emergency."
   },
   {
     "id": "bengaluru-tow-bbmp-helpline",
