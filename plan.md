@@ -40,22 +40,56 @@
 - Cross-region architecture: 10 points.
 - UI clarity and accessibility: 5 points.
 
-## Competitor analysis summary-
-An exhaustive analysis of all 110 competitor repositories listed in competitors.txt (including 18 initial deep-dives and 92 automated code scans) revealed the following patterns:
-- **Active vs. Scaffold Split**: Out of the 110 repos, 74 are active repositories with actual functional code (18 initial deep-dives + 56 discovered in the scan), while 36 are empty templates/scaffolds or abandoned.
-- **Common features among active competitors**: Google Maps Places API or Leaflet Maps for service discovery, basic Gemini/OpenAI chatbot interfaces (Next.js or React/Flask stacks), and native SMS or WhatsApp fallback links (e.g. `Bhavan-R/RoadSOS`, `Nitheka07/RoadSOS`, `leonkaushikdeka/roadsos`) to send pre-formatted distress messages.
-- **Rare but impactful features**: Browser-native voice description (Web Speech API), accident triage systems that prioritize services, and working PWAs with offline service workers (like `VidhyaSriKS/RoadSOS`, `ShriNithee/RoadSoS`).
-- **Universal weaknesses**: Zero competitors implement data provenance (no verification metadata or trust badges for emergency contacts), no chatbot has hallucination guardrails (making them highly dangerous for fabricating phone numbers), and cross-region support is just a hardcoded variable rather than a data-driven adapter.
-- **Our competitive Moat**: A trusted verified local contacts ledger (solving the Google Maps garbage data problem), a strict no-hallucination flight recorder architecture, and a schema-driven cross-region layout that runs 100% offline (contacts, maps, first-aid guides).
-- **Gaps we have closed in this plan**:
-  1. Seeding real verified Chennai contacts with trust ratings (P0).
-  2. Map integration using Leaflet.js with offline golden-region tiles (P0).
-  3. Working PWA infrastructure with service workers and IndexedDB (P0).
-  4. Native offline dispatch handoff using `sms:` and `https://wa.me/` protocols with pre-filled coordinates (P1).
-  5. Browser-native voice-to-text input (P1).
-  6. Multilingual support for Hindi, Tamil, and English (P1).
-  7. Accident severity triage affecting search ranking (P1).
-  8. Static first-aid templates stored offline (P1).
+## Public GitHub competitive audit - 2026-05-25
+
+### Scope and sources-
+- Search method: GitHub public repository search for `roadsos` in repository name plus `RoadSafety-iitM`, `roadsafety iitm`, and closely related casing/spelling variants.
+- Search result scale: GitHub API returned 142 public repositories with `roadsos` in the repo name and 3 public `roadsafety/iitm` naming matches at audit time.
+- Public metadata is noisy. Some repos have little or no README, so this audit only treats repo names, descriptions, topics, languages, deployment URLs, stars/forks, and visible GitHub metadata as evidence.
+- Sources inspected:
+  - https://github.com/LEVELING2108/RoadSoS
+  - https://github.com/Hemapriya26/roadsos_emergency_response_app
+  - https://github.com/NITISH-R-G/RoadSOS
+  - https://github.com/AS24xADITYA/RoadSoS-AI_Cloud
+  - https://github.com/anujapol24-gif/roadsos
+  - https://github.com/Spacey6849/RoadSOS
+  - https://github.com/nandinirathod2321/IIT-M-ROADSOS
+  - https://github.com/Akash-T-aiml/IITM_RoadSafety
+  - https://github.com/suyashkumar102/RoadSafety-iitM
+  - https://github.com/harshi-codes/roadsafety_iitm
+
+### What competitors visibly claim-
+- `LEVELING2108/RoadSoS` is the strongest public feature-claim competitor. Its repository description advertises Google Gemini scene triage, WebSockets live SOS tracking, rPPG vital monitoring, React 19 + FastAPI, Leaflet/maps, PWA, voice assistant, geolocation, and healthcare/safety AI topics.
+- `NITISH-R-G/RoadSOS` is a Flutter/Dart mobile-oriented repo with public traction signals at audit time (4 stars, 2 forks, many open issues). Even if unfinished, it may look more "native app" than our browser PWA to a judge skimming screenshots.
+- `AS24xADITYA/RoadSoS-AI_Cloud` publicly positions itself as a Road Safety AI cloud product and has an MIT license plus small star traction.
+- `Hemapriya26/roadsos_emergency_response_app`, `anujapol24-gif/roadsos`, and `Spacey6849/RoadSOS` have visible Vercel/Netlify-style deployment URLs, which means they may be easier for judges to open instantly than a local-only demo.
+- `nandinirathod2321/IIT-M-ROADSOS` and `Akash-T-aiml/IITM_RoadSafety` show that multiple teams are likely building mobile or TypeScript frontends around the same IITM road-safety theme.
+- `suyashkumar102/RoadSafety-iitM` is a related team/fork signal, not a true external competitor. It should still be watched to avoid branch drift.
+
+### Our current advantages-
+- We have a trust-first data contract: source URL, source name, verification date, confidence, ranking reasons, and fixture/production separation.
+- We avoid unsafe AI claims: no invented emergency numbers, no dispatch guarantee, no medical/legal diagnosis, and visible assistant refusal logic.
+- We have deterministic backend APIs, data validation, pytest coverage, and documented manual checks, while many public repos expose only app metadata/deployments.
+- We have an offline-first product story: cache package, service worker shell, fallback contacts, cache age, and chaos rehearsal controls.
+- We have a judge script and submission docs tied to actual behavior, not just a feature list.
+
+### Competitive gaps to close-
+- **Vision triage gap:** Add optional photo-based scene notes only if it can be clearly labelled as non-diagnostic. Do not claim medical severity detection. Safer target: "image-to-incident-notes assistant" that extracts visible hazards like smoke, blocked lane, vehicle type, and night/rain context.
+- **Live tracking gap:** Add a local demo-safe responder/bystander status board using WebSocket or server-sent events. Show location packet updates, call status, and "not dispatched by RoadSoS" disclaimer.
+- **Map gap:** Add a real map/route panel using Leaflet or a static offline-safe map fallback. Current radar preview is good for UI polish but not enough against map-heavy competitors.
+- **Voice assistant gap:** Add push-to-talk or speech-to-text for panic mode, but keep contact lookup deterministic. Voice should fill incident fields and read official fallback guidance, not invent answers.
+- **Vitals/rPPG gap:** Do not copy rPPG as a medical feature unless it is heavily caveated and validated. If added, position it as an experimental wellness signal outside dispatch decisions. Prefer safer bystander observation checklist first.
+- **Native/mobile perception gap:** Improve PWA install flow, mobile screenshots, Lighthouse PWA score, and offline install demo so judges see our browser app as phone-ready.
+- **Deployment gap:** Publish a stable demo URL with backend health visible. Public competitors with Vercel/Netlify links have a first-click advantage.
+- **Data breadth gap:** Expand Chennai contacts to 20-25 and add a second-region sample. Competitors may make bigger AI claims, so our counterweight must be visibly better verified contact coverage.
+- **Assistant intelligence gap:** Move from refusal-only to retrieval-based supported intents: nearest hospital, police, ambulance fallback, fire, tow, repair, offline help, and incident packet translation.
+- **Evidence gap:** Add screenshots, short screen recording, source verification output, backend test output, and frontend build output to the PR/deck so judges can see repeatability.
+
+### Leaderboard-worthy counter-positioning-
+- Our pitch should not be "more AI." It should be "the safest emergency AI: source-backed contacts, offline by design, and honest refusals."
+- Copy competitors on demo energy, not on unsafe claims. Add camera, voice, map, live status, and PWA install only when they remain explainable and non-diagnostic.
+- Every flashy feature needs a trust affordance: source badge, confidence reason, cache age, refusal reason, or disclaimer visible in the UI.
+- Final demo should show one high-drama flow in under 60 seconds: GPS/manual location -> ranked verified contacts -> map/route -> incident packet -> assistant refusal/retrieval -> offline reload -> chaos fallback.
 
 ## Working model-
 - Shared repository trunk: `main`.
@@ -456,6 +490,13 @@ Address the three biggest scoring gaps: cross-region portability (currently 0/10
 - Suggested PR title:
   - `Add installable PWA, region selector, smart assistant UI, and night mode`
 
+**Sidhesh implementation note:** the frontend PR now covers the service worker,
+offline fallback page, install prompt surface, region selector contract, active
+region status, assistant quick asks with retrieved contact cards, template-based
+Tamil/Hindi incident packet output, automatic dark mode, and manual Night demo
+toggle. The remaining cross-region production behavior depends on Suyash's
+backend/data PR for source-backed Bengaluru contacts and region-aware routing.
+
 ### Roopal tasks-
 - Review Suyash PR for:
   - Cross-region data provenance (Bengaluru sources must be verifiable).
@@ -566,6 +607,12 @@ Ensure the app is demo-proof: every judge interaction path works reliably, edge 
   - Lighthouse scores are documented.
 - Suggested PR title:
   - `Polish UI, capture screenshots, and verify offline/accessibility`
+
+**Sidhesh implementation note:** the frontend PR now includes the mobile polish
+pass, loading skeletons, haptic call taps, GPS-denied chaos rehearsal, offline
+verification notes, and the required 375px screenshots under
+`docs/screenshots/`. Lighthouse should still be run manually in the browser
+before final submission because desktop availability varies by judge machine.
 
 ### Roopal tasks-
 - **Finalize 7-slide presentation:**
