@@ -91,8 +91,8 @@ const GOOD_SAMARITAN =
 const NAV_ITEMS = [
   { id: 'rescue', label: 'Rescue' },
   { id: 'assistant', label: 'Assistant' },
-  { id: 'bystander', label: 'Guide' },
   { id: 'incident', label: 'Report' },
+  { id: 'bystander', label: 'Guide' },
   { id: 'trust', label: 'About' },
 ];
 
@@ -382,6 +382,19 @@ function DonutChart({ data }) {
   );
 }
 
+function BarChart({ data }) {
+  return (
+    <div className="bar-chart">
+      {data.map((item, i) => (
+        <div key={i} className="bar-item">
+          <div className="bar-fill" style={{ height: `${item.value}%`, background: item.color }} />
+          <span className="bar-label">{item.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════
    LIVE PULSE RADAR — the "wow moment"
    Animated radar with concentric distance rings and
@@ -443,23 +456,23 @@ function LivePulseRadar({ contacts }) {
         {/* Background rings */}
         {[0.25, 0.5, 0.75, 1].map((r, i) => (
           <circle key={i} cx="150" cy="150" r={r * 130} fill="none"
-            stroke="rgba(59,130,246,0.08)" strokeWidth="1" strokeDasharray="4 4" />
+            stroke="rgba(6, 182, 212, 0.28)" strokeWidth="1.2" strokeDasharray="4 4" />
         ))}
         {/* Cross hairs */}
-        <line x1="150" y1="20" x2="150" y2="280" stroke="rgba(59,130,246,0.06)" strokeWidth="1" />
-        <line x1="20" y1="150" x2="280" y2="150" stroke="rgba(59,130,246,0.06)" strokeWidth="1" />
+        <line x1="150" y1="20" x2="150" y2="280" stroke="rgba(6, 182, 212, 0.16)" strokeWidth="1" />
+        <line x1="20" y1="150" x2="280" y2="150" stroke="rgba(6, 182, 212, 0.16)" strokeWidth="1" />
 
         {/* Sweep line */}
         <line
           x1="150" y1="150"
           x2={150 + 130 * Math.cos(sweepRad)}
           y2={150 + 130 * Math.sin(sweepRad)}
-          stroke="rgba(59,130,246,0.4)" strokeWidth="2"
+          stroke="rgba(6, 182, 212, 0.7)" strokeWidth="2.5"
         />
         {/* Sweep glow trail */}
         <path
           d={`M150,150 L${150 + 130 * Math.cos(sweepRad)},${150 + 130 * Math.sin(sweepRad)} A130,130 0 0,0 ${150 + 130 * Math.cos(sweepRad - 0.5)},${150 + 130 * Math.sin(sweepRad - 0.5)} Z`}
-          fill="rgba(59,130,246,0.06)"
+          fill="rgba(6, 182, 212, 0.12)"
         />
 
         {/* Dynamic distance labels */}
@@ -522,7 +535,7 @@ function LiveMap({ contacts, userLat, userLon }) {
     if (!L) return;
     const map = L.map(containerRef.current, { zoomControl: false, attributionControl: false })
       .setView([userLat, userLon], 13);
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", { maxZoom: 19 }).addTo(map);
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", { maxZoom: 19 }).addTo(map);
     L.control.zoom({ position: "bottomright" }).addTo(map);
     mapRef.current = map;
     return () => { map.remove(); mapRef.current = null; };
@@ -551,7 +564,7 @@ function LiveMap({ contacts, userLat, userLon }) {
 /* ═══════════════════════════════════════════════════════
    CONTACT CARD
    ═══════════════════════════════════════════════════════ */
-function ContactCard({ contact, index }) {
+function ContactCard({ contact, index, onCallClick }) {
   const [open, setOpen] = useState(false);
   const conf = contact.effective_confidence ?? contact.confidence_score ?? 0;
   const reasons = [...(contact.ranking_reasons || []), ...(contact.confidence_reasons || [])].slice(0, 4);
@@ -568,7 +581,10 @@ function ContactCard({ contact, index }) {
             <span className="card-type" style={{ background: accent }}>{fmtType(contact.type)}</span>
           </div>
         </div>
-        <a className="card-call" href={`tel:${contact.phone}`} onClick={() => navigator.vibrate?.(40)}>
+        <a className="card-call" href={`tel:${contact.phone}`} onClick={(e) => {
+          navigator.vibrate?.(40);
+          onCallClick?.(contact.name, contact.phone);
+        }}>
           <Phone size={14} /> {contact.phone}
         </a>
       </div>
@@ -612,6 +628,8 @@ function App() {
   const [elapsed, setElapsed] = useState(null);
   const [cache, setCache] = useState(readCache());
   const [region, setRegion] = useState("auto");
+  const [radius, setRadius] = useState(8);
+  const [toast, setToast] = useState(null);
   const [section, setSection] = useState("rescue");
   const [assistQ, setAssistQ] = useState("");
   const [assistA, setAssistA] = useState(null);
@@ -625,7 +643,51 @@ function App() {
   const lat = Number(loc.lat);
   const lon = Number(loc.lon);
   const activeRegion = useMemo(() => detectRegion(lat, lon, region), [lat, lon, region]);
-  const filteredContacts = useMemo(() => contacts.filter((c) => filters.includes(c.type)), [contacts, filters]);
+  const filteredContacts = useMemo(() => {
+    return contacts.filter((c) => {
+      if (filters.includes(c.type)) return true;
+      if (filters.includes("ambulance") && (c.type === "hospital" || c.type === "trauma_center")) return true;
+      return false;
+    });
+  }, [contacts, filters]);
+
+  const [highConfContacts, lowConfContacts] = useMemo(() => {
+    const list = filteredContacts.length > 0 ? filteredContacts : fallbacks;
+    const high = [];
+    const low = [];
+    list.forEach((c) => {
+      const conf = c.effective_confidence ?? c.confidence_score ?? 0;
+      if (conf >= 0.85) {
+        high.push(c);
+      } else {
+        low.push(c);
+      }
+    });
+    return [high, low];
+  }, [filteredContacts, fallbacks]);
+
+  const [highConfAssist, lowConfAssist] = useMemo(() => {
+    const high = [];
+    const low = [];
+    assistMatches.forEach((c) => {
+      const conf = c.effective_confidence ?? c.confidence_score ?? 0;
+      if (conf >= 0.85) {
+        high.push(c);
+      } else {
+        low.push(c);
+      }
+    });
+    return [high, low];
+  }, [assistMatches]);
+
+  const triggerToast = useCallback((msg) => {
+    setToast(msg);
+    setTimeout(() => setToast((curr) => curr === msg ? null : curr), 3500);
+  }, []);
+
+  const handleCallClick = useCallback((name, phone) => {
+    triggerToast(`[Simulation Mode] Initiating call to ${name} (${phone})...`);
+  }, [triggerToast]);
 
   /* ── Lifecycle ── */
   useEffect(() => {
@@ -686,6 +748,13 @@ function App() {
     } catch {}
   }
 
+  // Automatically fetch cache package when online or when region changes
+  useEffect(() => {
+    if (online) {
+      refreshCache();
+    }
+  }, [online, activeRegion]);
+
   /* ── Rescue Drill ── */
   // Background load (silent retrieval on mount/update)
   const loadServicesBackground = useCallback(async () => {
@@ -700,7 +769,7 @@ function App() {
     try {
       const r = await fetch(`${API}/api/nearby-services`, {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lat, lon, radius_km: 8, service_types: filters, location_source: locSource, region: activeRegion }),
+        body: JSON.stringify({ lat, lon, radius_km: radius, service_types: filters, location_source: locSource, region: activeRegion }),
       });
       if (r.ok) {
         const d = await r.json();
@@ -709,7 +778,7 @@ function App() {
         setWarnings(d.warnings || []);
       }
     } catch {}
-  }, [lat, lon, online, filters, locSource, activeRegion]);
+  }, [lat, lon, online, radius, filters, locSource, activeRegion]);
 
   // Automatic retrieval on coordinate/filter updates
   useEffect(() => {
@@ -733,7 +802,7 @@ function App() {
     try {
       const r = await fetch(`${API}/api/nearby-services`, {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lat, lon, radius_km: 8, service_types: filters, location_source: locSource, region: activeRegion }),
+        body: JSON.stringify({ lat, lon, radius_km: radius, service_types: filters, location_source: locSource, region: activeRegion }),
       });
       if (!r.ok) throw new Error();
       const d = await r.json();
@@ -768,13 +837,35 @@ function App() {
     } catch {}
     // Local fallback (retrieval-based)
     const q = assistQ.toLowerCase();
+    
+    // Check medical/legal advice in frontend
+    const MEDICAL_LEGAL_PATTERNS = [
+      /diagnos/i, /treat/i, /medication/i, /drug/i, /prescri/i,
+      /legal advice/i, /sue/i, /liabl/i, /compensation/i, /insurance claim/i,
+      /\bbroken\b/i, /\bfracture\b/i, /\bburn(t|ed)\b/i, /\bburns\b/i, /\bpain\b/i
+    ];
+    const isMedicalLegal = MEDICAL_LEGAL_PATTERNS.some((pat) => pat.test(q));
+    
+    if (isMedicalLegal) {
+      setAssistA({
+        answer: "I cannot provide medical diagnoses, treatment advice, or legal counsel. For medical emergencies, dial 108 (ambulance) or 112 (all emergencies).",
+        refusal_reason: "medical_legal_advice_not_provided"
+      });
+      setAssistMatches([]);
+      return;
+    }
+
     const pool = dedup([...contacts, ...(cache?.contacts || []), ...fallbacks]);
     const intent = INTENTS.find((i) => i.tokens.some((t) => q.includes(t)));
     if (intent && intent.types[0] === "_template_firstaid") {
       setAssistA({ answer: "Keep the injured person still unless immediate danger. Warn traffic. Call 112. Do not move someone with possible spinal injury. This is safety guidance, not medical advice.", refusal_reason: null });
       setAssistMatches([]);
     } else if (intent) {
-      const m = pool.filter((c) => intent.types.includes(c.type)).slice(0, 4);
+      let wantedTypes = [...intent.types];
+      if (wantedTypes.includes("ambulance")) {
+        wantedTypes.push("hospital", "trauma_center");
+      }
+      const m = pool.filter((c) => wantedTypes.includes(c.type)).slice(0, 4);
       setAssistA({ answer: `Retrieved ${m.length} verified contact(s) from the curated dataset.`, refusal_reason: null });
       setAssistMatches(m);
     } else {
@@ -923,6 +1014,13 @@ function App() {
                 <select className="region-select" value={region} onChange={(e) => setRegion(e.target.value)}>
                   {REGIONS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
                 </select>
+                <select className="region-select" value={radius} onChange={(e) => setRadius(Number(e.target.value))}>
+                  <option value={5}>5 km</option>
+                  <option value={8}>8 km</option>
+                  <option value={15}>15 km</option>
+                  <option value={25}>25 km</option>
+                  <option value={50}>50 km</option>
+                </select>
                 <button className="control-btn" onClick={refreshCache} title="Download offline pack"><Download size={15} /></button>
                 <span className="cache-status">{cacheAge(cache)}</span>
               </div>
@@ -973,16 +1071,38 @@ function App() {
                 </div>
               </div>
               <div className="card-list">
-                {filteredContacts.map((c, i) => <ContactCard key={c.id || i} contact={c} index={i} />)}
-                {filteredContacts.length === 0 && fallbacks.map((c, i) => <ContactCard key={c.id || i} contact={c} index={i} />)}
+                {/* Section A: Verified Emergency Centers */}
+                {highConfContacts.length > 0 && (
+                  <div className="section-divider-title">
+                    <ShieldCheck size={14} /> Curated & Verified Rescue Centers ({highConfContacts.length})
+                  </div>
+                )}
+                {highConfContacts.map((c, i) => (
+                  <ContactCard key={c.id || i} contact={c} index={i} onCallClick={handleCallClick} />
+                ))}
+
+                {/* Section B: Local Proximity & Private Clinics */}
+                {lowConfContacts.length > 0 && (
+                  <div className="section-divider-title secondary-divider">
+                    <AlertTriangle size={14} /> Local Proximity Clinics & Private Nodes ({lowConfContacts.length})
+                  </div>
+                )}
+                {lowConfContacts.map((c, i) => (
+                  <ContactCard key={c.id || i} contact={c} index={highConfContacts.length + i} onCallClick={handleCallClick} />
+                ))}
               </div>
             </div>
           )}
 
           {/* Good Samaritan */}
           <div className="legal-card glass reveal">
-            <ShieldCheck size={16} />
-            <div><strong>Good Samaritan Protection</strong><p>{GOOD_SAMARITAN}</p></div>
+            <div className="shield-icon-container">
+              <ShieldCheck size={24} className="shield-icon-glow" />
+            </div>
+            <div>
+              <strong className="shield-title">Good Samaritan Protection Shield</strong>
+              <p className="shield-text">{GOOD_SAMARITAN}</p>
+            </div>
           </div>
         </section>
 
@@ -1016,7 +1136,25 @@ function App() {
             )}
             {assistMatches.length > 0 && (
               <div className="card-list">
-                {assistMatches.map((c, i) => <ContactCard key={c.id || i} contact={c} index={i} />)}
+                {/* Section A: Verified Emergency Centers */}
+                {highConfAssist.length > 0 && (
+                  <div className="section-divider-title">
+                    <ShieldCheck size={14} /> Curated & Verified Rescue Centers ({highConfAssist.length})
+                  </div>
+                )}
+                {highConfAssist.map((c, i) => (
+                  <ContactCard key={c.id || i} contact={c} index={i} onCallClick={handleCallClick} />
+                ))}
+
+                {/* Section B: Local Proximity & Private Clinics */}
+                {lowConfAssist.length > 0 && (
+                  <div className="section-divider-title secondary-divider">
+                    <AlertTriangle size={14} /> Local Proximity Clinics & Private Nodes ({lowConfAssist.length})
+                  </div>
+                )}
+                {lowConfAssist.map((c, i) => (
+                  <ContactCard key={c.id || i} contact={c} index={highConfAssist.length + i} onCallClick={handleCallClick} />
+                ))}
               </div>
             )}
 
@@ -1036,40 +1174,7 @@ function App() {
           </div>
         </section>
 
-        {/* ═══ Section 4: BYSTANDER GUIDE ═══ */}
-        <section className="section" id="bystander">
-          <div className="section-header reveal">
-            <div className="section-tag"><Users size={12} /> Action Guide</div>
-            <h2 className="section-title">Bystander <span className="highlight">Action Roles</span></h2>
-            <p className="section-desc">No medical training needed. Pick one role and act immediately.</p>
-          </div>
-          <div className="role-grid reveal">
-            {BYSTANDER_ROLES.map((r) => (
-              <div className="role-card glass-card" key={r.t} style={{'--role-color': r.color}}>
-                <div className="role-top">
-                  <div className="role-icon-wrap" style={{background: `${r.color}20`, color: r.color}}>{r.icon}</div>
-                  <div className="role-meta">
-                    <h3>{r.t}</h3>
-                    <div className="role-tags">
-                      <span className="role-priority" style={{background: `${r.color}18`, color: r.color, borderColor: `${r.color}30`}}>{r.priority}</span>
-                      <span className="role-time"><Clock size={10} /> {r.time}</span>
-                    </div>
-                  </div>
-                </div>
-                <ul className="role-actions">
-                  {r.actions.map((a, i) => <li key={i}><ChevronRight size={11} /> {a}</li>)}
-                </ul>
-                <div className="role-legal"><ShieldCheck size={12} /> {r.legal}</div>
-              </div>
-            ))}
-          </div>
-          <div className="legal-card glass reveal">
-            <ShieldCheck size={16} />
-            <div><strong>Legally Protected</strong><p>{GOOD_SAMARITAN}</p></div>
-          </div>
-        </section>
-
-        {/* ═══ Section 5: INCIDENT REPORT ═══ */}
+        {/* ═══ Section 4: INCIDENT REPORT ═══ */}
         <section className="section" id="incident">
           <div className="section-header reveal">
             <div className="section-tag"><Clipboard size={12} /> Report</div>
@@ -1138,6 +1243,44 @@ function App() {
           </div>
         </section>
 
+        {/* ═══ Section 5: BYSTANDER GUIDE ═══ */}
+        <section className="section" id="bystander">
+          <div className="section-header reveal">
+            <div className="section-tag"><Users size={12} /> Action Guide</div>
+            <h2 className="section-title">Bystander <span className="highlight">Action Roles</span></h2>
+            <p className="section-desc">No medical training needed. Pick one role and act immediately.</p>
+          </div>
+          <div className="role-grid reveal">
+            {BYSTANDER_ROLES.map((r) => (
+              <div className="role-card glass-card" key={r.t} style={{'--role-color': r.color}}>
+                <div className="role-top">
+                  <div className="role-icon-wrap" style={{background: `${r.color}20`, color: r.color}}>{r.icon}</div>
+                  <div className="role-meta">
+                    <h3>{r.t}</h3>
+                    <div className="role-tags">
+                      <span className="role-priority" style={{background: `${r.color}18`, color: r.color, borderColor: `${r.color}30`}}>{r.priority}</span>
+                      <span className="role-time"><Clock size={10} /> {r.time}</span>
+                    </div>
+                  </div>
+                </div>
+                <ul className="role-actions">
+                  {r.actions.map((a, i) => <li key={i}><ChevronRight size={11} /> {a}</li>)}
+                </ul>
+                <div className="role-legal"><ShieldCheck size={12} /> {r.legal}</div>
+              </div>
+            ))}
+          </div>
+          <div className="legal-card glass reveal">
+            <div className="shield-icon-container">
+              <ShieldCheck size={24} className="shield-icon-glow" />
+            </div>
+            <div>
+              <strong className="shield-title">Good Samaritan Protection Shield</strong>
+              <p className="shield-text">{GOOD_SAMARITAN}</p>
+            </div>
+          </div>
+        </section>
+
         {/* ═══ Section 6: TRUST & CREDIBILITY ═══ */}
         <section className="trust-section" id="trust">
           <div className="reveal">
@@ -1189,6 +1332,12 @@ function App() {
           </div>
         </section>
       </ScrollReveal>
+      {toast && (
+        <div className="toast-notification">
+          <Zap size={14} style={{ color: 'var(--accent)' }} />
+          <span>{toast}</span>
+        </div>
+      )}
     </div>
   );
 }

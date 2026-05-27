@@ -51,7 +51,12 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.origin === self.location.origin) {
+  if (
+    url.origin === self.location.origin ||
+    url.origin.includes("unpkg.com") ||
+    url.origin.includes("fonts.googleapis.com") ||
+    url.origin.includes("fonts.gstatic.com")
+  ) {
     event.respondWith(
       caches.match(request).then(
         (cached) =>

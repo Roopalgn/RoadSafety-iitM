@@ -176,6 +176,9 @@ def nearby_services(request: NearbyServicesRequest) -> NearbyServicesResponse:
 
     if request.service_types:
         wanted = set(request.service_types)
+        if "ambulance" in wanted:
+            wanted.add("hospital")
+            wanted.add("trauma_center")
         contacts = [c for c in contacts if c.get("type") in wanted]
 
     deduped = dedupe_contacts(contacts)
@@ -248,20 +251,20 @@ def nearby_services(request: NearbyServicesRequest) -> NearbyServicesResponse:
 
 
 @app.get("/api/cache-package", response_model=CachePackageResponse)
-def cache_package() -> CachePackageResponse:
+def cache_package(region: str = "chennai") -> CachePackageResponse:
     """Return the versioned offline cache bundle.
 
     Contains all validated production contacts and official fallbacks.
     The frontend stores this in localStorage for offline use.
     """
-    resolved = resolve_service_contacts(allow_fixtures=False, region="chennai")
+    resolved = resolve_service_contacts(allow_fixtures=False, region=region)
     contacts = resolved["contacts"]
     report = validate_collection(contacts)
     if not report["ok"]:
         bad = {f["index"] for f in report["errors"]}
         contacts = [c for i, c in enumerate(contacts) if i not in bad]
 
-    fallbacks = load_fallback_contacts(region="chennai")
+    fallbacks = load_fallback_contacts(region=region)
     fb_report = validate_collection(fallbacks)
     if not fb_report["ok"]:
         bad_fb = {f["index"] for f in fb_report["errors"]}

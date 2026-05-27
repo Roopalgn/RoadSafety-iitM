@@ -46,9 +46,9 @@ _INTENTS: list[dict[str, Any]] = [
     {
         "name": "ambulance",
         "keywords": [r"\bambulance\b", r"\b108\b", r"\bemergency medical\b", r"\bparamedic\b"],
-        "service_types": {"ambulance"},
+        "service_types": {"ambulance", "hospital", "trauma_center"},
         "answer_template": (
-            "Here are the verified ambulance contacts from the RoadSoS dataset. "
+            "Here are the verified ambulance and hospital contacts from the RoadSoS dataset. "
             "Dial 108 for a free GPS-dispatched ambulance anywhere in Tamil Nadu or Karnataka."
         ),
     },
@@ -126,9 +126,14 @@ _MEDICAL_LEGAL_PATTERNS = [
     r"\bprescri",
     r"\blegal advice\b",
     r"\bsue\b",
-    r"\bliabilit",
+    r"\bliabl",
     r"\bcompensation\b",
     r"\binsurance claim\b",
+    r"\bbroken\b",
+    r"\bfracture\b",
+    r"\bburn(t|ed)\b",
+    r"\bburns\b",
+    r"\bpain\b",
 ]
 
 # Approved first-aid safety templates (offline-safe, no medical advice).

@@ -290,7 +290,7 @@ def test_assistant_ambulance_query_returns_contacts():
     body = res.json()
     assert body["refusal_reason"] is None
     assert body["matched_contacts"]
-    assert all(c["type"] == "ambulance" for c in body["matched_contacts"])
+    assert all(c["type"] in ("ambulance", "hospital", "trauma_center") for c in body["matched_contacts"])
 
 
 def test_assistant_police_query_returns_contacts():

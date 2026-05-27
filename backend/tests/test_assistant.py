@@ -70,7 +70,8 @@ def test_trauma_keyword_returns_hospitals():
 def test_ambulance_intent_returns_ambulance():
     result = run_assistant("call ambulance 108", SAMPLE_CONTACTS, IITM_LAT, IITM_LON, TODAY)
     assert result["refusal_reason"] is None
-    assert all(c["type"] == "ambulance" for c in result["matched_contacts"])
+    types = {c["type"] for c in result["matched_contacts"]}
+    assert types.issubset({"ambulance", "hospital", "trauma_center"})
 
 
 def test_police_intent_returns_police():
