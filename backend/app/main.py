@@ -88,7 +88,7 @@ def _resolve_region(request_region: str | None, lat: float, lon: float) -> tuple
       3. Fall back to ``"chennai"`` (default) with a warning.
     """
     warnings: list[str] = []
-    if request_region:
+    if request_region and request_region.lower().strip() != "auto":
         region = request_region.lower().strip()
         return region, warnings
 

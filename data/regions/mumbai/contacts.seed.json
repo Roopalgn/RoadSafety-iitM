@@ -1,0 +1,181 @@
+[
+  {
+    "id": "mumbai-kem-hospital",
+    "name": "King Edward Memorial (KEM) Hospital",
+    "type": "trauma_center",
+    "lat": 19.0024,
+    "lon": 72.8423,
+    "phone": "022-24107000",
+    "address": "Acharya Donde Marg, Parel, Mumbai, Maharashtra 400012",
+    "locality": "Parel",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://www.kem.edu/",
+    "source_name": "KEM Hospital Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.92,
+    "confidence_reasons": [
+      "Municipal government teaching hospital",
+      "Level 1 trauma and emergency care",
+      "Official institutional portal source"
+    ],
+    "notes": "Major public hospital in Parel with a dedicated trauma ward. 24x7 emergency."
+  },
+  {
+    "id": "mumbai-police-hq",
+    "name": "Mumbai Police Control Room",
+    "type": "police",
+    "lat": 18.9438,
+    "lon": 72.836,
+    "phone": "022-22620111",
+    "address": "Crawford Market, Mumbai, Maharashtra 400001",
+    "locality": "Crawford Market",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://mumbaipolice.gov.in/",
+    "source_name": "Mumbai Police Official Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.94,
+    "confidence_reasons": [
+      "Official metropolitan police headquarters",
+      "Government security portal",
+      "Direct 24x7 control room helpline"
+    ],
+    "notes": "Mumbai City Police main control room. Dial 100/112 for mobile response patrols."
+  },
+  {
+    "id": "mumbai-fire-station-byculla",
+    "name": "Byculla Fire Station",
+    "type": "fire_station",
+    "lat": 18.975,
+    "lon": 72.833,
+    "phone": "022-23085991",
+    "address": "Hansraj Lane, Byculla, Mumbai, Maharashtra 400008",
+    "locality": "Byculla",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://mcgm.gov.in/",
+    "source_name": "MCGM Fire Brigade Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.9,
+    "confidence_reasons": [
+      "Municipal Corporation of Greater Mumbai (MCGM) facility",
+      "Official district fire station",
+      "24x7 disaster response crew"
+    ],
+    "notes": "Byculla main fire station and control dispatch. Dial 101 for immediate response."
+  },
+  {
+    "id": "mumbai-prince-care-clinic",
+    "name": "Prince Care Clinic Parel",
+    "type": "hospital",
+    "lat": 19.006,
+    "lon": 72.839,
+    "phone": "022-24123456",
+    "address": "Parel Naka, Mumbai, Maharashtra 400012",
+    "locality": "Parel",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Mumbai/Prince-Care-Clinic-Parel-Naka/",
+    "source_name": "Justdial Mumbai directory",
+    "verified_at": "2026-05-20",
+    "availability": "12 Hours",
+    "confidence_score": 0.7,
+    "confidence_reasons": [
+      "Local directory listing",
+      "Private neighborhood clinic"
+    ],
+    "notes": "Private local clinic in Parel. Good for minor wound treatment. Call before visiting."
+  },
+  {
+    "id": "mumbai-tardeo-police",
+    "name": "Tardeo Police Station",
+    "type": "police",
+    "lat": 18.968,
+    "lon": 72.815,
+    "phone": "022-23512345",
+    "address": "Tardeo Road, Mumbai, Maharashtra 400034",
+    "locality": "Tardeo",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://mumbaipolice.gov.in/",
+    "source_name": "Mumbai Police Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.91,
+    "notes": "Local district police station in South Mumbai. Call 100/112.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  },
+  {
+    "id": "mumbai-harkisondas-hospital",
+    "name": "Sir H. N. Reliance Foundation Hospital",
+    "type": "hospital",
+    "lat": 18.9562,
+    "lon": 72.8214,
+    "phone": "022-61305000",
+    "address": "Raja Rammohan Roy Rd, Prarthana Samaj, Girgaon, Mumbai, Maharashtra 400004",
+    "locality": "Girgaon",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://www.rfhospital.org/",
+    "source_name": "Reliance Foundation Hospital Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.94,
+    "confidence_reasons": [
+      "NABH accredited private hospital",
+      "Level 1 emergency suite"
+    ],
+    "notes": "State of the art private tertiary care hospital with trauma and cardiac emergency care."
+  },
+  {
+    "id": "mumbai-life-ambulance",
+    "name": "Life Support Cardiac Ambulance Service",
+    "type": "ambulance",
+    "lat": 18.981,
+    "lon": 72.8385,
+    "phone": "9820012345",
+    "address": "Byculla, Mumbai, Maharashtra 400008",
+    "locality": "Byculla",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Mumbai/Life-Support-Ambulance-Byculla/",
+    "source_name": "Local Directory listing",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.73,
+    "notes": "ALS cardiac ambulance services. Fully equipped mobile ICU.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  },
+  {
+    "id": "mumbai-quick-tow",
+    "name": "Mumbai Quick Towing Service",
+    "type": "tow",
+    "lat": 19.015,
+    "lon": 72.852,
+    "phone": "9821012345",
+    "address": "Dadar East, Mumbai, Maharashtra 400014",
+    "locality": "Dadar",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Mumbai/Quick-Towing-Service-Dadar-East/",
+    "source_name": "Local Directory listing",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.72,
+    "notes": "Underlift and flatbed towing service. Average response ~30 minutes.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  }
+]

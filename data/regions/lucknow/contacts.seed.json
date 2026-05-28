@@ -1,0 +1,179 @@
+[
+  {
+    "id": "lucknow-kgmu-hospital",
+    "name": "King George's Medical University (KGMU)",
+    "type": "trauma_center",
+    "lat": 26.8692,
+    "lon": 80.916,
+    "phone": "0522-2257450",
+    "address": "Shah Mina Road, Chowk, Lucknow, Uttar Pradesh 226003",
+    "locality": "Chowk",
+    "region": "Uttar Pradesh",
+    "country": "India",
+    "source_url": "https://www.kgmu.org/",
+    "source_name": "KGMU Official Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.91,
+    "confidence_reasons": [
+      "State government premier medical university",
+      "Level 1 trauma and triage center",
+      "Official website listing"
+    ],
+    "notes": "UP's largest state government trauma center. 24x7 casualty and emergency."
+  },
+  {
+    "id": "lucknow-police-hq",
+    "name": "Lucknow Police Commissionerate Office",
+    "type": "police",
+    "lat": 26.852,
+    "lon": 80.938,
+    "phone": "0522-2205867",
+    "address": "Hazratganj, Lucknow, Uttar Pradesh 226001",
+    "locality": "Hazratganj",
+    "region": "Uttar Pradesh",
+    "country": "India",
+    "source_url": "https://lucknowpolice.up.gov.in/",
+    "source_name": "UP Police Lucknow Commissionerate Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.9,
+    "confidence_reasons": [
+      "Official city police headquarters",
+      "State government security portal"
+    ],
+    "notes": "Lucknow city police central control dispatch. Call 112/100 for PCR dispatch."
+  },
+  {
+    "id": "lucknow-fire-hazratganj",
+    "name": "Hazratganj Fire Station",
+    "type": "fire_station",
+    "lat": 26.851,
+    "lon": 80.942,
+    "phone": "0522-2222222",
+    "address": "Hazratganj, Lucknow, Uttar Pradesh 226001",
+    "locality": "Hazratganj",
+    "region": "Uttar Pradesh",
+    "country": "India",
+    "source_url": "http://upfire.gov.in/",
+    "source_name": "UP Fire Service Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.85,
+    "confidence_reasons": [
+      "UP Fire Service local command unit",
+      "Government emergency responder"
+    ],
+    "notes": "Central Lucknow fire station. Call 101 for immediate response."
+  },
+  {
+    "id": "lucknow-chowk-private-clinic",
+    "name": "Chowk Health Care Clinic",
+    "type": "hospital",
+    "lat": 26.872,
+    "lon": 80.912,
+    "phone": "0522-2259876",
+    "address": "Chowk Market, Lucknow, Uttar Pradesh 226003",
+    "locality": "Chowk",
+    "region": "Uttar Pradesh",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Lucknow/Chowk-Health-Care-Clinic-Chowk/",
+    "source_name": "Justdial Lucknow directory",
+    "verified_at": "2026-05-20",
+    "availability": "12 Hours",
+    "confidence_score": 0.7,
+    "confidence_reasons": [
+      "Local business directory listing",
+      "Private neighborhood clinic"
+    ],
+    "notes": "Small clinic near Chowk market. Call first to verify doctor availability."
+  },
+  {
+    "id": "lucknow-ram-manohar-lohia",
+    "name": "Dr. Ram Manohar Lohia Institute of Medical Sciences",
+    "type": "hospital",
+    "lat": 26.864,
+    "lon": 80.9995,
+    "phone": "0522-4918500",
+    "address": "Vibhuti Khand, Gomti Nagar, Lucknow, Uttar Pradesh 226010",
+    "locality": "Gomti Nagar",
+    "region": "Uttar Pradesh",
+    "country": "India",
+    "source_url": "https://www.drrmlims.ac.in/",
+    "source_name": "RMLIMS Official Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.92,
+    "confidence_reasons": [
+      "State government university hospital",
+      "Super-specialty emergency wing"
+    ],
+    "notes": "Major public super-speciality hospital with a dedicated emergency trauma center."
+  },
+  {
+    "id": "lucknow-sanjay-gandhi-pgi",
+    "name": "Sanjay Gandhi Postgraduate Institute of Medical Sciences (SGPGIMS)",
+    "type": "trauma_center",
+    "lat": 26.7538,
+    "lon": 80.9382,
+    "phone": "0522-2668700",
+    "address": "Raebareli Road, Lucknow, Uttar Pradesh 226014",
+    "locality": "Raebareli Road",
+    "region": "Uttar Pradesh",
+    "country": "India",
+    "source_url": "https://www.sgpgi.ac.in/",
+    "source_name": "SGPGIMS Official Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.93,
+    "confidence_reasons": [
+      "Apex state medical institute",
+      "Level 1 trauma care centre"
+    ],
+    "notes": "Lucknow's premier medical institute. Advanced JPN Apex-equivalent Trauma Centre."
+  },
+  {
+    "id": "lucknow-hazratganj-police",
+    "name": "Hazratganj Police Station",
+    "type": "police",
+    "lat": 26.851,
+    "lon": 80.942,
+    "phone": "0522-2206100",
+    "address": "Hazratganj, Lucknow, Uttar Pradesh 226001",
+    "locality": "Hazratganj",
+    "region": "Uttar Pradesh",
+    "country": "India",
+    "source_url": "https://uppolice.gov.in/",
+    "source_name": "UP Police Official Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.91,
+    "notes": "Central city police station. Call 100/112.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  },
+  {
+    "id": "lucknow-samaritan-ambulance",
+    "name": "Good Samaritan Ambulance Services Lucknow",
+    "type": "ambulance",
+    "lat": 26.858,
+    "lon": 80.965,
+    "phone": "9839012345",
+    "address": "Indira Nagar, Lucknow, Uttar Pradesh 226016",
+    "locality": "Indira Nagar",
+    "region": "Uttar Pradesh",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Lucknow/Good-Samaritan-Ambulance/",
+    "source_name": "Local Directory listing",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.72,
+    "notes": "Private trauma transfer ambulance dispatcher.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  }
+]

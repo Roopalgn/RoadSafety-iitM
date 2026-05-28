@@ -374,7 +374,7 @@ img, svg {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 2rem;
+  padding: 8rem 2rem 2rem;
   overflow: hidden;
 }
 
@@ -421,7 +421,7 @@ img, svg {
   font-family: var(--font-heading);
   font-size: 4rem;
   font-weight: 800;
-  line-height: 1.05;
+  line-height: 1.25;
   letter-spacing: -0.04em;
   margin-bottom: 1.5rem;
   background: linear-gradient(135deg, var(--fg) 0%, var(--fg-muted) 100%);
@@ -664,6 +664,13 @@ img, svg {
   align-items: center;
   gap: 0.6rem;
   flex-wrap: wrap;
+  margin-top: 1.25rem;
+}
+
+.region-select option,
+.region-select optgroup {
+  background: var(--bg-elevated);
+  color: var(--fg);
 }
 
 .control-btn {
@@ -1558,6 +1565,7 @@ img, svg {
 .packet-card pre {
   font-size: 0.78rem;
   white-space: pre-wrap;
+  word-break: break-all;
   color: var(--fg-muted);
   margin-bottom: 0.85rem;
   line-height: 1.6;
@@ -2582,4 +2590,458 @@ img, svg {
     max-width: 320px;
   }
 }
+
+/* ============================================================
+   27. HANDS-FREE VOICE EMERGENY WAKE WORD STYLES
+   ============================================================ */
+.voice-wake-label {
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+  font-weight: 500;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.voice-word-glow {
+  color: var(--cyan);
+  text-shadow: 0 0 10px var(--cyan-glow);
+}
+
+.handsfree-toggle-btn {
+  padding: 1.1rem 2.2rem;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 60px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--fg-muted);
+  transition: all var(--duration) var(--ease);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.handsfree-toggle-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+  color: var(--fg);
+}
+
+.handsfree-toggle-btn.active {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  color: var(--fg);
+  box-shadow: 0 0 20px var(--accent-glow);
+  animation: handsfree-pulse 2s infinite;
+}
+
+.nav-action-btn.handsfree-active {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+  animation: handsfree-pulse 2s infinite;
+}
+
+@keyframes handsfree-pulse {
+  0% {
+    opacity: 0.9;
+    box-shadow: 0 0 4px var(--accent-glow);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+  100% {
+    opacity: 0.9;
+    box-shadow: 0 0 4px var(--accent-glow);
+  }
+}
+
+/* ============================================================
+   28. DATA QUALITY LEDGER DRAWER
+   ============================================================ */
+/* ============================================================
+   28. DATA QUALITY LEDGER HORIZONTAL CARD
+   ============================================================ */
+.quality-card {
+  width: 100%;
+  max-width: 900px;
+  margin: 1.5rem auto 2.5rem;
+  padding: 1.5rem 1.8rem;
+  border-radius: var(--radius);
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.quality-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.quality-card-header h3 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--fg);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quality-card-subtitle {
+  font-size: 0.78rem;
+  color: var(--fg-muted);
+}
+
+.quality-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.quality-card-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.metric-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.metric-value-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.metric-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.metric-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.metric-value-row strong {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  color: var(--fg);
+  min-width: 38px;
+  text-align: right;
+}
+
+.quality-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--fg-dim);
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .quality-card-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* ============================================================
+   28b. LIVE CAMERA EVIDENCE CAPTURE MODAL
+   ============================================================ */
+.camera-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 3, 8, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.camera-modal {
+  width: 100%;
+  max-width: 440px;
+  border-radius: var(--radius);
+  background: rgba(12, 12, 24, 0.95);
+  border: 1px solid var(--border-strong);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: var(--shadow-lg);
+  animation: fadeSlideUp 0.3s var(--spring) forwards;
+}
+
+.camera-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.camera-header h3 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--fg);
+  margin: 0;
+}
+
+.camera-view-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #000;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(1);
+}
+
+.camera-frame-guide {
+  position: absolute;
+  inset: 2rem;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-xs);
+  pointer-events: none;
+}
+
+.camera-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem 0;
+}
+
+.camera-capture-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: white;
+  border: 4px solid var(--fg-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+  padding: 0;
+  margin: 0 auto;
+}
+
+.camera-capture-btn:hover {
+  transform: scale(1.05);
+  border-color: var(--fg-muted);
+}
+
+.camera-capture-btn:active {
+  transform: scale(0.95);
+}
+
+.capture-inner {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #000;
+}
+
+.camera-cancel-btn {
+  background: none;
+  border: none;
+  color: var(--fg-muted);
+  font-size: 0.85rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.camera-cancel-btn:hover {
+  color: var(--fg);
+}
+
+/* ============================================================
+   29. SEVERITY AUTO-TRIAGE ENGINE
+   ============================================================ */
+.triage-row {
+  margin-top: 1.25rem;
+  border-top: 1px dashed var(--border);
+  padding-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.triage-input {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.triage-badge {
+  display: inline-block;
+  padding: 0.3rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  width: fit-content;
+  font-family: var(--font-heading);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+.triage-critical {
+  background: rgba(220, 38, 38, 0.12);
+  color: var(--primary);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  box-shadow: 0 0 10px rgba(220, 38, 38, 0.1);
+}
+
+.triage-moderate {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--warning);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.triage-minor {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+/* ============================================================
+   30. PHOTO EVIDENCE CAPTURE
+   ============================================================ */
+.photo-evidence-row {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 1rem;
+  border-top: 1px dashed var(--border);
+  padding-top: 1.2rem;
+}
+
+.photo-btn {
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.78rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--fg-muted);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.photo-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+  color: var(--fg);
+}
+
+.photo-preview-wrap {
+  position: relative;
+  display: inline-block;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1.5px solid var(--border-strong);
+}
+
+.photo-preview-thumb {
+  width: 68px;
+  height: 50px;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-clear {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  background: rgba(220,38,38,0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: 800;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+.photo-clear:hover {
+  background: #ef4444;
+}
+
+.photo-disclaimer {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--fg-muted);
+  margin-top: 0.4rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+/* ============================================================
+   31. TIMER SLA CONTAINER
+   ============================================================ */
+.timer-sla-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+}
+
+.timer-sla-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--fg-muted);
+  font-family: var(--font-heading);
+  margin-top: 0.5rem;
+}
+
+.timer-sla-desc {
+  font-size: 0.65rem;
+  color: var(--fg-dim);
+  max-width: 240px;
+  line-height: 1.4;
+}
+
 

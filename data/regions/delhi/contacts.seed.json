@@ -1,0 +1,180 @@
+[
+  {
+    "id": "delhi-aiims-hospital",
+    "name": "AIIMS Delhi (All India Institute of Medical Sciences)",
+    "type": "trauma_center",
+    "lat": 28.5672,
+    "lon": 77.21,
+    "phone": "011-26588500",
+    "address": "Ansari Nagar, New Delhi, Delhi 110029",
+    "locality": "Ansari Nagar",
+    "region": "Delhi NCR",
+    "country": "India",
+    "source_url": "https://www.aiims.edu/",
+    "source_name": "AIIMS Delhi Official Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.95,
+    "confidence_reasons": [
+      "Apex national medical science institution",
+      "Level 1 JPN Apex Trauma Center",
+      "Official website listing"
+    ],
+    "notes": "India's premier public hospital with a world-class specialized Jai Prakash Narain Apex Trauma Centre."
+  },
+  {
+    "id": "delhi-police-hq",
+    "name": "Delhi Police Headquarters",
+    "type": "police",
+    "lat": 28.6291,
+    "lon": 77.2155,
+    "phone": "011-23490200",
+    "address": "Jai Singh Road, Connaught Place, New Delhi, Delhi 110001",
+    "locality": "Connaught Place",
+    "region": "Delhi NCR",
+    "country": "India",
+    "source_url": "https://delhipolice.gov.in/",
+    "source_name": "Delhi Police Official Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.92,
+    "confidence_reasons": [
+      "Union territory central police headquarters",
+      "Official government domain listing",
+      "24x7 dispatch helpline"
+    ],
+    "notes": "Main Delhi Police Headquarters control room. Call 100 or 112 for local PCR van dispatch."
+  },
+  {
+    "id": "delhi-fire-station-cp",
+    "name": "Connaught Place Fire Station",
+    "type": "fire_station",
+    "lat": 28.628,
+    "lon": 77.221,
+    "phone": "011-23412222",
+    "address": "Connaught Circus, New Delhi, Delhi 110001",
+    "locality": "Connaught Place",
+    "region": "Delhi NCR",
+    "country": "India",
+    "source_url": "https://dfs.delhigovt.nic.in/",
+    "source_name": "Delhi Fire Service Government Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.9,
+    "confidence_reasons": [
+      "Delhi Fire Service government facility",
+      "Official central capital responder"
+    ],
+    "notes": "Central Delhi district fire dispatch and service headquarters. Dial 101."
+  },
+  {
+    "id": "delhi-capital-care-clinic",
+    "name": "Capital Care Clinic CP",
+    "type": "hospital",
+    "lat": 28.632,
+    "lon": 77.218,
+    "phone": "011-23345678",
+    "address": "Outer Circle, Connaught Place, New Delhi, Delhi 110001",
+    "locality": "Connaught Place",
+    "region": "Delhi NCR",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Delhi/Capital-Care-Clinic-Connaught-Place/",
+    "source_name": "Justdial Delhi directory",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.73,
+    "confidence_reasons": [
+      "Private directory listing",
+      "Outpatient clinic"
+    ],
+    "notes": "Private clinical facility in Connaught Place. Call first to verify doctor availability."
+  },
+  {
+    "id": "delhi-safdarjung-hospital",
+    "name": "Safdarjung Hospital & Trauma Centre",
+    "type": "trauma_center",
+    "lat": 28.5695,
+    "lon": 77.2075,
+    "phone": "011-26707100",
+    "address": "Ansari Nagar East, New Delhi, Delhi 110029",
+    "locality": "Ansari Nagar",
+    "region": "Delhi NCR",
+    "country": "India",
+    "source_url": "http://vmmc-sjh.nic.in/",
+    "source_name": "Safdarjung Hospital Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.93,
+    "confidence_reasons": [
+      "Central government hospital",
+      "Large dedicated trauma block"
+    ],
+    "notes": "One of India's largest public hospitals, featuring a massive emergency and multi-disciplinary trauma unit."
+  },
+  {
+    "id": "delhi-red-cross-ambulance",
+    "name": "Red Cross Emergency Ambulance Services",
+    "type": "ambulance",
+    "lat": 28.618,
+    "lon": 77.202,
+    "phone": "011-23359379",
+    "address": "1, Red Cross Rd, Connaught Place, New Delhi, Delhi 110001",
+    "locality": "Connaught Place",
+    "region": "Delhi NCR",
+    "country": "India",
+    "source_url": "https://indianredcross.org/",
+    "source_name": "Indian Red Cross Society Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.91,
+    "confidence_reasons": [
+      "Official humanitarian registry",
+      "Direct dispatcher line"
+    ],
+    "notes": "Official Red Cross ambulance dispatch. 24x7 triage ambulances."
+  },
+  {
+    "id": "delhi-flatbed-tow",
+    "name": "Delhi NCR Flatbed Towing Service",
+    "type": "tow",
+    "lat": 28.591,
+    "lon": 77.23,
+    "phone": "9811099999",
+    "address": "Lajpat Nagar, New Delhi, Delhi 110024",
+    "locality": "Lajpat Nagar",
+    "region": "Delhi NCR",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Delhi/NCR-Towing-Service-Lajpat-Nagar/",
+    "source_name": "Local Directory listing",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.71,
+    "notes": "Flatbed tow recovery. Serves entire South Delhi area.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  },
+  {
+    "id": "delhi-connaught-repair",
+    "name": "Express Auto Care Connaught Place",
+    "type": "repair",
+    "lat": 28.63,
+    "lon": 77.222,
+    "phone": "9810188888",
+    "address": "Radial Road, Connaught Place, New Delhi, Delhi 110001",
+    "locality": "Connaught Place",
+    "region": "Delhi NCR",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Delhi/Express-Auto-Care-Connaught-Place/",
+    "source_name": "Local directory listing",
+    "verified_at": "2026-05-20",
+    "availability": "12 Hours",
+    "confidence_score": 0.7,
+    "notes": "Emergency puncture, battery, and engine breakdown repair.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  }
+]

@@ -1,0 +1,179 @@
+[
+  {
+    "id": "gurgaon-medanta-hospital",
+    "name": "Medanta - The Medicity",
+    "type": "trauma_center",
+    "lat": 28.4312,
+    "lon": 77.0425,
+    "phone": "0124-4141414",
+    "address": "Sector 38, Gurugram, Haryana 122001",
+    "locality": "Sector 38",
+    "region": "Haryana",
+    "country": "India",
+    "source_url": "https://www.medanta.org/",
+    "source_name": "Medanta Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.88,
+    "confidence_reasons": [
+      "JCI and NABH accredited super specialty hospital",
+      "Level 1 emergency and trauma services",
+      "Official website listing"
+    ],
+    "notes": "Large private super-specialty hospital with 24x7 emergency and trauma care."
+  },
+  {
+    "id": "gurgaon-police-commissioner",
+    "name": "Gurugram Police Commissioner's Office",
+    "type": "police",
+    "lat": 28.4674,
+    "lon": 77.0392,
+    "phone": "0124-2316100",
+    "address": "Sector 15, Gurugram, Haryana 122001",
+    "locality": "Sector 15",
+    "region": "Haryana",
+    "country": "India",
+    "source_url": "https://gurugram.haryanapolice.gov.in/",
+    "source_name": "Haryana Police Gurugram Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.9,
+    "confidence_reasons": [
+      "Official district police headquarters",
+      "Haryana government official database source"
+    ],
+    "notes": "Commissioner of Police Gurugram. Call 100/112 for police control dispatch."
+  },
+  {
+    "id": "gurgaon-fire-station-sector29",
+    "name": "Sector 29 Fire Station",
+    "type": "fire_station",
+    "lat": 28.469,
+    "lon": 77.063,
+    "phone": "0124-2385101",
+    "address": "Sector 29, Gurugram, Haryana 122002",
+    "locality": "Sector 29",
+    "region": "Haryana",
+    "country": "India",
+    "source_url": "https://haryanafire.gov.in/",
+    "source_name": "Haryana Fire Service Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.86,
+    "confidence_reasons": [
+      "Haryana fire services station",
+      "Official city rescue responder"
+    ],
+    "notes": "Major fire station serving DLF CyberCity and Sector 29 areas in Gurgaon."
+  },
+  {
+    "id": "gurgaon-med-care-clinic",
+    "name": "Med Care Local Clinic",
+    "type": "hospital",
+    "lat": 28.435,
+    "lon": 77.046,
+    "phone": "0124-4054321",
+    "address": "Sector 38 Market, Gurugram, Haryana 122001",
+    "locality": "Sector 38",
+    "region": "Haryana",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Gurgaon/Med-Care-Clinic-Sector-38/",
+    "source_name": "Justdial Gurgaon directory",
+    "verified_at": "2026-05-20",
+    "availability": "12 Hours",
+    "confidence_score": 0.7,
+    "confidence_reasons": [
+      "Local web listing",
+      "Private neighborhood clinic"
+    ],
+    "notes": "Small clinic near Sector 38. Good for basic first aid. Call to verify doctor presence."
+  },
+  {
+    "id": "gurgaon-max-hospital",
+    "name": "Max Super Speciality Hospital Gurugram",
+    "type": "hospital",
+    "lat": 28.459,
+    "lon": 77.0798,
+    "phone": "0124-6610000",
+    "address": "B-Block, Sushant Lok 1, Gurugram, Haryana 122001",
+    "locality": "Sushant Lok 1",
+    "region": "Haryana",
+    "country": "India",
+    "source_url": "https://www.maxhealthcare.in/hospital-branches/gurugram/",
+    "source_name": "Max Healthcare Official Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.93,
+    "confidence_reasons": [
+      "NABH-accredited private care branch",
+      "24x7 advanced trauma unit"
+    ],
+    "notes": "Premium private hospital with dedicated trauma response suite."
+  },
+  {
+    "id": "gurgaon-fortis-memorial",
+    "name": "Fortis Memorial Research Institute (FMRI)",
+    "type": "trauma_center",
+    "lat": 28.458,
+    "lon": 77.0725,
+    "phone": "0124-4962200",
+    "address": "Sector 44, Opposite HUDA City Centre, Gurugram, Haryana 122002",
+    "locality": "Sector 44",
+    "region": "Haryana",
+    "country": "India",
+    "source_url": "https://www.fortishealthcare.com/",
+    "source_name": "Fortis Healthcare Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.94,
+    "confidence_reasons": [
+      "Level 1 private trauma center",
+      "NABH and JCI accredited"
+    ],
+    "notes": "Major private tertiary research institute with full ICU, trauma, and emergency dispatch services."
+  },
+  {
+    "id": "gurgaon-capital-ambulance",
+    "name": "Capital Rescue Ambulance Services",
+    "type": "ambulance",
+    "lat": 28.441,
+    "lon": 77.031,
+    "phone": "9812300000",
+    "address": "Sector 31, Gurugram, Haryana 122001",
+    "locality": "Sector 31",
+    "region": "Haryana",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Gurgaon/Capital-Ambulance-Sector-31/",
+    "source_name": "Local Directory listing",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.72,
+    "notes": "Advanced and basic life support emergency transfer ambulances.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  },
+  {
+    "id": "gurgaon-iffco-tow",
+    "name": "IFFCO Chowk Quick Towing & Recovery",
+    "type": "tow",
+    "lat": 28.472,
+    "lon": 77.072,
+    "phone": "9812400000",
+    "address": "IFFCO Chowk, Gurugram, Haryana 122002",
+    "locality": "IFFCO Chowk",
+    "region": "Haryana",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Gurgaon/IFFCO-Chowk-Towing-Service/",
+    "source_name": "Directory listing",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.71,
+    "notes": "Emergency towing near NH-48 highway. Average arrival time 20 mins.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  }
+]

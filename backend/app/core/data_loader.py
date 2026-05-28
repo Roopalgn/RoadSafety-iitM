@@ -25,12 +25,26 @@ OFFLINE_CACHE_VERSION = "merge4-final-0"
 _REGION_BBOXES: dict[str, tuple[float, float, float, float]] = {
     "chennai": (12.8, 13.2, 80.0, 80.35),
     "bengaluru": (12.85, 13.1, 77.45, 77.75),
+    "mumbai": (18.85, 19.35, 72.75, 73.15),
+    "kolkata": (22.45, 22.65, 88.25, 88.45),
+    "hyderabad": (17.3, 17.55, 78.3, 78.6),
+    "delhi": (28.4, 28.85, 76.85, 77.4),
+    "gurgaon": (28.3, 28.55, 76.8, 77.15),
+    "lucknow": (26.75, 26.95, 80.85, 81.05),
+    "pune": (18.4, 18.65, 73.75, 74.0),
 }
 
 # Supported region keys and their seed file directories.
 _REGION_DIRS: dict[str, Any] = {
     "chennai": None,          # None means root data/ directory
     "bengaluru": "bengaluru",
+    "mumbai": "mumbai",
+    "kolkata": "kolkata",
+    "hyderabad": "hyderabad",
+    "delhi": "delhi",
+    "gurgaon": "gurgaon",
+    "lucknow": "lucknow",
+    "pune": "pune",
 }
 
 

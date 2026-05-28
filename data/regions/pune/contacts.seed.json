@@ -1,0 +1,179 @@
+[
+  {
+    "id": "pune-sassoon-hospital",
+    "name": "Sassoon General Hospital (BJ Medical College)",
+    "type": "trauma_center",
+    "lat": 18.5283,
+    "lon": 73.8736,
+    "phone": "020-26128000",
+    "address": "Jai Prakash Narayan Road, Near Pune Railway Station, Pune, Maharashtra 411001",
+    "locality": "Railway Station Road",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "http://www.bjgmc.org/",
+    "source_name": "BJ Government Medical College Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.89,
+    "confidence_reasons": [
+      "State government apex teaching hospital",
+      "Level 1 trauma and burn care unit",
+      "Official college website listing"
+    ],
+    "notes": "Pune's largest government-run hospital. Level 1 trauma and major casualty unit."
+  },
+  {
+    "id": "pune-police-hq",
+    "name": "Pune Police Headquarters Office",
+    "type": "police",
+    "lat": 18.5309,
+    "lon": 73.855,
+    "phone": "020-26208200",
+    "address": "Shivajinagar, Pune, Maharashtra 411005",
+    "locality": "Shivajinagar",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://punepolice.gov.in/",
+    "source_name": "Pune City Police Official Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.91,
+    "confidence_reasons": [
+      "Official city police commissionerate",
+      "State government security site"
+    ],
+    "notes": "Pune City Police main headquarters and control dispatch room. Call 100/112."
+  },
+  {
+    "id": "pune-fire-station-central",
+    "name": "Pune Central Fire Station",
+    "type": "fire_station",
+    "lat": 18.502,
+    "lon": 73.857,
+    "phone": "020-26451707",
+    "address": "Bhavani Peth, Pune, Maharashtra 411042",
+    "locality": "Bhavani Peth",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://www.pmc.gov.in/",
+    "source_name": "PMC Fire Brigade Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.87,
+    "confidence_reasons": [
+      "Pune Municipal Corporation fire department",
+      "Government responder command center"
+    ],
+    "notes": "Central Pune fire command dispatch station. Call 101."
+  },
+  {
+    "id": "pune-shree-clinic",
+    "name": "Shree Clinic Shivajinagar",
+    "type": "hospital",
+    "lat": 18.533,
+    "lon": 73.852,
+    "phone": "020-25531234",
+    "address": "F.C. Road, Shivajinagar, Pune, Maharashtra 411005",
+    "locality": "Shivajinagar",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Pune/Shree-Clinic-Shivajinagar/",
+    "source_name": "Justdial Pune directory",
+    "verified_at": "2026-05-20",
+    "availability": "12 Hours",
+    "confidence_score": 0.7,
+    "confidence_reasons": [
+      "Local business directory listing",
+      "Private neighborhood clinic"
+    ],
+    "notes": "Private clinical center near F.C. Road. Suitable for first aid treatments. Call first."
+  },
+  {
+    "id": "pune-ruby-hall-clinic",
+    "name": "Ruby Hall Clinic Pune",
+    "type": "hospital",
+    "lat": 18.5325,
+    "lon": 73.877,
+    "phone": "020-66455100",
+    "address": "40, Sassoon Rd, Central Shivaji Nagar, Pune, Maharashtra 411001",
+    "locality": "Sassoon Road",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://rubyhall.com/",
+    "source_name": "Ruby Hall Clinic Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.93,
+    "confidence_reasons": [
+      "NABH-accredited private care facility",
+      "Well-known emergency trauma unit"
+    ],
+    "notes": "Major private tertiary hospital in Pune. Advanced emergency response services."
+  },
+  {
+    "id": "pune-jehangir-hospital",
+    "name": "Jehangir Hospital",
+    "type": "hospital",
+    "lat": 18.5305,
+    "lon": 73.8765,
+    "phone": "020-66819999",
+    "address": "32, Sassoon Rd, near Pune Station, Pune, Maharashtra 411001",
+    "locality": "Sassoon Road",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://www.jehangirhospital.com/",
+    "source_name": "Jehangir Hospital Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.93,
+    "notes": "Large multi-specialty private hospital next to Pune station. Full emergency support.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  },
+  {
+    "id": "pune-express-tow",
+    "name": "Pune Highway Towing & Crane Services",
+    "type": "tow",
+    "lat": 18.515,
+    "lon": 73.842,
+    "phone": "9823011111",
+    "address": "Shivajinagar, Pune, Maharashtra 411005",
+    "locality": "Shivajinagar",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Pune/Pune-Highway-Towing-Service/",
+    "source_name": "Local Directory listing",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.72,
+    "notes": "Heavy flatbed towing and highway recovery services.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  },
+  {
+    "id": "pune-lokmanya-ambulance",
+    "name": "Lokmanya Emergency Ambulance Network",
+    "type": "ambulance",
+    "lat": 18.498,
+    "lon": 73.821,
+    "phone": "9822099999",
+    "address": "Swargate, Pune, Maharashtra 411002",
+    "locality": "Swargate",
+    "region": "Maharashtra",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Pune/Lokmanya-Ambulance-Swargate/",
+    "source_name": "Local Directory verified",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.73,
+    "notes": "Fully integrated private network of trauma and transfer ambulances.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  }
+]

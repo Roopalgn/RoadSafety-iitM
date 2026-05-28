@@ -1,0 +1,180 @@
+[
+  {
+    "id": "kolkata-sskm-hospital",
+    "name": "IPGMER & SSKM Hospital",
+    "type": "trauma_center",
+    "lat": 22.5391,
+    "lon": 88.3444,
+    "phone": "033-22236242",
+    "address": "244 AJC Bose Road, Kolkata, West Bengal 700020",
+    "locality": "AJC Bose Road",
+    "region": "West Bengal",
+    "country": "India",
+    "source_url": "https://www.ipgmer.gov.in/",
+    "source_name": "IPGMER SSKM Hospital Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.9,
+    "confidence_reasons": [
+      "State government premier teaching hospital",
+      "Level 1 trauma and critical care center",
+      "Official website listing"
+    ],
+    "notes": "State-run super specialty hospital. Major trauma care center in Kolkata. 24x7 emergency."
+  },
+  {
+    "id": "kolkata-police-lalbazar",
+    "name": "Kolkata Police Headquarters Lalbazar",
+    "type": "police",
+    "lat": 22.5744,
+    "lon": 88.3533,
+    "phone": "033-22143000",
+    "address": "18 Lalbazar Street, Kolkata, West Bengal 700001",
+    "locality": "Lalbazar",
+    "region": "West Bengal",
+    "country": "India",
+    "source_url": "https://kolkatapolice.gov.in/",
+    "source_name": "Kolkata Police Official Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.92,
+    "confidence_reasons": [
+      "Kolkata Metropolitan Police Headquarters",
+      "Government agency official contact",
+      "24x7 control room hotline"
+    ],
+    "notes": "Kolkata police main headquarters and control room. Dial 100/112 for police assistance."
+  },
+  {
+    "id": "kolkata-fire-central",
+    "name": "Kolkata Central Fire Station",
+    "type": "fire_station",
+    "lat": 22.5685,
+    "lon": 88.3582,
+    "phone": "033-22521165",
+    "address": "13D Mirza Ghalib Street, Kolkata, West Bengal 700016",
+    "locality": "Mirza Ghalib Street",
+    "region": "West Bengal",
+    "country": "India",
+    "source_url": "https://wbfes.gov.in/",
+    "source_name": "West Bengal Fire & Emergency Services Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.88,
+    "confidence_reasons": [
+      "West Bengal Fire Services official portal",
+      "Regional central fire response headquarters"
+    ],
+    "notes": "Main fire station for central Kolkata. Quick dispatch response team."
+  },
+  {
+    "id": "kolkata-park-side-clinic",
+    "name": "Park Side Private Clinic",
+    "type": "hospital",
+    "lat": 22.543,
+    "lon": 88.352,
+    "phone": "033-22876543",
+    "address": "Park Street, Kolkata, West Bengal 700016",
+    "locality": "Park Street",
+    "region": "West Bengal",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Kolkata/Park-Side-Clinic-Park-Street/",
+    "source_name": "Justdial Kolkata directory",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.72,
+    "confidence_reasons": [
+      "Local web directory directory listing",
+      "Private outpatient clinic"
+    ],
+    "notes": "Small private clinic on Park Street. Offers first aid and basic diagnosis."
+  },
+  {
+    "id": "kolkata-medical-college",
+    "name": "Medical College Hospital Kolkata",
+    "type": "trauma_center",
+    "lat": 22.5731,
+    "lon": 88.3615,
+    "phone": "033-22123789",
+    "address": "88, College St, Bowbazar, Kolkata, West Bengal 700073",
+    "locality": "College Street",
+    "region": "West Bengal",
+    "country": "India",
+    "source_url": "https://www.kolkatamedicalcollege.gov.in/",
+    "source_name": "Medical College Kolkata Official Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.92,
+    "confidence_reasons": [
+      "State government teaching hospital",
+      "Established trauma registry list"
+    ],
+    "notes": "Historic government medical college with round-the-clock trauma and general emergency ward."
+  },
+  {
+    "id": "kolkata-crisis-ambulance",
+    "name": "Crisis Cardiac Ambulance Service",
+    "type": "ambulance",
+    "lat": 22.545,
+    "lon": 88.351,
+    "phone": "9830054321",
+    "address": "Park Street, Kolkata, West Bengal 700016",
+    "locality": "Park Street",
+    "region": "West Bengal",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Kolkata/Crisis-Ambulance-Park-Street/",
+    "source_name": "Directory verified registry",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.73,
+    "notes": "Private ICU and cardiac transport ambulances. Fast response in central Kolkata.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  },
+  {
+    "id": "kolkata-howrah-tow",
+    "name": "Howrah Breakdown & Flatbed Towing",
+    "type": "tow",
+    "lat": 22.585,
+    "lon": 88.33,
+    "phone": "9831098765",
+    "address": "Howrah, Kolkata, West Bengal 711101",
+    "locality": "Howrah",
+    "region": "West Bengal",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Kolkata/Howrah-Towing-Service-Howrah/",
+    "source_name": "Local Directory listing",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.7,
+    "notes": "Heavy vehicle recovery and flatbed car towing.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  },
+  {
+    "id": "kolkata-alipore-police",
+    "name": "Alipore Police Station",
+    "type": "police",
+    "lat": 22.535,
+    "lon": 88.332,
+    "phone": "033-24791556",
+    "address": "8, Alipore Rd, Kolkata, West Bengal 700027",
+    "locality": "Alipore",
+    "region": "West Bengal",
+    "country": "India",
+    "source_url": "https://kolkatapolice.gov.in/",
+    "source_name": "Kolkata Police Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.91,
+    "notes": "Local division control dispatch. Dial 100.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  }
+]

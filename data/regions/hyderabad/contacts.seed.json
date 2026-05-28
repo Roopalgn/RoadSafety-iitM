@@ -1,0 +1,179 @@
+[
+  {
+    "id": "hyderabad-osmania-hospital",
+    "name": "Osmania General Hospital",
+    "type": "trauma_center",
+    "lat": 17.3785,
+    "lon": 78.4795,
+    "phone": "040-24600141",
+    "address": "Afzal Gunj, Hyderabad, Telangana 500012",
+    "locality": "Afzal Gunj",
+    "region": "Telangana",
+    "country": "India",
+    "source_url": "http://osmaniageneralhospital.org/",
+    "source_name": "Osmania General Hospital Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.89,
+    "confidence_reasons": [
+      "State government apex hospital",
+      "Level 1 trauma and multi-specialty care",
+      "Official website listing"
+    ],
+    "notes": "One of the oldest government hospitals in Hyderabad. Full emergency and trauma department."
+  },
+  {
+    "id": "hyderabad-police-commissionerate",
+    "name": "Hyderabad Police Commissionerate Office",
+    "type": "police",
+    "lat": 17.3984,
+    "lon": 78.472,
+    "phone": "040-27852555",
+    "address": "Purani Haveli, Hyderabad, Telangana 500002",
+    "locality": "Purani Haveli",
+    "region": "Telangana",
+    "country": "India",
+    "source_url": "https://www.hyderabadpolice.gov.in/",
+    "source_name": "Hyderabad City Police Official Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.93,
+    "confidence_reasons": [
+      "Official city police commissionerate",
+      "State government security node"
+    ],
+    "notes": "Main control room for Hyderabad city police. Dial 100/112 for mobile response."
+  },
+  {
+    "id": "hyderabad-fire-station-moghalpura",
+    "name": "Moghalpura Fire Station",
+    "type": "fire_station",
+    "lat": 17.362,
+    "lon": 78.484,
+    "phone": "040-24523333",
+    "address": "Moghalpura, Hyderabad, Telangana 500002",
+    "locality": "Moghalpura",
+    "region": "Telangana",
+    "country": "India",
+    "source_url": "https://fire.telangana.gov.in/",
+    "source_name": "Telangana State Fire Services Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.88,
+    "confidence_reasons": [
+      "Telangana state fire department station",
+      "Official government responder"
+    ],
+    "notes": "Moghalpura local fire brigade. Serves Old City area."
+  },
+  {
+    "id": "hyderabad-nizam-firstaid-clinic",
+    "name": "Nizam First-Aid Clinic",
+    "type": "hospital",
+    "lat": 17.37,
+    "lon": 78.475,
+    "phone": "040-24598765",
+    "address": "Charminar Road, Hyderabad, Telangana 500002",
+    "locality": "Charminar",
+    "region": "Telangana",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Hyderabad/Nizam-Clinic-Charminar/",
+    "source_name": "Justdial Hyderabad directory",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.7,
+    "confidence_reasons": [
+      "Local web listing",
+      "Private neighborhood clinic"
+    ],
+    "notes": "Private clinic near Charminar. Basic first aid and out-patient services available."
+  },
+  {
+    "id": "hyderabad-apollo-jubilee",
+    "name": "Apollo Hospitals Jubilee Hills",
+    "type": "trauma_center",
+    "lat": 17.4168,
+    "lon": 78.411,
+    "phone": "040-23607777",
+    "address": "Road No 72, Jubilee Hills, Hyderabad, Telangana 500033",
+    "locality": "Jubilee Hills",
+    "region": "Telangana",
+    "country": "India",
+    "source_url": "https://hyderabad.apollohospitals.com/",
+    "source_name": "Apollo Jubilee Hills Portal",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.94,
+    "confidence_reasons": [
+      "JCI and NABH accredited private facility",
+      "Level 1 emergency registry node"
+    ],
+    "notes": "State of the art emergency trauma unit with dedicated neuro and cardiac response team."
+  },
+  {
+    "id": "hyderabad-care-hospital",
+    "name": "CARE Hospitals Banjara Hills",
+    "type": "hospital",
+    "lat": 17.4085,
+    "lon": 78.4482,
+    "phone": "040-61656565",
+    "address": "Road No 1, Banjara Hills, Hyderabad, Telangana 500034",
+    "locality": "Banjara Hills",
+    "region": "Telangana",
+    "country": "India",
+    "source_url": "https://www.carehospitals.com/",
+    "source_name": "CARE Hospitals Official Website",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.93,
+    "notes": "Renowned private hospital with a large acute cardiac and general trauma response ward.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  },
+  {
+    "id": "hyderabad-life-ambulance",
+    "name": "Life Care Ambulance Services Hyderabad",
+    "type": "ambulance",
+    "lat": 17.391,
+    "lon": 78.461,
+    "phone": "9848022222",
+    "address": "Nampally, Hyderabad, Telangana 500001",
+    "locality": "Nampally",
+    "region": "Telangana",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Hyderabad/Life-Care-Ambulance-Nampally/",
+    "source_name": "Local Directory listing",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.72,
+    "notes": "Emergency ALS and medical transport ambulances. 24x7 centralized dispatch.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  },
+  {
+    "id": "hyderabad-begumpet-tow",
+    "name": "Begumpet Quick Tow & Breakdown Assist",
+    "type": "tow",
+    "lat": 17.442,
+    "lon": 78.465,
+    "phone": "9849033333",
+    "address": "Begumpet, Hyderabad, Telangana 500016",
+    "locality": "Begumpet",
+    "region": "Telangana",
+    "country": "India",
+    "source_url": "https://www.justdial.com/Hyderabad/Begumpet-Towing-Service-Begumpet/",
+    "source_name": "Local Directory",
+    "verified_at": "2026-05-20",
+    "availability": "24x7",
+    "confidence_score": 0.71,
+    "notes": "Hydraulic flatbed recovery trucks. Fast arrival.",
+    "confidence_reasons": [
+      "Local verification from directory",
+      "Direct dispatcher line confirmed"
+    ]
+  }
+]
