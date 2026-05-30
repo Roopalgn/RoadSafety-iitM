@@ -1178,6 +1178,20 @@ function App() {
   return (
     <div className="app-shell">
       <InteractiveBackground />
+      {/* Mobile Top Header */}
+      <header className="mobile-header">
+        <div className="mobile-brand"><Shield size={18} /> Road<mark>SoS</mark></div>
+        <div className="mobile-actions">
+          <button className={`mobile-action-btn ${handsFree ? 'handsfree-active' : ''}`} onClick={toggleHandsFree} title="Voice Wake Mode">
+            <Mic size={14} />
+          </button>
+          {installPrompt && (
+            <button className="mobile-action-btn" onClick={() => { installPrompt.prompt(); setInstallPrompt(null); }} title="Install">
+              <Download size={14} />
+            </button>
+          )}
+        </div>
+      </header>
       {/* Floating Navigation */}
       <nav className="floating-nav">
         <div className="nav-brand"><Shield size={18} /> Road<mark>SoS</mark></div>
