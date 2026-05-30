@@ -11,6 +11,7 @@ import re
 from datetime import datetime, timezone
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from .core.assistant import run_assistant
@@ -40,6 +41,14 @@ app = FastAPI(
     title="RoadSoS API",
     description="Offline-first accident response API.",
     version="0.5.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # When fewer than this many ranked local services are returned, the response
