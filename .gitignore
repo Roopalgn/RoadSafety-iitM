@@ -1,34 +1,51 @@
 # Python
 __pycache__/
 *.py[cod]
+*.pyo
 .pytest_cache/
 pytest-cache-files-*/
 .venv/
 venv/
+.python-version
 
 # Node
 node_modules/
-dist/
 .vite/
 
-# Local config
+# Build output
+dist/
+build/
+
+# Local config / secrets
 .env
 .env.local
+.env.*.local
 
-# Generated data
+# Generated database and cache
 *.sqlite
 *.sqlite3
-data/generated/
+*.db
 data/roadsos.db
 data/cache_version.txt
+data/generated/
 
-# OS/editor
+# OS / editor artifacts
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
-# Hackathon competitor tracking
+# Hackathon internal tracking (not relevant to judges)
 competitors.txt
 competitive_analysis.md
+plan.md
+info.md
 
+# Internal/working docs not needed for submission
+docs/gap_analysis.md
+docs/merge5_verification.md
+docs/pr_review_checklist.md
+docs/frontend_verification.md

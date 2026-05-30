@@ -36,6 +36,8 @@ RoadSoS is a location-aware emergency response Progressive Web App. A bystander 
 4. **Generate an incident packet** — structured summary with injury count, vehicle type, severity, and nearest contacts; available in English, Tamil, and Hindi
 5. **Use the guarded assistant** — ask "nearest hospital" and get verified contacts; ask "is the ambulance coming?" and get an honest refusal with reason
 6. **Work offline** — service worker caches the app shell; data cache persists across network loss
+7. **Use bystander mode** — role cards (Caller, Traffic Spotter, Note Taker, Location Sharer) keep everyone useful
+8. **Apply emergency presets** — one-tap filter for Medical emergency, Police support, Vehicle recovery
 
 ---
 
@@ -58,6 +60,7 @@ RoadSoS is a location-aware emergency response Progressive Web App. A bystander 
 |---|---|---|
 | UI framework | React | latest |
 | Build tool | Vite | latest |
+| Map library | Leaflet | 1.9.4 |
 | Icons | lucide-react | latest |
 | Language | JavaScript (ES modules) | — |
 | PWA | Service Worker (vanilla JS) | — |
@@ -65,59 +68,79 @@ RoadSoS is a location-aware emergency response Progressive Web App. A bystander 
 
 ---
 
-## 5. Folder Structure
+## 5. Repository Structure
 
 ```
 RoadSafety-iitM/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                  # CI: backend tests + frontend build on every push
 ├── backend/
 │   ├── app/
 │   │   ├── core/
-│   │   │   ├── assistant.py       # Retrieval-based assistant (intent + refusal)
-│   │   │   ├── confidence.py      # Multi-factor ranking (distance, freshness, priority)
-│   │   │   ├── data_loader.py     # Region-aware seed file loader
-│   │   │   └── geo.py             # Bounding box detection, distance ranking
-│   │   ├── main.py                # FastAPI routes (/api/contacts, /api/assistant, etc.)
-│   │   └── models.py              # Pydantic request/response models
-│   ├── data/
-│   │   ├── contacts.seed.json     # 21 Chennai production contacts
-│   │   ├── fallbacks.seed.json    # 4 national fallback contacts
-│   │   └── regions/
-│   │       └── bengaluru/
-│   │           ├── contacts.seed.json   # 11 Bengaluru production contacts
-│   │           └── fallbacks.seed.json  # 5 Karnataka fallbacks
+│   │   │   ├── assistant.py        # Retrieval-based assistant (intent + refusal)
+│   │   │   ├── confidence.py       # Multi-factor ranking (distance, freshness, priority)
+│   │   │   ├── data_loader.py      # Region-aware seed file loader
+│   │   │   ├── dedupe.py           # Duplicate contact collapsing
+│   │   │   ├── geo.py              # Bounding box detection, distance ranking
+│   │   │   ├── paths.py            # Path resolution utilities
+│   │   │   └── validation.py       # JSON Schema contract validation
+│   │   ├── main.py                 # FastAPI routes + XSS sanitization + middleware
+│   │   └── models.py               # Pydantic request/response models
 │   ├── scripts/
-│   │   ├── build_db.py            # SQLite generation from seed files
-│   │   ├── validate_data.py       # Data integrity checks
-│   │   └── verify_sources.py      # HTTP 200 check on all source URLs
+│   │   ├── build_db.py             # SQLite generation from seed files
+│   │   ├── validate_data.py        # Data integrity checks (no fixture leakage)
+│   │   └── verify_sources.py       # HTTP 200 check on all source URLs
 │   ├── tests/
-│   │   ├── fixtures/              # Non-production test data
-│   │   ├── test_api.py            # API endpoint tests
-│   │   └── test_assistant.py      # Assistant logic tests
+│   │   ├── fixtures/               # Non-production test data (isolated from production)
+│   │   ├── test_api.py             # API endpoint tests (122 total)
+│   │   ├── test_assistant.py       # Assistant logic and refusal tests
+│   │   ├── test_confidence.py      # Confidence scoring tests
+│   │   ├── test_db.py              # Database integration tests
+│   │   ├── test_dedupe.py          # Deduplication logic tests
+│   │   ├── test_geo.py             # Geo/bounding box detection tests
+│   │   └── test_validation.py      # JSON Schema validation tests
+│   ├── conftest.py
 │   └── requirements.txt
 ├── frontend/
 │   ├── public/
-│   │   ├── manifest.webmanifest   # PWA manifest with icon
-│   │   ├── offline.html           # Offline fallback page
-│   │   ├── roadsos-icon.svg       # PWA icon
-│   │   └── sw.js                  # Service worker (cache shell + offline.html)
+│   │   ├── manifest.webmanifest    # PWA manifest (name, icons, display mode)
+│   │   ├── offline.html            # Offline fallback page
+│   │   ├── roadsos-icon.svg        # PWA icon
+│   │   └── sw.js                   # Service worker (cache first, offline.html fallback)
 │   ├── src/
-│   │   ├── main.jsx               # Full React application
-│   │   └── styles.css             # Glassmorphism design + dark/night mode
-│   └── package.json
+│   │   ├── main.jsx                # Full React application
+│   │   └── styles.css              # Glassmorphism design, dark/night mode
+│   ├── index.html
+│   ├── package.json
+│   └── vite.config.js
+├── data/
+│   ├── contacts.seed.json          # 21 Chennai production contacts
+│   ├── fallbacks.seed.json         # 4 national fallbacks (112, 108, 100, 1033)
+│   └── regions/
+│       ├── bengaluru/              # 11 Bengaluru contacts + 5 Karnataka fallbacks
+│       ├── delhi/                  # Delhi region seed data
+│       ├── gurgaon/                # Gurgaon region seed data
+│       ├── hyderabad/              # Hyderabad region seed data
+│       ├── kolkata/                # Kolkata region seed data
+│       ├── lucknow/                # Lucknow region seed data
+│       ├── mumbai/                 # Mumbai region seed data
+│       └── pune/                   # Pune region seed data
 ├── contracts/
-│   ├── contact.schema.json        # JSON Schema for contact records
-│   └── api.examples.json          # API request/response examples
+│   ├── contact.schema.json         # JSON Schema for contact records
+│   └── api.examples.json           # API request/response examples
 ├── demo/
-│   └── golden_scenario.md         # Step-by-step judging walkthrough (12 beats)
+│   └── golden_scenario.md          # 12-beat judging walkthrough
 ├── docs/
 │   ├── assumptions.md
-│   ├── data_sources.md            # Source URLs + provenance for all 32 contacts
-│   ├── deck_outline.md            # 7-slide presentation outline
-│   ├── frontend_verification.md   # Build and test results
-│   ├── offline_verification.md    # Offline demo steps for Chrome, Android, iOS
-│   ├── screenshots/               # 9 mobile screenshots (375px)
-│   └── submission_requirements.md
-└── plan.md                        # Full project plan and acceptance gates
+│   ├── data_sources.md             # Source URLs + provenance for all contacts
+│   ├── deck_outline.md             # 7-slide presentation outline
+│   ├── offline_verification.md     # Offline demo steps
+│   ├── submission_requirements.md  # Hackathon requirements checklist
+│   └── submission_word_document.md # This document
+├── .env.example
+├── render.yaml                     # Render.com backend deployment
+└── vercel.json                     # Vercel frontend deployment
 ```
 
 ---
@@ -128,22 +151,22 @@ RoadSafety-iitM/
 - Python 3.11+
 - Node.js 18+
 
-### Backend (one command)
+### Backend
 ```powershell
 cd backend
 pip install -r requirements.txt
 python -m scripts.build_db
-uvicorn app.main:app --port 8001 --reload
+uvicorn app.main:app --port 8000 --reload
 ```
 
-### Frontend (one command)
+### Frontend
 ```powershell
 cd frontend
 npm install
 npm run dev
 ```
 
-Open **http://localhost:5174** in Chrome. Backend runs at **http://localhost:8001**.
+Open **http://localhost:5173** in Chrome. Backend API at **http://localhost:8000**. Swagger docs at **http://localhost:8000/docs**.
 
 ### Verify data integrity
 ```powershell
@@ -154,70 +177,94 @@ python -m pytest tests -v
 
 ---
 
-## 7. Software Packages
+## 7. API Reference
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Service health check + version info |
+| `POST` | `/api/nearby-services` | Ranked emergency contacts by coordinates + radius |
+| `GET` | `/api/cache-package?region=chennai` | Offline cache bundle |
+| `POST` | `/api/incident-summary` | Generate structured incident packet |
+| `POST` | `/api/assistant` | Guarded retrieval assistant |
+
+### Example: Nearby Services Request
+```json
+{
+  "lat": 12.9915,
+  "lon": 80.2337,
+  "radius_km": 8,
+  "service_types": ["hospital", "ambulance"],
+  "location_source": "gps",
+  "region": "auto"
+}
+```
+
+---
+
+## 8. Software Packages
 
 ### Backend (`backend/requirements.txt`)
-
 | Package | Version | Purpose |
 |---|---|---|
 | fastapi | 0.115.6 | REST API framework |
-| uvicorn[standard] | 0.34.0 | ASGI server with WebSocket support |
+| uvicorn[standard] | 0.34.0 | ASGI server |
 | pydantic | 2.10.4 | Request/response validation |
 | jsonschema | 4.23.0 | JSON Schema contract validation |
 | pytest | 8.3.4 | Test runner |
 | httpx | 0.28.1 | Async HTTP client for API tests |
 
 ### Frontend (`frontend/package.json`)
-
 | Package | Version | Purpose |
 |---|---|---|
 | react | latest | UI framework |
 | react-dom | latest | React DOM renderer |
-| lucide-react | latest | Icon set (emergency icons) |
+| leaflet | 1.9.4 | Interactive maps |
+| lucide-react | latest | Emergency icon set |
 | vite | latest | Build tool and dev server |
-| @vitejs/plugin-react | latest | React JSX transform for Vite |
+| @vitejs/plugin-react | latest | React JSX transform |
 
 **No external LLM API packages.** The assistant is fully retrieval-based using the curated contact database.
 
 ---
 
-## 8. Assumptions
+## 9. Assumptions
 
 ### Scope
-- RoadSoS is built for the RoadSoS track only; DriveLegal and RoadWatch features are explicitly out of scope.
-- The primary demo region is IIT Madras / Chennai (lat 12.9915, lon 80.2337).
-- A second-region portability sample (Bengaluru) proves the schema across cities; coordinates outside known regions receive national fallbacks only.
+- RoadSoS is built for the RoadSoS track only.
+- The primary demo region is IIT Madras / Chennai (lat `12.9915`, lon `80.2337`).
+- Additional regions (Bengaluru, Delhi, Mumbai, Hyderabad, Pune, Kolkata, Gurgaon, Lucknow) are included with their own seed files.
+- Coordinates outside all known region bounding boxes receive national fallbacks only.
 
 ### Data
-- Production emergency contacts must be curated manually from reliable, verifiable public sources.
-- AI may summarize user-provided incident details but must not create emergency contacts, phone numbers, or addresses.
-- Every production contact requires `source_url`, `source_name`, `verified_at`, and `confidence_reasons`.
-- Contacts with no reliable coordinates are excluded from distance ranking or have `lat`/`lon` set to `null`.
-- Test fixtures live outside production seed files and are clearly marked as non-production.
-- The offline cache is scoped to curated demo regions; it does not cover all of India.
+- Production emergency contacts must be curated manually from verifiable public sources.
+- AI may structure user-provided incident details but **must not** create emergency contacts, phone numbers, or addresses.
+- Every production contact requires: `source_url`, `source_name`, `verified_at`, `confidence_reasons`.
+- Contacts with no reliable coordinates have `lat`/`lon` set to `null` (not excluded, but shown in fallbacks).
+- Test fixtures live outside production seed files, clearly isolated in `tests/fixtures/`.
+- The offline cache covers curated demo regions; it does not cover all of India.
 
 ### Backend and Assistant
 - The assistant searches curated contacts, official fallbacks, and approved safety templates only.
-- The assistant does not call external LLM APIs for emergency contact data.
-- If the assistant cannot match a query to verified data/templates, it refuses with a clear `refusal_reason`.
-- Real-time queries (ETA, dispatch status, "is the ambulance coming?") are always refused.
-- Medical diagnosis, triage advice, and legal advice queries are always refused.
-- RoadSoS does not dispatch emergency services.
-- RoadSoS does not guarantee real-time availability of any listed contact.
-- Ranking is deterministic and explainable: distance, confidence, freshness, service priority, and availability.
+- The assistant does **not** call external LLM APIs for emergency contact data.
+- If the assistant cannot match a query to verified data, it refuses with a clear `refusal_reason`.
+- Real-time queries (ETA, dispatch status, "is the ambulance coming?") are **always refused**.
+- Medical diagnosis, triage advice, and legal advice are **always refused**.
+- RoadSoS does **not** dispatch emergency services.
+- RoadSoS does **not** guarantee real-time availability of any listed contact.
+- Ranking is deterministic: distance → confidence → freshness → service priority → availability.
 
 ### Offline
-- The offline layer has two tiers: (1) service worker caches the app shell (HTML, JS, CSS) after first load, and (2) browser `localStorage` stores the `/api/cache-package` data response.
-- The user must tap **Refresh cache** at least once while online to populate the local data store.
-- The app always falls back to ERSS 112 if no data cache exists.
+- Two-tier offline: (1) service worker caches the app shell; (2) localStorage stores `/api/cache-package` response.
+- User must tap **Refresh cache** at least once while online.
+- If no cache exists, ERSS 112 is always shown as the minimum fallback.
 
 ---
 
-## 9. Data Sources
+## 10. Data Sources
 
-**Total production contacts: 32 (Chennai: 21 | Bengaluru: 11) + 4 national fallbacks**
+**Total production contacts: 21 Chennai + 11 Bengaluru + additional city seeds + 4 national fallbacks**
 
-All verified as of **2026-05-20**.
+All contacts verified as of **2026-05-20**.
 
 ### National Fallbacks
 | Contact | Phone | Source |
@@ -227,33 +274,33 @@ All verified as of **2026-05-20**.
 | Police Emergency | 100 | tnpolice.gov.in |
 | NHAI Highway Helpline | 1033 | nhai.gov.in |
 
-### Chennai — Hospitals / Trauma Centres (6)
-| Contact | Phone | Source |
-|---|---|---|
-| AIIMS Madras | 044-22289999 | aiimsmadras.edu.in |
-| Government Stanley Medical College | 044-25281201 | stanleymedicalcollege.ac.in |
-| Rajiv Gandhi Government General Hospital | 044-25305000 | rggh.tn.gov.in |
-| Apollo Hospitals Greams Road | 044-28290200 | apollohospitals.com |
-| Fortis Malar Hospital | 044-42892222 | fortishealthcare.com |
-| Kilpauk Medical College Hospital | 044-26421111 | tnhealth.tn.gov.in |
+### Chennai — Hospitals / Trauma Centres (10)
+| Contact | Type | Phone | Source |
+|---|---|---|---|
+| AIIMS Madras | trauma_center | 044-22289999 | aiimsmadras.edu.in |
+| Apollo Hospitals Greams Road | trauma_center | 044-28290200 | apollohospitals.com |
+| Rajiv Gandhi Govt General Hospital | hospital | 044-25305000 | rggh.tn.gov.in |
+| Government Stanley Medical College | hospital | 044-25281201 | stanleymedicalcollege.ac.in |
+| Fortis Malar Hospital | hospital | 044-42892222 | fortishealthcare.com |
+| Sri Ram Hospital Adyar | hospital | 044-24420555 | justdial (verified) |
+| Kilpauk Medical College Hospital | hospital | 044-26421111 | tnhealth.tn.gov.in |
+| Institute of Child Health | hospital | 044-25305050 | tnhealth.tn.gov.in |
+| Vijaya Hospital (Vadapalani) | hospital | 044-22431111 | vijayahospital.com |
+| Govt Hospital of Thoracic Medicine | hospital | 044-22262001 | tnhealth.tn.gov.in |
 
-### Chennai — Police Stations (4)
-| Contact | Phone | Source |
-|---|---|---|
-| Adyar Police Station | 044-24910100 | tnpolice.gov.in |
-| Kotturpuram Police Station | 044-24470585 | tnpolice.gov.in |
-| Velachery Police Station | 044-22430585 | tnpolice.gov.in |
-| Guindy Police Station | 044-22350100 | tnpolice.gov.in |
-
-### Chennai — Ambulance, Fire Stations, Tow, Repair (7 + 4 more hospitals)
+### Chennai — Police, Fire, Ambulance, Tow, Repair (11)
 | Contact | Type | Phone | Source |
 |---|---|---|---|
 | TN 108 Emergency Ambulance | ambulance | 108 | emri.in |
+| Adyar Police Station | police | 044-24910100 | tnpolice.gov.in |
+| Kotturpuram Police Station | police | 044-24470585 | tnpolice.gov.in |
+| Velachery Police Station | police | 044-22430585 | tnpolice.gov.in |
+| Guindy Police Station | police | 044-22350100 | tnpolice.gov.in |
 | Adyar Fire Station | fire_station | 044-24910101 | tnfrs.tn.gov.in |
 | Velachery Fire Station | fire_station | 044-22431101 | tnfrs.tn.gov.in |
 | Guindy Fire Station | fire_station | 044-22350101 | tnfrs.tn.gov.in |
-| NHAI 1033 (Towing) | tow | 1033 | nhai.gov.in |
 | Chennai RTO Towing (Adyar Zone) | tow | 044-23452345 | tnsta.gov.in |
+| NHAI Highway Helpline | tow | 1033 | nhai.gov.in |
 | TVS Authorised Service (Adyar) | repair | 044-24910200 | tvsmotor.com |
 
 ### Bengaluru (11 contacts)
@@ -269,44 +316,47 @@ All verified as of **2026-05-20**.
 | Koramangala Fire Station | fire_station | 080-22943101 | kfd.karnataka.gov.in |
 | Indiranagar Fire Station | fire_station | 080-25200101 | kfd.karnataka.gov.in |
 | BBMP Towing Helpline | tow | 080-22221188 | bbmp.gov.in |
-| NHAI 1033 (Towing — Bengaluru) | tow | 1033 | nhai.gov.in |
+| NHAI 1033 (Bengaluru) | tow | 1033 | nhai.gov.in |
+
+Full provenance with coordinates and notes: [`docs/data_sources.md`](docs/data_sources.md)
 
 ---
 
-## 10. Known Limitations
+## 11. Known Limitations
 
-1. **Source URL verification script:** Several Indian government websites (tnpolice.gov.in, 112.gov.in, ksp.gov.in, etc.) return SSL errors or timeouts from non-Indian IPs due to geo-blocking or SSL certificate configurations. These sites are verified as live and correct by direct browser access; the automated script reports these as network-level failures, not dead URLs.
-
-2. **Apollo Hospitals URL:** Returns HTTP 403 (bot-blocking) from automated scripts. The page is live and accessible from a browser.
-
-3. **TVS Dealer Locator (1033):** The URL structure changed after verification. The contact phone number (044-24910200) is correct. This is flagged as confidence 0.70 in the seed data.
-
-4. **Repair shops:** No reliable, verifiable source was found for individual roadside repair shops near IIT Madras. The TVS authorised dealer is included as the only office-hours repair option.
-
-5. **Offline cache:** Requires at least one online visit with **Refresh cache** tapped. First-load offline is not supported.
-
-6. **Lighthouse PWA score:** Targeted at 90+ on Chrome. Score may vary by machine; manual Lighthouse audit is recommended before final demo.
-
-7. **Multi-language packet:** Tamil and Hindi use template-based keyword translation, not full machine translation. Emergency terms are pre-translated; user-entered notes remain in English.
-
-8. **Cross-region second city:** Bengaluru backend routing and source-backed contacts are implemented. A third or fourth city requires a new `data/regions/<city>/` seed file following the same schema.
-
-9. **RoadSoS does not dispatch emergency services** and does not confirm live availability of any contact.
+1. **SSL geo-blocking:** Several Indian government websites (tnpolice.gov.in, 112.gov.in, ksp.gov.in) block non-Indian IPs. Verified as live via direct browser access; automated `verify_sources.py` may report failures.
+2. **Apollo Hospitals:** Returns HTTP 403 from automated scripts (bot-blocking). Page is live and accessible from browser.
+3. **TVS Dealer Locator:** URL structure changed post-verification. Phone number (044-24910200) is correct. Confidence set to 0.70.
+4. **Repair shops:** No reliable, verifiable source exists for individual roadside repair shops near IIT Madras. TVS dealer included as the only verifiable repair option.
+5. **Offline cache:** Requires at least one online session with **Refresh cache** tapped. First-load offline is not supported.
+6. **Multi-language packet:** Tamil and Hindi use template-based keyword translation, not full machine translation. User-entered notes remain in English.
+7. **No real dispatch:** RoadSoS surfaces verified contacts but does not dispatch emergency services or confirm live availability.
+8. **City seed depth:** Chennai and Bengaluru have fully verified contacts. Newly added cities (Delhi, Mumbai, etc.) have regional seed data at varying depth.
 
 ---
 
-## 11. Test Results (Final — Merge 4)
+## 12. Test Results
 
 ```
-Data validation:      PASS (32 production contacts, no fixture leakage)
-Backend test suite:   122 passed
-Frontend build:       PASS (vite build — zero errors)
+python -m scripts.validate_data   →  PASS (all contacts, no fixture leakage)
+python -m pytest tests -v         →  122 passed
+npm run build                     →  ✓ built, 0 errors
 ```
 
 ---
 
-## 12. Offline Cache Version
+## 13. Offline Cache Version
 
 `merge4-final-0`
 
 This version string is displayed in the app's status bar and identifies the data snapshot cached by the service worker.
+
+---
+
+## 14. Safety Rules (Non-Negotiable)
+
+- Do not generate emergency phone numbers, addresses, or service names with AI.
+- Production contacts must be source-backed with `source_url`, `source_name`, and `verified_at`.
+- The assistant searches curated contacts and approved templates only — no external LLM API calls.
+- If the app cannot verify something, it says so and shows official fallback guidance (ERSS 112).
+- ERSS 112 is always visible regardless of network or cache state.

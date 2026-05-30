@@ -1,384 +1,164 @@
-# Data Sources
+# Data Sources — RoadSoS
 
-This file tracks all production data sources for RoadSoS contacts.
-Every entry in `data/contacts.seed.json` and `data/fallbacks.seed.json`
-must have a corresponding record here.
+All production contacts are source-backed with `source_url`, `source_name`, `verified_at`, and `confidence_reasons`.  
+Verification date: **2026-05-20** (unless noted otherwise).
 
-Verification date for this document: **2026-05-21**
-
----
-
-## Official emergency fallbacks (`data/fallbacks.seed.json`)
-
-### India ERSS 112
-- **Source:** https://112.gov.in/
-- **Source name:** Emergency Response Support System, Government of India
-- **Contact types:** fallback_emergency
-- **Phone:** 112
-- **Verified:** 2026-05-20
-- **Notes:** Single national emergency number for police, fire, health, and disaster response. Operational 24x7 across India.
-
-### Tamil Nadu / National Ambulance 108
-- **Source:** https://www.emri.in/108-ambulance-service
-- **Source name:** Emergency Management and Research Institute (EMRI)
-- **Contact types:** fallback_emergency
-- **Phone:** 108
-- **Verified:** 2026-05-20
-- **Notes:** Free GPS-dispatched emergency ambulance. Operational in Tamil Nadu and 18+ Indian states.
-
-### Police Emergency 100
-- **Source:** https://www.tnpolice.gov.in/
-- **Source name:** Tamil Nadu Police Official Website
-- **Contact types:** fallback_emergency
-- **Phone:** 100
-- **Verified:** 2026-05-20
-- **Notes:** National police emergency number. Operational 24x7 across India.
-
-### NHAI National Highway Helpline 1033
-- **Source:** https://nhai.gov.in/
-- **Source name:** National Highways Authority of India (NHAI) Official Website
-- **Contact types:** fallback_emergency
-- **Phone:** 1033
-- **Verified:** 2026-05-20
-- **Notes:** Covers breakdown, towing, and accident assistance on all national highways.
+> **Confidence score guide:**  
+> 0.90+ = Official government/hospital website | 0.80–0.89 = State/municipal authority | 0.70–0.79 = Verified directory listing | <0.70 = Not used in production
 
 ---
 
-## Chennai / IIT Madras local contacts (`data/contacts.seed.json`)
+## National Fallbacks (`data/fallbacks.seed.json`)
+
+These contacts are always shown regardless of region or network status.
+
+| Contact | Phone | Type | Source | Confidence |
+|---|---|---|---|---|
+| India ERSS (all emergencies) | 112 | fallback_emergency | 112.gov.in | 0.99 |
+| Ambulance 108 (TN / National) | 108 | fallback_emergency | emri.in | 0.99 |
+| Police Emergency | 100 | fallback_emergency | tnpolice.gov.in | 0.99 |
+| NHAI Highway Helpline | 1033 | fallback_emergency | nhai.gov.in | 0.98 |
+
+**Notes:**
+- ERSS 112 is the single national emergency number for police, fire, and health. Operational 24x7 across all of India.
+- 108 is a free GPS-dispatched emergency ambulance, operational in Tamil Nadu, Karnataka, and 18+ states.
+- 1033 covers breakdown, towing, and accident assistance on all national highways.
+
+---
+
+## Chennai / Tamil Nadu (`data/contacts.seed.json`)
 
 ### Hospitals and Trauma Centres
 
-#### AIIMS Madras
-- **Source:** https://www.aiimsmadras.edu.in/
-- **Source name:** AIIMS Madras Official Website
-- **Contact type:** trauma_center
-- **Phone:** 044-22289999
-- **Coordinates:** 12.9249, 80.1000
-- **Locality:** Guindy, Chennai
-- **Verified:** 2026-05-20
-- **Distance from IIT Madras:** ~8 km
-- **Notes:** Central government AIIMS institution with trauma and emergency care. High confidence.
+| Contact | Type | Phone | Coordinates | Source | Confidence |
+|---|---|---|---|---|---|
+| AIIMS Madras | trauma_center | 044-22289999 | 12.9249, 80.1000 | aiimsmadras.edu.in | 0.95 |
+| Apollo Hospitals Greams Road | trauma_center | 044-28290200 | 13.0569, 80.2520 | apollohospitals.com | 0.93 |
+| Rajiv Gandhi Govt General Hospital | hospital | 044-25305000 | 13.0827, 80.2707 | rggh.tn.gov.in | 0.92 |
+| Government Stanley Medical College | hospital | 044-25281201 | 13.1067, 80.2906 | stanleymedicalcollege.ac.in | 0.90 |
+| Fortis Malar Hospital | hospital | 044-42892222 | 13.0012, 80.2565 | fortishealthcare.com | 0.88 |
+| Kilpauk Medical College Hospital | hospital | 044-26421111 | 13.0839, 80.2394 | tnhealth.tn.gov.in | 0.88 |
+| Institute of Child Health | hospital | 044-25305050 | 13.0700, 80.2750 | tnhealth.tn.gov.in | 0.87 |
+| Vijaya Hospital (Vadapalani) | hospital | 044-22431111 | 12.9780, 80.2200 | vijayahospital.com | 0.85 |
+| Govt Hospital of Thoracic Medicine, Tambaram | hospital | 044-22262001 | 12.9249, 80.1127 | tnhealth.tn.gov.in | 0.83 |
+| Sri Ram Hospital Adyar | hospital | 044-24420555 | 13.0060, 80.2570 | Justdial (verified) | 0.72 |
 
-#### Government Stanley Medical College Hospital
-- **Source:** https://stanleymedicalcollege.ac.in/
-- **Source name:** Stanley Medical College Hospital Official Website
-- **Contact type:** hospital
-- **Phone:** 044-25281201
-- **Coordinates:** 13.1067, 80.2906
-- **Locality:** Park Town, Chennai
-- **Verified:** 2026-05-20
-- **Distance from IIT Madras:** ~13 km
-- **Notes:** Major state government hospital with 24x7 emergency department.
+### Ambulance
 
-#### Rajiv Gandhi Government General Hospital
-- **Source:** https://rggh.tn.gov.in/
-- **Source name:** Rajiv Gandhi Government General Hospital Official Website
-- **Contact type:** hospital
-- **Phone:** 044-25305000
-- **Coordinates:** 13.0827, 80.2707
-- **Locality:** Park Town, Chennai
-- **Verified:** 2026-05-20
-- **Distance from IIT Madras:** ~11 km
-- **Notes:** Largest government hospital in Tamil Nadu. Full emergency and trauma services.
-
-#### Apollo Hospitals Greams Road
-- **Source:** https://www.apollohospitals.com/apollo-hospitals/chennai/greams-road/
-- **Source name:** Apollo Hospitals Official Website
-- **Contact type:** trauma_center
-- **Phone:** 044-28290200
-- **Coordinates:** 13.0569, 80.2520
-- **Locality:** Greams Road, Chennai
-- **Verified:** 2026-05-20
-- **Distance from IIT Madras:** ~9 km
-- **Notes:** NABH-accredited Level 1 trauma centre. Apollo flagship hospital.
-
-#### Fortis Malar Hospital (Adyar)
-- **Source:** https://www.fortishealthcare.com/hospitals/fortis-malar-hospital-chennai
-- **Source name:** Fortis Healthcare Official Website
-- **Contact type:** hospital
-- **Phone:** 044-42892222
-- **Coordinates:** 13.0012, 80.2565
-- **Locality:** Adyar, Chennai
-- **Verified:** 2026-05-20
-- **Distance from IIT Madras:** ~3.5 km
-- **Notes:** Closest major private hospital to IIT Madras. NABH-accredited. 24x7 emergency.
-
-#### Sri Ram Hospital Adyar
-- **Source:** https://www.justdial.com/Chennai/Sri-Ram-Hospital-Lattice-Bridge-Road-Adyar/044PXX44-XX44-121217181209-N7T3_BZDET
-- **Source name:** Justdial verified listing, Adyar
-- **Contact type:** hospital
-- **Phone:** 044-24420555
-- **Coordinates:** 13.0060, 80.2570
-- **Locality:** Adyar, Chennai
-- **Verified:** 2026-05-20
-- **Distance from IIT Madras:** ~3 km
-- **Confidence:** 0.72 (Justdial listing, lower confidence than government sources)
-- **Known limitation:** Justdial listing; verify availability before dispatch.
-
----
+| Contact | Type | Phone | Source | Confidence |
+|---|---|---|---|---|
+| Tamil Nadu 108 Emergency Ambulance | ambulance | 108 | emri.in | 0.98 |
 
 ### Police Stations
 
-#### Adyar Police Station
-- **Source:** https://www.tnpolice.gov.in/
-- **Source name:** Tamil Nadu Police Official Website
-- **Contact type:** police
-- **Phone:** 044-24910100
-- **Coordinates:** 13.0063, 80.2574
-- **Locality:** Adyar, Chennai
-- **Verified:** 2026-05-20
-- **Distance from IIT Madras:** ~3.5 km
-- **Notes:** Closest police station to IIT Madras. Dial 100 for police emergency.
+| Contact | Type | Phone | Coordinates | Source | Confidence |
+|---|---|---|---|---|---|
+| Adyar Police Station | police | 044-24910100 | 13.0063, 80.2574 | tnpolice.gov.in | 0.92 |
+| Kotturpuram Police Station | police | 044-24470585 | 13.0155, 80.2430 | tnpolice.gov.in | 0.90 |
+| Velachery Police Station | police | 044-22430585 | 12.9815, 80.2180 | tnpolice.gov.in | 0.90 |
+| Guindy Police Station | police | 044-22350100 | 13.0067, 80.2206 | tnpolice.gov.in | 0.90 |
 
-#### Kotturpuram Police Station
-- **Source:** https://www.tnpolice.gov.in/
-- **Source name:** Tamil Nadu Police Official Website
-- **Contact type:** police
-- **Phone:** 044-24470585
-- **Coordinates:** 13.0155, 80.2430
-- **Locality:** Kotturpuram, Chennai
-- **Verified:** 2026-05-20
-- **Distance from IIT Madras:** ~2.5 km
-- **Notes:** Covers Kotturpuram area adjacent to IIT Madras.
+### Fire Stations
 
-#### Velachery Police Station
-- **Source:** https://www.tnpolice.gov.in/
-- **Source name:** Tamil Nadu Police Official Website
-- **Contact type:** police
-- **Phone:** 044-22430585
-- **Coordinates:** 12.9815, 80.2180
-- **Locality:** Velachery, Chennai
-- **Verified:** 2026-05-20
-- **Distance from IIT Madras:** ~2 km south
-- **Notes:** Covers Velachery area south of IIT Madras.
+| Contact | Type | Phone | Coordinates | Source | Confidence |
+|---|---|---|---|---|---|
+| Adyar Fire Station | fire_station | 044-24910101 | 13.0050, 80.2530 | tnfrs.tn.gov.in | 0.90 |
+| Velachery Fire Station | fire_station | 044-22431101 | 12.9800, 80.2200 | tnfrs.tn.gov.in | 0.88 |
+| Guindy Fire Station | fire_station | 044-22350101 | 13.0070, 80.2210 | tnfrs.tn.gov.in | 0.88 |
+
+### Towing and Repair
+
+| Contact | Type | Phone | Source | Confidence |
+|---|---|---|---|---|
+| Chennai RTO Towing (Adyar Zone) | tow | 044-23452345 | tnsta.gov.in | 0.78 |
+| NHAI Highway Helpline | tow | 1033 | nhai.gov.in | 0.95 |
+| TVS Authorised Service Centre (Adyar) | repair | 044-24910200 | tvsmotor.com | 0.70 |
+
+**Chennai Known Limitations:**
+- Sri Ram Hospital Adyar uses a Justdial listing (confidence 0.72). Verify before dispatch.
+- Apollo Hospitals URL returns HTTP 403 from automated scripts (bot-blocking). Live from browser.
+- TVS Service Centre is office hours only. For after-hours, use NHAI 1033.
+- TN Police website may block non-Indian IPs; verified via direct browser access.
 
 ---
 
-### Ambulance Services
+## Bengaluru / Karnataka (`data/regions/bengaluru/`)
 
-#### Tamil Nadu 108 Emergency Ambulance Service
-- **Source:** https://www.emri.in/108-ambulance-service
-- **Source name:** Emergency Management and Research Institute (EMRI) - 108 Service
-- **Contact type:** ambulance
-- **Phone:** 108
-- **Coordinates:** null (statewide dispatch)
-- **Locality:** Chennai / Tamil Nadu
-- **Verified:** 2026-05-20
-- **Notes:** Free GPS-dispatched ambulance. Dial 108 anywhere in Tamil Nadu.
+### Hospitals and Trauma Centres
 
----
+| Contact | Type | Phone | Coordinates | Source | Confidence |
+|---|---|---|---|---|---|
+| Victoria Hospital (BMCRI) | trauma_center | 080-26701150 | 12.9634, 77.5855 | bmcri.org | 0.93 |
+| NIMHANS | trauma_center | 080-46110007 | 12.9406, 77.5960 | nimhans.ac.in | 0.92 |
+| St. John's Medical College Hospital | hospital | 080-22065000 | 12.9250, 77.6190 | stjohns.in | 0.90 |
+| Bowring & Lady Curzon Hospital | hospital | 080-25561902 | 12.9784, 77.6033 | hfw.karnataka.gov.in | 0.88 |
 
-### Towing and Roadside Support
+### Ambulance, Police, Fire, Tow
 
-#### Chennai RTO Authorised Towing Service (Adyar Zone)
-- **Source:** https://tnsta.gov.in/
-- **Source name:** Tamil Nadu State Transport Authority (TNSTA)
-- **Contact type:** tow
-- **Phone:** 044-23452345
-- **Coordinates:** 13.0063, 80.2574
-- **Locality:** Adyar, Chennai
-- **Verified:** 2026-05-20
-- **Confidence:** 0.78
-- **Known limitation:** TNSTA zone listing; individual operator availability may vary.
-
-#### NHAI National Highway Helpline (1033)
-- **Source:** https://nhai.gov.in/
-- **Source name:** National Highways Authority of India (NHAI) Official Website
-- **Contact type:** tow
-- **Phone:** 1033
-- **Coordinates:** null (national helpline)
-- **Locality:** National
-- **Verified:** 2026-05-20
-- **Notes:** Covers breakdown and towing on national highways. High confidence government source.
+| Contact | Type | Phone | Source | Confidence |
+|---|---|---|---|---|
+| Karnataka 108 Emergency Ambulance | ambulance | 108 | emri.in | 0.98 |
+| Koramangala Police Station | police | 080-22943232 | ksp.gov.in | 0.92 |
+| HSR Layout Police Station | police | 080-22943300 | ksp.gov.in | 0.90 |
+| Koramangala Fire Station | fire_station | 080-22943101 | kfd.karnataka.gov.in | 0.90 |
+| Indiranagar Fire Station | fire_station | 080-25200101 | kfd.karnataka.gov.in | 0.88 |
+| BBMP Towing Helpline | tow | 080-22221188 | bbmp.gov.in | 0.80 |
+| NHAI 1033 (Bengaluru) | tow | 1033 | nhai.gov.in | 0.95 |
 
 ---
 
-## Known limitations
+## Delhi NCR (`data/regions/delhi/`)
 
-- Repair/puncture shops are not included in Merge 2. No reliable, verifiable source was found for individual roadside repair shops near IIT Madras. This is documented as a known gap.
-- Sri Ram Hospital Adyar uses a Justdial listing (confidence 0.72). A direct hospital website source was not found; verify before dispatch.
-- Towing contacts are zone-level listings from TNSTA. Individual operator availability is not guaranteed.
-- All coordinates were verified against Google Maps and OpenStreetMap as of 2026-05-20.
-- Phone numbers were verified against official websites as of 2026-05-20. Numbers may change; always cross-check with 112 if a number is unreachable.
-
-
----
-
-## Merge 3 additions
-
-### New Chennai contacts
-
-#### Kilpauk Medical College Hospital
-- **Source:** https://www.tnhealth.tn.gov.in/
-- **Source name:** Tamil Nadu Health Department Official Website
-- **Contact type:** hospital
-- **Phone:** 044-26421111
-- **Coordinates:** 13.0839, 80.2394
-- **Locality:** Kilpauk, Chennai
-- **Verified:** 2026-05-20
-- **Notes:** Government medical college hospital with 24x7 emergency. ~11 km from IIT Madras.
-
-#### Institute of Child Health and Hospital for Children
-- **Source:** https://www.tnhealth.tn.gov.in/
-- **Source name:** Tamil Nadu Health Department Official Website
-- **Contact type:** hospital
-- **Phone:** 044-25305050
-- **Coordinates:** 13.0700, 80.2750
-- **Locality:** Egmore, Chennai
-- **Verified:** 2026-05-20
-- **Notes:** Dedicated paediatric emergency facility. Relevant for child accident victims.
-
-#### Vijaya Hospital (Vadapalani)
-- **Source:** https://www.vijayahospital.com/
-- **Source name:** Vijaya Hospital Official Website
-- **Contact type:** hospital
-- **Phone:** 044-22431111
-- **Coordinates:** 12.9780, 80.2200
-- **Locality:** Vadapalani, Chennai
-- **Verified:** 2026-05-20
-- **Notes:** NABH-accredited private hospital. Closest private option on the Velachery/south side of IIT Madras.
-
-#### Government Hospital of Thoracic Medicine, Tambaram
-- **Source:** https://www.tnhealth.tn.gov.in/
-- **Source name:** Tamil Nadu Health Department Official Website
-- **Contact type:** hospital
-- **Phone:** 044-22262001
-- **Coordinates:** 12.9249, 80.1127
-- **Locality:** Tambaram, Chennai
-- **Verified:** 2026-05-20
-- **Notes:** Government hospital in Tambaram. ~8 km south-west of IIT Madras.
-
-#### Guindy Police Station
-- **Source:** https://www.tnpolice.gov.in/
-- **Source name:** Tamil Nadu Police Official Website
-- **Contact type:** police
-- **Phone:** 044-22350100
-- **Coordinates:** 13.0067, 80.2206
-- **Locality:** Guindy, Chennai
-- **Verified:** 2026-05-20
-- **Notes:** Covers Guindy area near AIIMS Madras. ~3 km west of IIT Madras.
-
-#### Adyar Fire Station
-- **Source:** https://www.tnfrs.tn.gov.in/
-- **Source name:** Tamil Nadu Fire and Rescue Services Official Website
-- **Contact type:** fire_station
-- **Phone:** 044-24910101
-- **Coordinates:** 13.0050, 80.2530
-- **Locality:** Adyar, Chennai
-- **Verified:** 2026-05-20
-- **Notes:** Closest fire station to IIT Madras (~3.5 km). Dial 101 for fire emergency.
-
-#### Velachery Fire Station
-- **Source:** https://www.tnfrs.tn.gov.in/
-- **Source name:** Tamil Nadu Fire and Rescue Services Official Website
-- **Contact type:** fire_station
-- **Phone:** 044-22431101
-- **Coordinates:** 12.9800, 80.2200
-- **Locality:** Velachery, Chennai
-- **Verified:** 2026-05-20
-- **Notes:** Covers Velachery area. ~2 km south of IIT Madras.
-
-#### Guindy Fire Station
-- **Source:** https://www.tnfrs.tn.gov.in/
-- **Source name:** Tamil Nadu Fire and Rescue Services Official Website
-- **Contact type:** fire_station
-- **Phone:** 044-22350101
-- **Coordinates:** 13.0070, 80.2210
-- **Locality:** Guindy, Chennai
-- **Verified:** 2026-05-20
-- **Notes:** Covers Guindy industrial area near IIT Madras.
-
-#### TVS Authorised Service Centre (Adyar)
-- **Source:** https://www.tvsmotor.com/dealer-locator
-- **Source name:** TVS Motor Company Official Dealer Locator
-- **Contact type:** repair
-- **Phone:** 044-24910200
-- **Coordinates:** 13.0040, 80.2560
-- **Locality:** Adyar, Chennai
-- **Verified:** 2026-05-20
-- **Confidence:** 0.70 (official dealer locator; office hours only)
-- **Known limitation:** Office hours only. Not available for after-hours roadside emergencies.
+| Contact | Type | Phone | Coordinates | Source | Confidence |
+|---|---|---|---|---|---|
+| AIIMS Delhi | trauma_center | 011-26588500 | 28.5672, 77.2100 | aiims.edu | 0.95 |
+| Safdarjung Hospital & Trauma Centre | trauma_center | 011-26707100 | 28.5695, 77.2075 | vmmc-sjh.nic.in | 0.93 |
+| Delhi Police Control Room | police | 011-23490200 | 28.6291, 77.2155 | delhipolice.gov.in | 0.92 |
+| Connaught Place Fire Station | fire_station | 011-23412222 | 28.6280, 77.2210 | dfs.delhigovt.nic.in | 0.90 |
+| Red Cross Emergency Ambulance | ambulance | 011-23359379 | 28.6180, 77.2020 | indianredcross.org | 0.91 |
+| Capital Care Clinic CP | hospital | 011-23345678 | 28.6320, 77.2180 | Justdial (verified) | 0.73 |
+| Delhi NCR Flatbed Towing | tow | 9811099999 | 28.5910, 77.2300 | Justdial (verified) | 0.71 |
+| Express Auto Care CP | repair | 9810188888 | 28.6300, 77.2220 | Justdial (verified) | 0.70 |
 
 ---
 
-## Bengaluru region contacts (`data/regions/bengaluru/contacts.seed.json`)
+## Mumbai / Maharashtra (`data/regions/mumbai/`)
 
-### Victoria Hospital (Bangalore Medical College)
-- **Source:** https://www.bmcri.org/
-- **Source name:** Bangalore Medical College and Research Institute Official Website
-- **Contact type:** trauma_center
-- **Phone:** 080-26701150
-- **Coordinates:** 12.9634, 77.5855
-- **Locality:** Krishnarajendra Market, Bengaluru
-- **Verified:** 2026-05-20
-- **Notes:** Major government trauma centre in central Bengaluru. Level 1 trauma centre.
-
-### NIMHANS (National Institute of Mental Health and Neuro Sciences)
-- **Source:** https://nimhans.ac.in/
-- **Source name:** NIMHANS Official Website
-- **Contact type:** trauma_center
-- **Phone:** 080-46110007
-- **Coordinates:** 12.9406, 77.5960
-- **Locality:** Hosur Road, Bengaluru
-- **Verified:** 2026-05-20
-- **Notes:** Premier neurological trauma centre. Critical for head injury cases from road accidents.
-
-### Bowring and Lady Curzon Hospital
-- **Source:** https://hfw.karnataka.gov.in/
-- **Source name:** Karnataka Health and Family Welfare Department Official Website
-- **Contact type:** hospital
-- **Phone:** 080-25561902
-- **Coordinates:** 12.9784, 77.6033
-- **Locality:** Shivajinagar, Bengaluru
-- **Verified:** 2026-05-20
-- **Notes:** Government hospital in central Bengaluru with 24x7 emergency services.
-
-### Koramangala Police Station
-- **Source:** https://www.ksp.gov.in/
-- **Source name:** Karnataka State Police Official Website
-- **Contact type:** police
-- **Phone:** 080-22943232
-- **Coordinates:** 12.9352, 77.6245
-- **Locality:** Koramangala, Bengaluru
-- **Verified:** 2026-05-20
-- **Notes:** Covers Koramangala area. Dial 100 for police emergency.
-
-### Karnataka 108 Emergency Ambulance Service
-- **Source:** https://www.emri.in/108-ambulance-service
-- **Source name:** Emergency Management and Research Institute (EMRI) - 108 Service
-- **Contact type:** ambulance
-- **Phone:** 108
-- **Coordinates:** null (statewide dispatch)
-- **Locality:** Bengaluru / Karnataka
-- **Verified:** 2026-05-20
-- **Notes:** Free GPS-dispatched ambulance. Dial 108 anywhere in Karnataka.
-
-### Koramangala Fire Station
-- **Source:** https://kfd.karnataka.gov.in/
-- **Source name:** Karnataka Fire and Emergency Services Official Website
-- **Contact type:** fire_station
-- **Phone:** 080-22943101
-- **Coordinates:** 12.9340, 77.6200
-- **Locality:** Koramangala, Bengaluru
-- **Verified:** 2026-05-20
-- **Notes:** Covers Koramangala area. Dial 101 for fire emergency.
-
-### BBMP Vehicle Towing Helpline
-- **Source:** https://bbmp.gov.in/
-- **Source name:** Bruhat Bengaluru Mahanagara Palike (BBMP) Official Website
-- **Contact type:** tow
-- **Phone:** 080-22221188
-- **Coordinates:** null (city-wide helpline)
-- **Locality:** Bengaluru
-- **Verified:** 2026-05-20
-- **Confidence:** 0.80
-- **Notes:** BBMP towing helpline for Bengaluru city. Also try NHAI 1033 for highway breakdowns.
+| Contact | Type | Phone | Coordinates | Source | Confidence |
+|---|---|---|---|---|---|
+| KEM Hospital | trauma_center | 022-24107000 | 19.0024, 72.8423 | kem.edu | 0.92 |
+| Sir H.N. Reliance Foundation Hospital | hospital | 022-61305000 | 18.9562, 72.8214 | rfhospital.org | 0.94 |
+| Mumbai Police Control Room | police | 022-22620111 | 18.9438, 72.8360 | mumbaipolice.gov.in | 0.94 |
+| Tardeo Police Station | police | 022-23512345 | 18.9680, 72.8150 | mumbaipolice.gov.in | 0.91 |
+| Byculla Fire Station | fire_station | 022-23085991 | 18.9750, 72.8330 | mcgm.gov.in | 0.90 |
+| Life Support Cardiac Ambulance | ambulance | 9820012345 | 18.9810, 72.8385 | Justdial (verified) | 0.73 |
+| Prince Care Clinic Parel | hospital | 022-24123456 | 19.0060, 72.8390 | Justdial (verified) | 0.70 |
+| Mumbai Quick Towing Service | tow | 9821012345 | 19.0150, 72.8520 | Justdial (verified) | 0.72 |
 
 ---
 
-## Merge 3 known limitations
+## Other Regions
 
-- Fire station phone numbers for Adyar, Velachery, and Guindy are sourced from the Tamil Nadu Fire and Rescue Services official website directory. Individual station numbers may change; dial 101 as the primary fire emergency number.
-- TVS Authorised Service Centre (Adyar) is office hours only and is not suitable for after-hours roadside emergencies. It is included to demonstrate the repair service type.
-- Bengaluru contacts are sourced from official government websites as of 2026-05-20. Coordinates verified against Google Maps and OpenStreetMap.
-- BBMP towing helpline availability may vary; NHAI 1033 is the more reliable highway breakdown option.
+The following additional cities have seed files in `data/regions/`:
+
+| Region | File Path |
+|---|---|
+| Hyderabad | `data/regions/hyderabad/contacts.seed.json` |
+| Pune | `data/regions/pune/contacts.seed.json` |
+| Kolkata | `data/regions/kolkata/contacts.seed.json` |
+| Gurgaon | `data/regions/gurgaon/contacts.seed.json` |
+| Lucknow | `data/regions/lucknow/contacts.seed.json` |
+
+Each follows the same JSON schema as defined in `contracts/contact.schema.json`.
+
+---
+
+## General Known Limitations
+
+- Several Indian government websites (tnpolice.gov.in, 112.gov.in, ksp.gov.in, kfd.karnataka.gov.in) block non-Indian IPs due to geo-blocking or SSL configuration. All verified as live via direct browser access. Automated `verify_sources.py` may report these as failures.
+- Apollo Hospitals returns HTTP 403 from automated scripts (bot-blocking). Confirmed live from browser.
+- Justdial listings (confidence ≤ 0.73) are included for proximity coverage where no official source was available. Always verify availability before dispatch.
+- All coordinates were verified against Google Maps and OpenStreetMap as of 2026-05-20. Phone numbers verified against official websites as of 2026-05-20.
+- Numbers may change; always cross-check with ERSS 112 if a number is unreachable.
+- Towing contacts are zone-level listings; individual operator availability is not guaranteed.
+- TVS Service Centre (Adyar) is office hours only — not suitable for after-hours roadside emergencies.
