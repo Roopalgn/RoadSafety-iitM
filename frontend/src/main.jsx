@@ -847,11 +847,13 @@ function App() {
         const last = e.results.length - 1;
         const text = e.results[last][0].transcript.toLowerCase();
         if (text.includes("road sos") || text.includes("road s o s") || text.includes("road s.o.s") || text.includes("road-es-o-es") || text.includes("hey road")) {
-          const msg = new SpeechSynthesisUtterance("Hey Road S O S detected. Locking GPS coordinates and dispatching ambulance.");
+          const msg = new SpeechSynthesisUtterance("Hey Road S O S detected. Locking GPS coordinates and retrieving nearby verified emergency services.");
           window.speechSynthesis?.speak(msg);
           triggerToast("[WAKE WORD DETECTED] Activating emergency response!");
           useGps();
           setFilters(["ambulance"]);
+          setSection("rescue");
+          document.getElementById("rescue")?.scrollIntoView({ behavior: "smooth" });
           setTimeout(() => {
             launchRescueDrill();
           }, 600);

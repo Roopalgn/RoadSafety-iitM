@@ -1833,6 +1833,10 @@ img, svg {
   padding: 0.75rem 1rem;
   border-radius: var(--radius-sm);
   transition: all var(--duration) var(--ease);
+  text-align: left;
+}
+.hero-feat div {
+  text-align: left;
 }
 .hero-feat:hover {
   background: var(--surface-hover);
